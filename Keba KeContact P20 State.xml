@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="64">
+	<Template id="4daf72bb-c09b-4f5d-b53b-87ed46b123fd" revision="1.0">
+		<Name>Keba KeContact P20 State</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Port</Name>
+				<Value>7090</Value>
+				<Id>port</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Internal poll interval</Name>
+				<Value>10000</Value>
+				<Id>internalPollInterval</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Keba KeContact P20 State</Name>
+			<Model>PacketParserModuleUdp</Model>
+			<DeviceProperties>
+				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>$[port]</Port>
+				<StayConnected>False</StayConnected>
+				<CustomVariables>[{"Name":"report2","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+				<ReadScriptPacketParser>SENDDATA("report 2");</ReadScriptPacketParser>
+				<ListenerScriptPacketParser>VAR jsonString := TOSTRING(RECEIVEDBYTES);
+VAR id := PARSEJSON(jsonString, "$.ID", 1);
+
+IF(id = 2)
+    report2 := jsonString;
+END</ListenerScriptPacketParser>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Keba Enable</Name>
+					<Model>PacketParserSwitch</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>226</OnStateIconId>
+						<OffStateIconId>227</OffStateIconId>
+						<OnStateName>${general_enabled}</OnStateName>
+						<OffStateName>${general_disabled}</OffStateName>
+						<ListenerScriptPacketParser>St := PARSEJSON(report2, "$.['Enable user']", 1)</ListenerScriptPacketParser>
+						<WriteSwitchStateScriptPacketParser>SENDDATA("ena " + St);
+SENDDATA("report 2");</WriteSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba Plug locked</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>220</OnStateIconId>
+						<OffStateIconId>221</OffStateIconId>
+						<OnStateName>${general_locked}</OnStateName>
+						<OffStateName>${general_unlocked}</OffStateName>
+						<ListenerScriptPacketParser>Rc := PARSEJSON(report2, "$.Plug", 1) &amp; 0x02</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba Plugged on EV</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>222</OnStateIconId>
+						<OffStateIconId>223</OffStateIconId>
+						<OnStateName>${general_plugged}</OnStateName>
+						<OffStateName>${general_unplugged}</OffStateName>
+						<ListenerScriptPacketParser>Rc := PARSEJSON(report2, "$.Plug", 1) &amp; 0x04</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba Plugged on wallbox</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>224</OnStateIconId>
+						<OffStateIconId>225</OffStateIconId>
+						<OnStateName>${general_plugged}</OnStateName>
+						<OffStateName>${general_unplugged}</OffStateName>
+						<ListenerScriptPacketParser>Rc := PARSEJSON(report2, "$.Plug", 1) &amp; 0x01</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba State</Name>
+					<Model>PacketParserMultiValueSwitch</Model>
+					<DeviceProperties>
+						<Value0Index>64</Value0Index>
+						<Value1Index>1</Value1Index>
+						<Value2Index>2</Value2Index>
+						<Value3Index>3</Value3Index>
+						<Value4Index>68</Value4Index>
+						<Value5Index>5</Value5Index>
+						<Value6Index>70</Value6Index>
+						<Value7Index>71</Value7Index>
+						<Value8Index>8</Value8Index>
+						<Value9Index>9</Value9Index>
+						<Value1Name>${starting}</Value1Name>
+						<Value2Name>${notReady}</Value2Name>
+						<Value3Name>${ready}</Value3Name>
+						<Value5Name>${charging}</Value5Name>
+						<Value8Name>${error}</Value8Name>
+						<Value9Name>${notAuthorized}</Value9Name>
+						<Value0IconId>0</Value0IconId>
+						<Value1IconId>228</Value1IconId>
+						<Value2IconId>229</Value2IconId>
+						<Value3IconId>230</Value3IconId>
+						<Value4IconId>0</Value4IconId>
+						<Value5IconId>231</Value5IconId>
+						<Value6IconId>0</Value6IconId>
+						<Value7IconId>0</Value7IconId>
+						<Value8IconId>232</Value8IconId>
+						<Value9IconId>233</Value9IconId>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<ListenerScriptPacketParser>VAR state := PARSEJSON(report2, "$.State");
+Mu := SWITCH(State, 0, 1, 1, 2, 2, 3, 3, 5, 4, 8, 5, 9, 1)</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba User Current [A]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<IsReadOnly>False</IsReadOnly>
+						<ListenerScriptPacketParser>Va := PARSEJSON(report2, "$.['Curr user']", 1) / 1000.0</ListenerScriptPacketParser>
+						<WriteStateScriptPacketParser>SENDDATA("curr " + Va*1000);
+SENDDATA("report 2");</WriteStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

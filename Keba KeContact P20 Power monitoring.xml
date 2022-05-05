@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="64">
+	<Template id="80f441fb-6571-4424-985b-126d8a3c7300" revision="1.0">
+		<Name>Keba KeContact P20 Power monitoring</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Port</Name>
+				<Value>7090</Value>
+				<Id>port</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Internal poll interval</Name>
+				<Value>10000</Value>
+				<Id>internalPollInterval</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Keba KeContact P20 Power monitoring</Name>
+			<Model>PacketParserModuleUdp</Model>
+			<DeviceProperties>
+				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>$[port]</Port>
+				<StayConnected>False</StayConnected>
+				<CustomVariables>[{"Name":"report3","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+				<ReadScriptPacketParser>SENDDATA(TOBYTEARRAY("report 3"));</ReadScriptPacketParser>
+				<ListenerScriptPacketParser>VAR jsonString := TOSTRING(RECEIVEDBYTES);
+VAR id := PARSEJSON(jsonString, "$.ID", 1);
+
+IF(id = 3)
+    report3 := jsonString;
+END</ListenerScriptPacketParser>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Keba I1 [A]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<IsReadOnly>True</IsReadOnly>
+						<ListenerScriptPacketParser>Va := PARSEJSON(report3, "$.I1", 1) / 1000.0</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba I2 [A]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<IsReadOnly>True</IsReadOnly>
+						<ListenerScriptPacketParser>Va := PARSEJSON(report3, "$.I2", 1) / 1000.0</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba I3 [A]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<IsReadOnly>True</IsReadOnly>
+						<ListenerScriptPacketParser>Va := PARSEJSON(report3, "$.I3", 1) / 1000.0</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba Present Power</Name>
+					<Model>PacketParserElectricityMeter</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<ListenerScriptPacketParser>Ed := PARSEJSON(report3, "$.['E pres']", 1) / 10000.0;
+To := PARSEJSON(report3, "$.P", 1) / 1000000.0</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba Total Power</Name>
+					<Model>PacketParserElectricityMeter</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<ListenerScriptPacketParser>Ed := PARSEJSON(report3, "$.['E total']", 1) / 10000.0;
+To := PARSEJSON(report3, "$.P", 1) / 1000000.0</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba U1 [V]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<IsReadOnly>True</IsReadOnly>
+						<ListenerScriptPacketParser>Va := PARSEJSON(report3, "$.U1", 1)</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba U2 [V]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<IsReadOnly>True</IsReadOnly>
+						<ListenerScriptPacketParser>Va := PARSEJSON(report3, "$.U2", 1)</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Keba U3 [V]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<IsReadOnly>True</IsReadOnly>
+						<ListenerScriptPacketParser>Va := PARSEJSON(report3, "$.U3", 1)</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

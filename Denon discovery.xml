@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="64">
+	<Template id="80dce6a8-ce53-49dc-84d3-8e84ec43f455" revision="1.0">
+		<SuggestedCCUParameters />
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<Name>Denon discovery</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Producer></Producer>
+		<Model></Model>
+		<Description></Description>
+		<Category>0</Category>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>ipAddress</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Denon discovery</Name>
+			<Model>PacketParserModuleTcp</Model>
+			<DeviceProperties>
+				<InternalPollInterval>15000</InternalPollInterval>
+				<IpAddress>$[ipAddress]</IpAddress>
+				<Port>1255</Port>
+				<StayConnected>False</StayConnected>
+				<MessageFramingDefinition>{"Framing":1,"Configuration":"{\"SendMessageBeginDelimiter\":null,\"SendMessageEndDelimiter\":\"DQo=\",\"ReceiveMessageBeginDelimiter\":null,\"ReceiveMessageEndDelimiter\":\"DQo=\"}"}</MessageFramingDefinition>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Denon player id</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<InternalPollInterval>15000</InternalPollInterval>
+						<IsReadOnly>False</IsReadOnly>
+						<ReadScriptPacketParser>SENDDATA("heos://player/get_players")</ReadScriptPacketParser>
+						<ListenerScriptPacketParser>VAR responseJson := TOSTRING(RECEIVEDBYTES);
+Va := PARSEJSON(responseJson,"$.payload[0].pid", 1);</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>
