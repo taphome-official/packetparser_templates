@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="64">
+<Templates format="2" protocolVersion="65">
 	<Template id="8ea10926-39aa-4180-9dc1-da1cbbcb9ce3" revision="1.0">
 		<Name>Fonestar</Name>
 		<CcuModel>PacketParserCCU</CcuModel>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="64">
+<Templates format="2" protocolVersion="65">
 	<Template id="103c7317-bbbc-4f58-918f-f96479ad8cb2" revision="1.0">
 		<Name>Shelly 1PM</Name>
 		<CcuModel>PacketParserCCU</CcuModel>

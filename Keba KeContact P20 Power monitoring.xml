@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="64">
+<Templates format="2" protocolVersion="65">
 	<Template id="80f441fb-6571-4424-985b-126d8a3c7300" revision="1.0">
 		<Name>Keba KeContact P20 Power monitoring</Name>
 		<CcuModel>PacketParserCCU</CcuModel>
