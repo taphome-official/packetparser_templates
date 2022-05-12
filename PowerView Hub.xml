@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="65">
+<Templates format="2" protocolVersion="66">
 	<Template id="0425ed41-3fd8-4516-b6d1-3edd2a350d68" revision="1.0">
 		<Name>PowerView Hub</Name>
 		<CcuModel>PacketParserCCU</CcuModel>

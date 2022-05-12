@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="1" protocolVersion="65">
+<Templates format="1" protocolVersion="66">
 	<Template id="4aa81532-7100-4322-a4d8-4f3955c803dd" revision="1.0">
 		<Name>Satel</Name>
 		<CcuModel>PacketParserCCU</CcuModel>
