@@ -171,7 +171,7 @@ SENDDATA(json);</ReadHueScriptPacketParser>
                         <ReadSaturationScriptPacketParser>VAR json := "{\"id\":953, \"method\":\"get_prop\", \"params\":[\"sat\"]}";
 SENDDATA(json);</ReadSaturationScriptPacketParser>
                         <ReadBrightnessScriptPacketParser>VAR json := "{\"id\":951, \"method\":\"get_prop\", \"params\":[\"bright\", \"power\"]}";
-#SENDDATA(json);</ReadBrightnessScriptPacketParser>
+SENDDATA(json);</ReadBrightnessScriptPacketParser>
                         <WriteHueScriptPacketParser>VAR hueJson := "{\"id\":944,\"method\":\"set_hsv\",\"params\":[" + ROUND(Hd) + ", " + ROUND(Sa*100) + ", \"smooth\", 300]}";
 SENDDATA(hueJson);</WriteHueScriptPacketParser>
                         <WriteSaturationScriptPacketParser>VAR satJson := "{\"id\":945,\"method\":\"set_hsv\",\"params\":[" + ROUND(Hd) + ", " + ROUND(Sa*100) + ", \"smooth\", 300]}";
