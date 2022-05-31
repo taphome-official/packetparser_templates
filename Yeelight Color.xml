@@ -5,7 +5,7 @@
 		<RevisionHistory>
 			<Revision id="1.0">Initial version</Revision>
 		</RevisionHistory>
-		<Name>Yeelight RGB</Name>
+		<Name>Yeelight Color</Name>
 		<CcuModel>PacketParserCCU</CcuModel>
 		<Producer></Producer>
 		<Model></Model>
@@ -29,7 +29,7 @@
 			</Parameter>
 		</ImportParameters>
 		<Module>
-			<Name>Yeelight RGB module</Name>
+			<Name>Yeelight color module</Name>
 			<Model>PacketParserModuleTcp</Model>
 			<DeviceProperties>
 				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
@@ -68,8 +68,8 @@ END</ListenerScriptPacketParser>
             </DeviceProperties>
             <Devices>
                 <Device>
-                    <Name>Yeelight ${dashboard_deviceRGBLight}</Name>
-                    <Model>PacketParserRGBWLight</Model>
+                    <Name>Yeelight color</Name>
+                    <Model>PacketParserHSBLight</Model>
                     <DeviceProperties>
                         <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
 						<CustomVariables>[{"Name":"receiveError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"sendError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"notificationError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"debounce","ValueTypeId":1,"NumericValue":0.0,"StringValue":null}]</CustomVariables>
