@@ -1,0 +1,444 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="68">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly 1PM MQTT Module</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>Shelly 1PM MQTT Module</Name>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"pulg1topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid1"},{"Name":"pulg2topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid2"},{"Name":"pulg3topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid3"},{"Name":"pulg4topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid4"},{"Name":"pulg5topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid5"}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+		<RootTopic>shellies/#</RootTopic>
+        <Port>1883</Port>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Shelly 1PM MQTT Power 1</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg1topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg1topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg1topic + "/relay/0/") != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+
+IF(topic = "shellies/" + pulg1topic + "/relay/0/power")
+    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
+ELSEIF(topic = "shellies/" + pulg1topic + "/relay/0/energy")
+    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly 1PM MQTT Switch 1</Name>
+          <Model>PacketParserSwitch</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg1topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg1topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg1topic) != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+    
+IF(topic = "shellies/" + pulg1topic + "/relay/0")
+    IF(value = "on")
+        St := 1;
+    ELSEIF(value = "off")
+        St := 0;
+    ELSE
+        ADDERROR("Unknown switch state");
+    END
+ELSEIF(topic = "shellies/" + pulg1topic + "/temperature")
+    internalTemp := value;
+ELSEIF(topic = "shellies/" + pulg1topic + "/overtemperature")
+    overTemp := value;
+ELSEIF(topic = "shellies/" + pulg1topic + "/temperature_status")
+    tempStatus := value;
+ELSEIF(topic = "shellies/" + pulg1topic + "/overpower_value")
+    overPower := value;
+END
+</ListenerScriptPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR value := IF(St = 1, "on", "off");
+MQTTPUBLISH("shellies/" + pulg1topic + "/relay/0/command", value);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly 1PM MQTT Power 2</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg2topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg2topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg2topic + "/relay/0/") != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+
+IF(topic = "shellies/" + pulg2topic + "/relay/0/power")
+    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
+ELSEIF(topic = "shellies/" + pulg2topic + "/relay/0/energy")
+    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly 1PM MQTT Switch 2</Name>
+          <Model>PacketParserSwitch</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg2topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg2topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg2topic) != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+    
+IF(topic = "shellies/" + pulg2topic + "/relay/0")
+    IF(value = "on")
+        St := 1;
+    ELSEIF(value = "off")
+        St := 0;
+    ELSE
+        ADDERROR("Unknown switch state");
+    END
+ELSEIF(topic = "shellies/" + pulg2topic + "/temperature")
+    internalTemp := value;
+ELSEIF(topic = "shellies/" + pulg2topic + "/overtemperature")
+    overTemp := value;
+ELSEIF(topic = "shellies/" + pulg2topic + "/temperature_status")
+    tempStatus := value;
+ELSEIF(topic = "shellies/" + pulg2topic + "/overpower_value")
+    overPower := value;
+END
+</ListenerScriptPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR value := IF(St = 1, "on", "off");
+MQTTPUBLISH("shellies/" + pulg2topic + "/relay/0/command", value);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly 1PM MQTT Power 3</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg3topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg3topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg3topic + "/relay/0/") != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+
+IF(topic = "shellies/" + pulg3topic + "/relay/0/power")
+    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
+ELSEIF(topic = "shellies/" + pulg3topic + "/relay/0/energy")
+    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly 1PM MQTT Switch 3</Name>
+          <Model>PacketParserSwitch</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg3topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg3topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg3topic) != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+    
+IF(topic = "shellies/" + pulg3topic + "/relay/0")
+    IF(value = "on")
+        St := 1;
+    ELSEIF(value = "off")
+        St := 0;
+    ELSE
+        ADDERROR("Unknown switch state");
+    END
+ELSEIF(topic = "shellies/" + pulg3topic + "/temperature")
+    internalTemp := value;
+ELSEIF(topic = "shellies/" + pulg3topic + "/overtemperature")
+    overTemp := value;
+ELSEIF(topic = "shellies/" + pulg3topic + "/temperature_status")
+    tempStatus := value;
+ELSEIF(topic = "shellies/" + pulg3topic + "/overpower_value")
+    overPower := value;
+END
+</ListenerScriptPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR value := IF(St = 1, "on", "off");
+MQTTPUBLISH("shellies/" + pulg3topic + "/relay/0/command", value);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly 1PM MQTT Power 4</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg4topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg4topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg4topic + "/relay/0/") != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+
+IF(topic = "shellies/" + pulg4topic + "/relay/0/power")
+    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
+ELSEIF(topic = "shellies/" + pulg4topic + "/relay/0/energy")
+    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly 1PM MQTT Switch 4</Name>
+          <Model>PacketParserSwitch</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg4topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg4topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg4topic) != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+    
+IF(topic = "shellies/" + pulg4topic + "/relay/0")
+    IF(value = "on")
+        St := 1;
+    ELSEIF(value = "off")
+        St := 0;
+    ELSE
+        ADDERROR("Unknown switch state");
+    END
+ELSEIF(topic = "shellies/" + pulg4topic + "/temperature")
+    internalTemp := value;
+ELSEIF(topic = "shellies/" + pulg4topic + "/overtemperature")
+    overTemp := value;
+ELSEIF(topic = "shellies/" + pulg4topic + "/temperature_status")
+    tempStatus := value;
+ELSEIF(topic = "shellies/" + pulg4topic + "/overpower_value")
+    overPower := value;
+END
+</ListenerScriptPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR value := IF(St = 1, "on", "off");
+MQTTPUBLISH("shellies/" + pulg4topic + "/relay/0/command", value);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly 1PM MQTT Power 5</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg5topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg5topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg5topic + "/relay/0/") != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+
+IF(topic = "shellies/" + pulg5topic + "/relay/0/power")
+    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
+ELSEIF(topic = "shellies/" + pulg5topic + "/relay/0/energy")
+    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly 1PM MQTT Switch 5</Name>
+          <Model>PacketParserSwitch</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
+            <ListenerScriptPacketParser>IF(INDEXOF(pulg5topic, "shelly1pm-deviceid") = 0)
+    ADDERROR("Set correct 'pulg5topic' value in module variables. Topic format is 'shelly1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+IF(INDEXOF(topic, "shellies/" + pulg5topic) != 0)
+    RETURN(0);
+END
+
+VAR payload := PARSEJSON(json, "Payload");
+VAR value := DECODE(payload, "base64");
+    
+IF(topic = "shellies/" + pulg5topic + "/relay/0")
+    IF(value = "on")
+        St := 1;
+    ELSEIF(value = "off")
+        St := 0;
+    ELSE
+        ADDERROR("Unknown switch state");
+    END
+ELSEIF(topic = "shellies/" + pulg5topic + "/temperature")
+    internalTemp := value;
+ELSEIF(topic = "shellies/" + pulg5topic + "/overtemperature")
+    overTemp := value;
+ELSEIF(topic = "shellies/" + pulg5topic + "/temperature_status")
+    tempStatus := value;
+ELSEIF(topic = "shellies/" + pulg5topic + "/overpower_value")
+    overPower := value;
+END
+</ListenerScriptPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR value := IF(St = 1, "on", "off");
+MQTTPUBLISH("shellies/" + pulg5topic + "/relay/0/command", value);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
