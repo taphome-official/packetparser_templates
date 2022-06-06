@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="68">
+<Templates format="2" protocolVersion="69">
   <Template revision="1.0">
     <SuggestedCCUParameters />
     <RevisionHistory>
@@ -21,7 +21,7 @@
       <Name>Shelly 1PM MQTT Module</Name>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
-        <InternalPollInterval>5000</InternalPollInterval>
+        <InternalPollInterval>15000</InternalPollInterval>
         <CustomVariables>[{"Name":"pulg1topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid1"},{"Name":"pulg2topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid2"},{"Name":"pulg3topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid3"},{"Name":"pulg4topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid4"},{"Name":"pulg5topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid5"}]</CustomVariables>
         <IpAddress>$[IpAddress]</IpAddress>
 		<RootTopic>shellies/#</RootTopic>
@@ -64,7 +64,7 @@ END</ListenerScriptPacketParser>
           <Model>PacketParserSwitch</Model>
           <DeviceProperties>
             <ReadScriptPacketParser />
-            <InternalPollInterval>2500</InternalPollInterval>
+            <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(pulg1topic, "shelly1pm-deviceid") = 0)
@@ -146,7 +146,7 @@ END</ListenerScriptPacketParser>
           <Model>PacketParserSwitch</Model>
           <DeviceProperties>
             <ReadScriptPacketParser />
-            <InternalPollInterval>2500</InternalPollInterval>
+            <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(pulg2topic, "shelly1pm-deviceid") = 0)
@@ -228,7 +228,7 @@ END</ListenerScriptPacketParser>
           <Model>PacketParserSwitch</Model>
           <DeviceProperties>
             <ReadScriptPacketParser />
-            <InternalPollInterval>2500</InternalPollInterval>
+            <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(pulg3topic, "shelly1pm-deviceid") = 0)
@@ -310,7 +310,7 @@ END</ListenerScriptPacketParser>
           <Model>PacketParserSwitch</Model>
           <DeviceProperties>
             <ReadScriptPacketParser />
-            <InternalPollInterval>2500</InternalPollInterval>
+            <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(pulg4topic, "shelly1pm-deviceid") = 0)
@@ -392,7 +392,7 @@ END</ListenerScriptPacketParser>
           <Model>PacketParserSwitch</Model>
           <DeviceProperties>
             <ReadScriptPacketParser />
-            <InternalPollInterval>2500</InternalPollInterval>
+            <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables>[{"Name":"internalTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overTemp","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"tempStatus","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"overPower","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature","Section":null},"ReadFormula":"IF(LENGTH(internalTemp) = 0, \"Unknown\", internalTemp + \"°C\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"IF(LENGTH(overTemp) = 0, \"Unknown\", IF(overtemp = 0, \"No\", \"Yes\"));"},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"IF(LENGTH(tempStatus) = 0, \"Unknown\", tempStatus);"},{"AttributeDefinition":{"Name":"Overpower","Section":null},"ReadFormula":"IF(LENGTH(overPower) = 0, \"0W\", overPower + \"W\");"}]</ServiceAttributesScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(pulg5topic, "shelly1pm-deviceid") = 0)
