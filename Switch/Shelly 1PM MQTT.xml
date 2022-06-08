@@ -51,8 +51,7 @@ IF(INDEXOF(topic, "shellies/" + pulg1topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
 
 IF(topic = "shellies/" + pulg1topic + "/relay/0/power")
     Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
@@ -84,8 +83,7 @@ IF(INDEXOF(topic, "shellies/" + pulg1topic) != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
     
 IF(topic = "shellies/" + pulg1topic + "/relay/0")
     IF(value = "on")
@@ -133,8 +131,7 @@ IF(INDEXOF(topic, "shellies/" + pulg2topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
 
 IF(topic = "shellies/" + pulg2topic + "/relay/0/power")
     Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
@@ -166,8 +163,7 @@ IF(INDEXOF(topic, "shellies/" + pulg2topic) != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
     
 IF(topic = "shellies/" + pulg2topic + "/relay/0")
     IF(value = "on")
@@ -215,8 +211,7 @@ IF(INDEXOF(topic, "shellies/" + pulg3topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
 
 IF(topic = "shellies/" + pulg3topic + "/relay/0/power")
     Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
@@ -248,8 +243,7 @@ IF(INDEXOF(topic, "shellies/" + pulg3topic) != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
     
 IF(topic = "shellies/" + pulg3topic + "/relay/0")
     IF(value = "on")
@@ -297,8 +291,7 @@ IF(INDEXOF(topic, "shellies/" + pulg4topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
 
 IF(topic = "shellies/" + pulg4topic + "/relay/0/power")
     Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
@@ -330,8 +323,7 @@ IF(INDEXOF(topic, "shellies/" + pulg4topic) != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
     
 IF(topic = "shellies/" + pulg4topic + "/relay/0")
     IF(value = "on")
@@ -379,8 +371,7 @@ IF(INDEXOF(topic, "shellies/" + pulg5topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
 
 IF(topic = "shellies/" + pulg5topic + "/relay/0/power")
     Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
@@ -412,8 +403,7 @@ IF(INDEXOF(topic, "shellies/" + pulg5topic) != 0)
     RETURN(0);
 END
 
-VAR payload := PARSEJSON(json, "Payload");
-VAR value := DECODE(payload, "base64");
+VAR value := PARSEJSON(json, "Payload");
     
 IF(topic = "shellies/" + pulg5topic + "/relay/0")
     IF(value = "on")
