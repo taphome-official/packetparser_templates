@@ -12,9 +12,14 @@
     <Description></Description>
 	<ImportParameters>
 		<Parameter>
-			<Name>${ipAddress}</Name>	
+			<Name>Mqtt Broker ${ipAddress}</Name>	
 			<Value>192.168.0.1</Value>
 			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
 		</Parameter>
 	</ImportParameters>
     <Module>
@@ -25,7 +30,7 @@
         <CustomVariables>[{"Name":"pulg1topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid1"},{"Name":"pulg2topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid2"},{"Name":"pulg3topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid3"},{"Name":"pulg4topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid4"},{"Name":"pulg5topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shelly1pm-deviceid5"}]</CustomVariables>
         <IpAddress>$[IpAddress]</IpAddress>
 		<RootTopic>shellies/#</RootTopic>
-        <Port>1883</Port>
+        <Port>$[Port]</Port>
       </DeviceProperties>
       <Devices>
         <Device>
