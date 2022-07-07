@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="66">
+<Templates format="2" protocolVersion="71">
 	<Template id="fdbf001d-e1dc-4112-b4dc-2e3a287d4b62" revision="1.0">
 		<Name>Sonos</Name>
 		<CcuModel>PacketParserCCU</CcuModel>
@@ -334,15 +334,33 @@ END
 
 ######################
 # fetch playlists
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;500&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
 
-response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-content := PARSEJSON(response, "Content");
-VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := PARSEJSON(response, "Content");
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK();
+    END
+WHILE readPlaylists &lt; numberOfPlaylists
+    
 ######################
-
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
     ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
     RETURN(-3);
@@ -429,15 +447,33 @@ END
 
 ######################
 # fetch playlists
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;500&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
 
-response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-content := PARSEJSON(response, "Content");
-VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := PARSEJSON(response, "Content");
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK();
+    END
+WHILE readPlaylists &lt; numberOfPlaylists
+    
 ######################
-
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
     ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
     RETURN(-3);
@@ -524,15 +560,33 @@ END
 
 ######################
 # fetch playlists
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;500&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
 
-response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-content := PARSEJSON(response, "Content");
-VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := PARSEJSON(response, "Content");
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK();
+    END
+WHILE readPlaylists &lt; numberOfPlaylists
+    
 ######################
-
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
     ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
     RETURN(-3);
@@ -619,15 +673,33 @@ END
 
 ######################
 # fetch playlists
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;500&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
 
-response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-content := PARSEJSON(response, "Content");
-VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := PARSEJSON(response, "Content");
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK();
+    END
+WHILE readPlaylists &lt; numberOfPlaylists
+    
 ######################
-
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
     ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
     RETURN(-3);
@@ -714,15 +786,33 @@ END
 
 ######################
 # fetch playlists
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;500&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
 
-response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-content := PARSEJSON(response, "Content");
-VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := PARSEJSON(response, "Content");
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK();
+    END
+WHILE readPlaylists &lt; numberOfPlaylists
+    
 ######################
-
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
     ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
     RETURN(-3);
@@ -797,20 +887,35 @@ END
 
 ######################
 # fetch favorites
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;100&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
 
-VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-VAR content := PARSEJSON(response, "Content");
-VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
 
-######################
-# find radio with provided name
-VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := PARSEJSON(response, "Content");
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK();
+    END
+WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
-	ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
-	RETURN(-3);
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
 END
 
 ######################
@@ -869,20 +974,35 @@ END
 
 ######################
 # fetch favorites
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;100&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
 
-VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-VAR content := PARSEJSON(response, "Content");
-VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
 
-######################
-# find radio with provided name
-VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := PARSEJSON(response, "Content");
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK();
+    END
+WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
-	ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
-	RETURN(-3);
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
 END
 
 ######################
@@ -941,20 +1061,35 @@ END
 
 ######################
 # fetch favorites
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;100&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
 
-VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-VAR content := PARSEJSON(response, "Content");
-VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
 
-######################
-# find radio with provided name
-VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := PARSEJSON(response, "Content");
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK();
+    END
+WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
-	ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
-	RETURN(-3);
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
 END
 
 ######################
@@ -1013,20 +1148,35 @@ END
 
 ######################
 # fetch favorites
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;100&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
 
-VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-VAR content := PARSEJSON(response, "Content");
-VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
 
-######################
-# find radio with provided name
-VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := PARSEJSON(response, "Content");
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK();
+    END
+WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
-	ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
-	RETURN(-3);
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
 END
 
 ######################
@@ -1085,20 +1235,35 @@ END
 
 ######################
 # fetch favorites
-VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
-VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;0&lt;/StartingIndex&gt;&lt;RequestedCount&gt;100&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
 
-VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
-VAR content := PARSEJSON(response, "Content");
-VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
 
-######################
-# find radio with provided name
-VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := PARSEJSON(response, "Content");
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK();
+    END
+WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
-	ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
-	RETURN(-3);
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
 END
 
 ######################
