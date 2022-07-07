@@ -324,7 +324,7 @@ END
 # get player uuid
 VAR response := SENDHTTPREQUEST("xml/device_description.xml");
 VAR content := PARSEJSON(response, "Content");
-VAR playerUuid := PARSETEXT(response, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
 
 IF(ISNULL(playerUuid))
     ADDERROR("Failed to get player UUID");
@@ -419,7 +419,7 @@ END
 # get player uuid
 VAR response := SENDHTTPREQUEST("xml/device_description.xml");
 VAR content := PARSEJSON(response, "Content");
-VAR playerUuid := PARSETEXT(response, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
 
 IF(ISNULL(playerUuid))
     ADDERROR("Failed to get player UUID");
@@ -514,7 +514,7 @@ END
 # get player uuid
 VAR response := SENDHTTPREQUEST("xml/device_description.xml");
 VAR content := PARSEJSON(response, "Content");
-VAR playerUuid := PARSETEXT(response, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
 
 IF(ISNULL(playerUuid))
     ADDERROR("Failed to get player UUID");
@@ -609,7 +609,7 @@ END
 # get player uuid
 VAR response := SENDHTTPREQUEST("xml/device_description.xml");
 VAR content := PARSEJSON(response, "Content");
-VAR playerUuid := PARSETEXT(response, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
 
 IF(ISNULL(playerUuid))
     ADDERROR("Failed to get player UUID");
@@ -704,7 +704,7 @@ END
 # get player uuid
 VAR response := SENDHTTPREQUEST("xml/device_description.xml");
 VAR content := PARSEJSON(response, "Content");
-VAR playerUuid := PARSETEXT(response, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
 
 IF(ISNULL(playerUuid))
     ADDERROR("Failed to get player UUID");
