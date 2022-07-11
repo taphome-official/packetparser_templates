@@ -358,7 +358,7 @@ DO
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
     END
-WHILE readPlaylists &lt; numberOfPlaylists
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
@@ -471,7 +471,7 @@ DO
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
     END
-WHILE readPlaylists &lt; numberOfPlaylists
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
@@ -584,7 +584,7 @@ DO
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
     END
-WHILE readPlaylists &lt; numberOfPlaylists
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
@@ -697,7 +697,7 @@ DO
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
     END
-WHILE readPlaylists &lt; numberOfPlaylists
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
@@ -810,7 +810,7 @@ DO
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
     END
-WHILE readPlaylists &lt; numberOfPlaylists
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
@@ -911,7 +911,7 @@ DO
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
     END
-WHILE readFavorites &lt; numberOfFavorites
+LOOP WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
     ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
@@ -998,7 +998,7 @@ DO
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
     END
-WHILE readFavorites &lt; numberOfFavorites
+LOOP WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
     ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
@@ -1085,7 +1085,7 @@ DO
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
     END
-WHILE readFavorites &lt; numberOfFavorites
+LOOP WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
     ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
@@ -1172,7 +1172,7 @@ DO
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
     END
-WHILE readFavorites &lt; numberOfFavorites
+LOOP WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
     ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
@@ -1259,7 +1259,7 @@ DO
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
     END
-WHILE readFavorites &lt; numberOfFavorites
+LOOP WHILE readFavorites &lt; numberOfFavorites
 
 IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
     ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
