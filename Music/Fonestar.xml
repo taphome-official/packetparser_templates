@@ -33,11 +33,11 @@
 
 VAR response := SENDHTTPREQUEST("/upnp/control/rendercontrol1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#GetVolume\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"" );
 
-IF(PARSEJSON(response, "IsSuccess", 1) = 1)
-    VAR responseXml := PARSEJSON(response, "Content");
+IF response.IsSuccess
+    VAR responseXml := response.Content;
     RETURN(PARSEXML(responseXml, "//CurrentVolume") / 100.0);
 ELSE
-    ADDERROR(PARSEJSON(response, "Content"));
+    ADDERROR(response.Content);
     RETURN(NaN);
 END</ReadLevelScriptPacketParser>
 						<WriteLevelScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;DesiredVolume&gt;" + ROUND(Le * 100) + "&lt;/DesiredVolume&gt;&lt;/u:SetVolume&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
@@ -115,11 +115,11 @@ SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"u
 
 VAR response := SENDHTTPREQUEST("/upnp/control/rendercontrol1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#GetMute\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");
 
-IF(PARSEJSON(response, "IsSuccess", 1) = 1)
-    VAR responseXml := PARSEJSON(response, "Content");
+IF response.IsSuccess
+    VAR responseXml := response.Content;
     RETURN(PARSEXML(responseXml, "//CurrentMute"));
 ELSE
-    ADDERROR(PARSEJSON(response, "Content"));
+    ADDERROR(response.Content);
     RETURN(NaN);
 END</ReadSwitchStateScriptPacketParser>
 						<WriteSwitchStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;DesiredMute&gt;" + St +"&lt;/DesiredMute&gt;&lt;/u:SetMute&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
@@ -166,12 +166,12 @@ SENDHTTPREQUEST("/upnp/control/rendercontrol1", "POST", body, "SOAPACTION: \"urn
 
 VAR response := SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");
 
-IF(PARSEJSON(response, "IsSuccess", 1) = 1)
-    VAR responseXml := PARSEJSON(response, "Content");
+IF response.IsSuccess
+    VAR responseXml := response.Content;
     VAR mode := PARSEXML(responseXml, "//PlayMode");
     RETURN(SWITCH(mode, "NORMAL", 0, "REPEAT_ALL", 1, "REPEAT_TRACK", 2, 0));
 ELSE
-    ADDERROR(PARSEJSON(response, "Content"));
+    ADDERROR(response.Content);
     RETURN(NaN);
 END</ReadSwitchStateScriptPacketParser>
 						<WriteSwitchStateScriptPacketParser>VAR mode := SWITCH(Mu, 0, "NORMAL", 1, "REPEAT_ALL", 2, "REPEAT_TRACK", "NORMAL");

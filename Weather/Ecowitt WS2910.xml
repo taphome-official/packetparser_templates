@@ -58,11 +58,11 @@ VAR path := "api/v3/device/real_time?application_key=" + application_key + "&amp
 
 VAR response := SENDHTTPREQUEST(path);
 
-IF(PARSEJSON(response, "IsSuccess") = 1)
-    responseJson := PARSEJSON(response, "Content");
+IF response.IsSuccess
+    responseJson := response.Content;
 ELSE
-    VAR contentJson := PARSEJSON(response, "Content");
-    VAR errCode := PARSEJSON(response, "StatusCode");
+    VAR contentJson := response.Content;
+    VAR errCode := response.StatusCode;
     VAR message := PARSEJSON(contentJson, "message");
     ADDERROR("Failed to read data - (" + errCode + ") " + message);
     RETURN(-4);

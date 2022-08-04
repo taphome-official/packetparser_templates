@@ -36,11 +36,11 @@
 VAR path := "data/2.5/onecall?units=metric&amp;lat=" + latitude + "&amp;lon=" + longitude + "&amp;appid=" + AppId;
 VAR response := SENDHTTPREQUEST(path);
 
-IF(PARSEJSON(response, "IsSuccess") = 1)
-    responseJson := PARSEJSON(response, "Content");
+IF response.IsSuccess
+    responseJson := response.Content;
 ELSE
-    VAR contentJson := PARSEJSON(response, "Content");
-    VAR errCode := PARSEJSON(response, "StatusCode");
+    VAR contentJson := response.Content;
+    VAR errCode := response.StatusCode;
     VAR message := PARSEJSON(contentJson, "message");
     ADDERROR("Failed to read data - (" + errCode + ") " + message);
 END</ReadScriptPacketParser>

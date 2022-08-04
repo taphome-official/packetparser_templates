@@ -36,12 +36,12 @@
 						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
 						<ReadBlindsLevelScriptPacketParser>VAR response := SENDHTTPREQUEST("api/shades/" + SlideDeviceId);
 
-IF(PARSEJSON(response, "IsSuccess"))
-    VAR responseJson := PARSEJSON(response, "Content");
+IF response.IsSuccess
+    VAR responseJson := response.Content;
     VAR pos := PARSEJSON(responseJson, "$.shade.positions.position1");
     RETURN(1 - (pos/65535));
 ELSE
-    ADDERROR(PARSEJSON(response, "Content"));
+    ADDERROR(response.Content);
     RETURN(NaN);
 END</ReadBlindsLevelScriptPacketParser>
 						<WriteBlindsLevelScriptPacketParser>VAR pos := ROUND((1 - Bl) * 65535);

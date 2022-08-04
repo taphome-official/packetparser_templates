@@ -32,7 +32,7 @@
 				<Port>$[Port]</Port>
 				<StayConnected>True</StayConnected>
 				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
-				<ReadScriptPacketParser>SENDDATA(BYTEARRAY("00"));</ReadScriptPacketParser>
+				<ReadScriptPacketParser>SENDDATA(BYTECOLLECTION("00"));</ReadScriptPacketParser>
 				<MessageFramingDefinition>{"Framing":2,"Configuration":""}</MessageFramingDefinition>
 			</DeviceProperties>
 			<Devices>
