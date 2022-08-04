@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="66">
+<Templates format="2" protocolVersion="71">
 	<Template id="fdbf001d-e1dc-4112-b4dc-2e3a287d4b62" revision="1.0">
 		<Name>Sonos</Name>
 		<CcuModel>PacketParserCCU</CcuModel>
