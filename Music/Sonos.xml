@@ -353,7 +353,7 @@ DO
     readPlaylists := readPlaylists + returnedPlaylists;
     
     VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
@@ -466,7 +466,7 @@ DO
     readPlaylists := readPlaylists + returnedPlaylists;
     
     VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
@@ -579,7 +579,7 @@ DO
     readPlaylists := readPlaylists + returnedPlaylists;
     
     VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
@@ -692,7 +692,7 @@ DO
     readPlaylists := readPlaylists + returnedPlaylists;
     
     VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
@@ -805,7 +805,7 @@ DO
     readPlaylists := readPlaylists + returnedPlaylists;
     
     VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
         BREAK();
@@ -906,7 +906,7 @@ DO
     readFavorites := readFavorites + returnedFavorites;
     
     VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
@@ -993,7 +993,7 @@ DO
     readFavorites := readFavorites + returnedFavorites;
     
     VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
@@ -1080,7 +1080,7 @@ DO
     readFavorites := readFavorites + returnedFavorites;
     
     VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
@@ -1167,7 +1167,7 @@ DO
     readFavorites := readFavorites + returnedFavorites;
     
     VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();
@@ -1254,7 +1254,7 @@ DO
     readFavorites := readFavorites + returnedFavorites;
     
     VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
-    VAR radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
         BREAK();

@@ -71,7 +71,7 @@ END</ListenerScriptPacketParser>
                     <Model>PacketParserHSBLight</Model>
                     <DeviceProperties>
                         <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
-						<CustomVariables>[{"Name":"receiveError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"sendError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"notificationError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"debounce","ValueTypeId":1,"NumericValue":0.0,"StringValue":null}]</CustomVariables>
+						<CustomVariables>[{"Name":"receiveError1","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"receiveError2","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"notificationError","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"debounce","ValueTypeId":1,"NumericValue":0},{"Name":"writeErrorBrightness","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"writeErrorHue","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"writeErrorSaturation","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
 						<ReadScriptPacketParser>IF(debounce &gt; 0)
     debounce = debounce - 1;
 ELSE
@@ -82,25 +82,30 @@ END</ReadScriptPacketParser>
 VAR method := PARSEJSON(jsonResponse, "method", 1);
 VAR id := PARSEJSON(jsonResponse, "id", 1);
 
+INT brightness;
+STRING brightnessStr;
+STRING onOff;
+VAR error := PARSEJSON(jsonResponse, "error.message", 1);
+
 IF(id = 951)
-   receiveError := PARSEJSON(jsonResponse, "error.message", 1);
+   receiveError1 := error;
    
-   IF(LENGTH(receiveError) = 0)
-      VAR hue := PARSEJSON(jsonResponse, "result[0]", 1);
-      VAR sat := PARSEJSON(jsonResponse, "result[1]", 1);
-      VAR brightness := PARSEJSON(jsonResponse, "result[2]", 1);
-      VAR onOff := PARSEJSON(jsonResponse, "result[3]", 1);
+   IF(LENGTH(receiveError1) = 0)
+      VAR hueStr := PARSEJSON(jsonResponse, "result[0]", 1);
+      VAR satStr := PARSEJSON(jsonResponse, "result[1]", 1);
+      brightnessStr := PARSEJSON(jsonResponse, "result[2]", 1);
+      onOff := PARSEJSON(jsonResponse, "result[3]", 1);
       
-      IF(!ISNULL(hue))
-         Hd := TODOUBLE(hue);
+      IF(!ISNULL(hueStr))
+         Hd := TODOUBLE(hueStr);
       END
 
-      IF(!ISNULL(sat))
-        Sa := TODOUBLE(sat) / 100.0;
+      IF(!ISNULL(satStr))
+        Sa := TODOUBLE(satStr) / 100.0;
       END
       
-      IF(!ISNULL(brightness))
-        Hb := TODOUBLE(brightness) / 100.0;
+      IF(!ISNULL(brightnessStr))
+        Hb := TODOUBLE(brightnessStr) / 100.0;
       END
    
       IF(onOff = "on")
@@ -111,26 +116,30 @@ IF(id = 951)
       END
    END
 ELSEIF(id = 952)
-   receiveError := PARSEJSON(jsonResponse, "error.message", 1);
+   receiveError2 := error;
    
-   IF(LENGTH(receiveError) = 0)
-   VAR brightness := PARSEJSON(jsonResponse, "result[0]", 1);
-      IF(!ISNULL(brightness))
-        Hb := TODOUBLE(brightness) / 100.0;
+   IF(LENGTH(receiveError2) = 0)
+   brightnessStr := PARSEJSON(jsonResponse, "result[0]", 1);
+      IF(!ISNULL(brightnessStr))
+        Hb := TODOUBLE(brightnessStr) / 100.0;
       END
    END
 END
 
-IF(id &gt; 940 AND id &lt; 950)
-   sendError := PARSEJSON(jsonResponse, "error.message", 1);
+IF(id &gt;= 941 AND id &lt;= 943)
+   writeErrorBrightness := error;
+ELSEIF(id = 944)
+   writeErrorHue := error;
+ELSEIF(id = 945)
+   writeErrorSaturation := error;
 END
 
 IF(method = "props")
-   notificationError := PARSEJSON(jsonResponse, "error.message", 1);
+   notificationError := error;
    
    IF(LENGTH(notificationError) = 0)
-      VAR brightness := PARSEJSON(jsonResponse, "params.bright", 1);
-      VAR onOff := PARSEJSON(jsonResponse, "params.power", 1);
+      brightness := PARSEJSON(jsonResponse, "params.bright", 1);
+      onOff := PARSEJSON(jsonResponse, "params.power", 1);
       VAR hue := PARSEJSON(jsonResponse, "params.hue", 1);
       VAR sat := PARSEJSON(jsonResponse, "params.sat", 1);
       VAR colorMode := PARSEJSON(jsonResponse, "params.color_mode", 1);
@@ -159,16 +168,28 @@ IF(method = "props")
    END
 END
 
-IF(LENGTH(receiveError) &gt; 0)
-   ADDERROR("Read error: " + receiveError);
+IF(LENGTH(receiveError1) &gt; 0)
+   ADDERROR(951, "Read error: " + receiveError1);
 END
 
-IF(LENGTH(sendError) &gt; 0)
-   ADDERROR("Write error: " + sendError);
+IF(LENGTH(receiveError2) &gt; 0)
+   ADDERROR(952, "Read error: " + receiveError2);
+END
+
+IF(LENGTH(writeErrorBrightness) &gt; 0)
+   ADDERROR(941, "Brightness write error: " + writeErrorBrightness);
+END
+
+IF(LENGTH(writeErrorHue) &gt; 0)
+   ADDERROR(944, "Hue write error: " + writeErrorHue);
+END
+
+IF(LENGTH(writeErrorSaturation) &gt; 0)
+   ADDERROR(945, "Saturation write error: " + writeErrorSaturation);
 END
 
 IF(LENGTH(notificationError) &gt; 0)
-   ADDERROR(notificationError);
+   ADDERROR(1, notificationError);
 END</ListenerScriptPacketParser>
                         <WriteHueScriptPacketParser>VAR hueJson := "{\"id\":944,\"method\":\"set_hsv\",\"params\":[" + ROUND(Hd) + ", " + ROUND(Sa*100) + ", \"smooth\", 300]}";
 SENDDATA(hueJson);
@@ -179,14 +200,14 @@ SENDDATA(satJson);
 
 debounce = 1;</WriteSaturationScriptPacketParser>
                         <WriteBrightnessScriptPacketParser>IF(Hb &gt; 0)
-    VAR jsonPower := "{\"id\":941,\"method\":\"set_power\",\"params\":[\"on\", \"smooth\", 300]}";
-    SENDDATA(jsonPower);
+    VAR jsonPowerOn := "{\"id\":941,\"method\":\"set_power\",\"params\":[\"on\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOn);
 
     VAR jsonBrightness := "{\"id\":942,\"method\":\"set_bright\",\"params\":[" + ROUND(Hb*100) + ",\"smooth\", 500]}";
     SENDDATA(jsonBrightness);
 ELSE
-    VAR jsonPower := "{\"id\":943,\"method\":\"set_power\",\"params\":[\"off\", \"smooth\", 300]}";
-    SENDDATA(jsonPower);
+    VAR jsonPowerOff := "{\"id\":943,\"method\":\"set_power\",\"params\":[\"off\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOff);
 END
 
 debounce = 1;</WriteBrightnessScriptPacketParser>

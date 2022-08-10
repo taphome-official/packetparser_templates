@@ -121,6 +121,7 @@ SENDDATA("heos://player/set_mute?pid=" + PlayerId + "&amp;state=" + mute);</Writ
 					</DeviceProperties>
 				</Device>
 				<Device>
+					<Name>Play Mode</Name>
 					<Model>PacketParserMultiValueSwitch</Model>
 					<DeviceProperties>
 						<InternalPollInterval>2500</InternalPollInterval>
