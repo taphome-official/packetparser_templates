@@ -53,6 +53,7 @@ END</ReadScriptPacketParser>
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.temp"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.humidity") / 100)</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -61,6 +62,7 @@ END</ReadScriptPacketParser>
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.feels_like"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -72,21 +74,14 @@ END</ReadScriptPacketParser>
 						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.pressure"))</ReadStateScriptPacketParser>
 					</DeviceProperties>
 				</Device>
-				<Device>
-					<Name>Current Humidity [%]</Name>
-					<Model>PacketParserVariable</Model>
-					<DeviceProperties>
-						<IsReadOnly>True</IsReadOnly>
-						<InternalPollInterval>300000</InternalPollInterval>
-						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.humidity"))</ReadStateScriptPacketParser>
-					</DeviceProperties>
-				</Device>
+
 				<Device>
 					<Name>Current Dew point</Name>
 					<Model>PacketParserTemperatureSensor</Model>
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.dew_point"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -205,6 +200,7 @@ SWITCH(weather, "Rain", PARSEJSON(responseJson, "current.rain.1h"), "Snow",  PAR
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].temp"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].humidity") / 100)</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -213,6 +209,7 @@ SWITCH(weather, "Rain", PARSEJSON(responseJson, "current.rain.1h"), "Snow",  PAR
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].feels_like"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -225,20 +222,12 @@ SWITCH(weather, "Rain", PARSEJSON(responseJson, "current.rain.1h"), "Snow",  PAR
 					</DeviceProperties>
 				</Device>
 				<Device>
-					<Name>Hourly Humidity [%]</Name>
-					<Model>PacketParserVariable</Model>
-					<DeviceProperties>
-						<IsReadOnly>True</IsReadOnly>
-						<InternalPollInterval>300000</InternalPollInterval>
-						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].humidity"))</ReadStateScriptPacketParser>
-					</DeviceProperties>
-				</Device>
-				<Device>
 					<Name>Hourly Dew point</Name>
 					<Model>PacketParserTemperatureSensor</Model>
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].dew_point"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -367,6 +356,7 @@ SWITCH(weather, "Rain", PARSEJSON(responseJson, "hourly[0].rain.1h"), "Snow",  P
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].temp.day"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].humidity") / 100)</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -375,6 +365,7 @@ SWITCH(weather, "Rain", PARSEJSON(responseJson, "hourly[0].rain.1h"), "Snow",  P
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].feels_like.day"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
@@ -387,20 +378,12 @@ SWITCH(weather, "Rain", PARSEJSON(responseJson, "hourly[0].rain.1h"), "Snow",  P
 					</DeviceProperties>
 				</Device>
 				<Device>
-					<Name>Daily Humidity [%]</Name>
-					<Model>PacketParserVariable</Model>
-					<DeviceProperties>
-						<IsReadOnly>True</IsReadOnly>
-						<InternalPollInterval>300000</InternalPollInterval>
-						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].humidity"))</ReadStateScriptPacketParser>
-					</DeviceProperties>
-				</Device>
-				<Device>
 					<Name>Daily Dew point</Name>
 					<Model>PacketParserTemperatureSensor</Model>
 					<DeviceProperties>
 						<InternalPollInterval>300000</InternalPollInterval>
 						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].dew_point"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
 					</DeviceProperties>
 				</Device>
 				<Device>
