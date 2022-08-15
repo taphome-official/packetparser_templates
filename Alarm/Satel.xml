@@ -45,10 +45,10 @@
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -61,10 +61,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -77,10 +77,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -93,10 +93,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -109,10 +109,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -125,10 +125,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -141,10 +141,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -157,10 +157,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,1) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -173,10 +173,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -189,10 +189,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -205,10 +205,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -221,10 +221,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -237,10 +237,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -253,10 +253,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -269,10 +269,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -285,10 +285,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,2) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -301,10 +301,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -317,10 +317,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -333,10 +333,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -349,10 +349,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -365,10 +365,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -381,10 +381,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -397,10 +397,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -413,10 +413,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,3) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -429,10 +429,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -445,10 +445,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -461,10 +461,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -477,10 +477,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -493,10 +493,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -509,10 +509,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -525,10 +525,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -541,10 +541,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,4) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -557,10 +557,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -573,10 +573,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -589,10 +589,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -605,10 +605,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -621,10 +621,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -637,10 +637,10 @@ END</ListenerScriptPacketParser>
 							<OffStateIconId>88</OffStateIconId>
 							<OnStateName>${general_open}</OnStateName>
 							<OffStateName>${general_closed}</OffStateName>
-							<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+							<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 						</DeviceProperties>
 					</Device>
@@ -653,10 +653,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -669,10 +669,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,5) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -685,10 +685,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -701,10 +701,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -717,10 +717,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -733,10 +733,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -749,10 +749,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -765,10 +765,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -781,10 +781,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -797,10 +797,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,6) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -813,10 +813,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -829,10 +829,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -845,10 +845,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -861,10 +861,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -877,10 +877,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -893,10 +893,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -909,10 +909,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -925,10 +925,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,7) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -941,10 +941,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -957,10 +957,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -973,10 +973,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -989,10 +989,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1005,10 +1005,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1021,10 +1021,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1037,10 +1037,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1053,10 +1053,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,8) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1069,10 +1069,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1085,10 +1085,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1101,10 +1101,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1117,10 +1117,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1133,10 +1133,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1149,10 +1149,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1165,10 +1165,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1181,10 +1181,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,9) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1197,10 +1197,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1213,10 +1213,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1229,10 +1229,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1245,10 +1245,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1261,10 +1261,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1277,10 +1277,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1293,10 +1293,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1309,10 +1309,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,10) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1325,10 +1325,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1341,10 +1341,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1357,10 +1357,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1373,10 +1373,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1389,10 +1389,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1405,10 +1405,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1421,10 +1421,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1437,10 +1437,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,11) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1453,10 +1453,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1469,10 +1469,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1485,10 +1485,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1501,10 +1501,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1517,10 +1517,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1533,10 +1533,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1549,10 +1549,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1565,10 +1565,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,12) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1581,10 +1581,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1597,10 +1597,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1613,10 +1613,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1629,10 +1629,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1645,10 +1645,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1661,10 +1661,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1677,10 +1677,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1693,10 +1693,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,13) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1709,10 +1709,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1725,10 +1725,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1741,10 +1741,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1757,10 +1757,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1773,10 +1773,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1789,10 +1789,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1805,10 +1805,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1821,10 +1821,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,14) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1837,10 +1837,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1853,10 +1853,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1869,10 +1869,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1885,10 +1885,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1901,10 +1901,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1917,10 +1917,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1933,10 +1933,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1949,10 +1949,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,15) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1965,10 +1965,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x01) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x01) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1981,10 +1981,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x02) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x02) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -1997,10 +1997,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x04) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x04) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -2013,10 +2013,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x08) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x08) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -2029,10 +2029,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x10) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x10) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -2045,10 +2045,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x20) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x20) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -2061,10 +2061,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x40) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x40) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
@@ -2077,10 +2077,10 @@ END</ListenerScriptPacketParser>
 						<OffStateIconId>88</OffStateIconId>
 						<OnStateName>${general_open}</OnStateName>
 						<OffStateName>${general_closed}</OffStateName>
-						<ListenerScriptPacketParser>VAR cmd := GETBYTE(RECEIVEDBYTES,0);
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
 
 IF(cmd = 0)
-   Rc := (GETBYTE(RECEIVEDBYTES,16) &amp; 0x80) &gt; 0;
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x80) &gt; 0;
 END</ListenerScriptPacketParser>
 					</DeviceProperties>
 				</Device>
