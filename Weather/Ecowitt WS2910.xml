@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="66">
+<Templates format="2" protocolVersion="71">
   <Template id="af7dffb2-6655-4988-8bc6-299e2f651963" revision="1.0">
     <SuggestedCCUParameters />
     <RevisionHistory>
@@ -58,11 +58,11 @@ VAR path := "api/v3/device/real_time?application_key=" + application_key + "&amp
 
 VAR response := SENDHTTPREQUEST(path);
 
-IF(PARSEJSON(response, "IsSuccess") = 1)
-    responseJson := PARSEJSON(response, "Content");
+IF response.IsSuccess
+    responseJson := response.Content;
 ELSE
-    VAR contentJson := PARSEJSON(response, "Content");
-    VAR errCode := PARSEJSON(response, "StatusCode");
+    VAR contentJson := response.Content;
+    VAR errCode := response.StatusCode;
     VAR message := PARSEJSON(contentJson, "message");
     ADDERROR("Failed to read data - (" + errCode + ") " + message);
     RETURN(-4);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="66">
+<Templates format="2" protocolVersion="71">
 	<Template id="f06365b5-1734-4db8-a610-febdda40da28" revision="1.0">
 		<SuggestedCCUParameters />
 		<RevisionHistory>
@@ -75,16 +75,17 @@ END</ListenerScriptPacketParser>
 						<ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
 VAR method := PARSEJSON(jsonResponse, "method", 1);
 VAR id := PARSEJSON(jsonResponse, "id", 1);
+STRING onOff;
 
 IF(id = 951)
    receiveError := PARSEJSON(jsonResponse, "error.message", 1);
    
    IF(LENGTH(receiveError) = 0)
-      VAR brightness := PARSEJSON(jsonResponse, "result[0]", 1);
-      VAR onOff := PARSEJSON(jsonResponse, "result[1]", 1);
+      VAR brightnessStr := PARSEJSON(jsonResponse, "result[0]", 1);
+      onOff := PARSEJSON(jsonResponse, "result[1]", 1);
    
-      IF(!ISNULL(brightness))
-         Le := TODOUBLE(brightness) / 100.0;
+      IF(!ISNULL(brightnessStr))
+         Le := TODOUBLE(brightnessStr) / 100.0;
       END
    
       IF(onOff = "on")
@@ -105,7 +106,7 @@ IF(method = "props")
    
    IF(LENGTH(notificationError) = 0)
       VAR brightness := PARSEJSON(jsonResponse, "params.bright", 1);
-      VAR onOff := PARSEJSON(jsonResponse, "params.power", 1);
+      onOff := PARSEJSON(jsonResponse, "params.power", 1);
    
       IF(!ISNULL(brightness))
          Le := brightness / 100.0;
@@ -137,14 +138,14 @@ END</ListenerScriptPacketParser>
 						<ReadLevelScriptPacketParser>VAR json := "{\"id\":951, \"method\":\"get_prop\", \"params\":[\"bright\", \"power\"]}";
 SENDDATA(json);</ReadLevelScriptPacketParser>
 						<WriteLevelScriptPacketParser>IF(Le &gt; 0)
-    VAR jsonPower := "{\"id\":952,\"method\":\"set_power\",\"params\":[\"on\", \"smooth\", 300]}";
-    SENDDATA(jsonPower);
+    VAR jsonPowerOn := "{\"id\":952,\"method\":\"set_power\",\"params\":[\"on\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOn);
 
     VAR jsonBrightness := "{\"id\":953,\"method\":\"set_bright\",\"params\":[" + ROUND(Le*100) + ",\"smooth\", 500]}";
     SENDDATA(jsonBrightness);
 ELSE
-    VAR jsonPower := "{\"id\":954,\"method\":\"set_power\",\"params\":[\"off\", \"smooth\", 300]}";
-    SENDDATA(jsonPower);
+    VAR jsonPowerOff := "{\"id\":954,\"method\":\"set_power\",\"params\":[\"off\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOff);
 END</WriteLevelScriptPacketParser>
 						<IconId>0</IconId>
 					</DeviceProperties>

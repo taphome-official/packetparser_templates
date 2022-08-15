@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="66">
+<Templates format="2" protocolVersion="71">
 	<Template id="80f441fb-6571-4424-985b-126d8a3c7300" revision="1.0">
 		<Name>Keba KeContact P20 Power monitoring</Name>
 		<CcuModel>PacketParserCCU</CcuModel>
@@ -33,7 +33,7 @@
 				<Port>$[port]</Port>
 				<StayConnected>False</StayConnected>
 				<CustomVariables>[{"Name":"report3","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
-				<ReadScriptPacketParser>SENDDATA(TOBYTEARRAY("report 3"));</ReadScriptPacketParser>
+				<ReadScriptPacketParser>SENDDATA("report 3");</ReadScriptPacketParser>
 				<ListenerScriptPacketParser>VAR jsonString := TOSTRING(RECEIVEDBYTES);
 VAR id := PARSEJSON(jsonString, "$.ID", 1);
 

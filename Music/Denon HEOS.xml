@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="66">
+<Templates format="2" protocolVersion="71">
 	<Template id="44e16277-3f69-43b3-b2b3-16409845dc7f" revision="1.0">
 		<SuggestedCCUParameters />
 		<RevisionHistory>
@@ -121,6 +121,7 @@ SENDDATA("heos://player/set_mute?pid=" + PlayerId + "&amp;state=" + mute);</Writ
 					</DeviceProperties>
 				</Device>
 				<Device>
+					<Name>Play Mode</Name>
 					<Model>PacketParserMultiValueSwitch</Model>
 					<DeviceProperties>
 						<InternalPollInterval>2500</InternalPollInterval>
