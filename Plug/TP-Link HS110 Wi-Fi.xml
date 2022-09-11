@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" id="ab7b9505-29b6-4588-a375-1dff978e01da" protocolVersion="72">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>TP-Link HS110 Wi-Fi Module</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>TP-Link HS110 Wi-Fi Module</Name>
+      <Model>PacketParserModuleTcp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR payload := "{\"system\":{\"get_sysinfo\":{}}}";
+
+COLLECTION&lt;UINT8&gt; encrypted;
+VAR payloadLength := LENGTH(payload);
+
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 24);
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 16);
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 8);
+encrypted := APPEND(encrypted, payloadLength);
+
+INT i := 0;
+UINT8 key := 171;
+
+WHILE i &lt; payloadLength
+    key := GETAT(payload, i) XOR key;
+    encrypted := APPEND(encrypted, key);
+    i += 1;
+LOOP
+
+SENDDATA(encrypted);</ReadScriptPacketParser>
+        <InternalPollInterval>2500</InternalPollInterval>
+        <CustomVariables>[{"Name":"SysInfoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"EMeterInfoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"SW version"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.sw_ver\u0022, 1);"},{"AttributeDefinition":{"Name":"HW version"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.hw_ver\u0022, 1);"},{"AttributeDefinition":{"Name":"Model"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.model\u0022, 0);"},{"AttributeDefinition":{"Name":"MAC address"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.mac\u0022, 0);"},{"AttributeDefinition":{"Name":"Signal strength (RSSI)"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.rssi\u0022, 0);"},{"AttributeDefinition":{"Name":"Voltage"},"ReadFormula":"VAR voltage := ROUND(PARSEJSON(EMeterInfoJson, \u0022$.voltage\u0022, 0));\r\nRETURN(voltage \u002B \u0022V\u0022);"}]</ServiceAttributesScriptsPacketParser>
+        <ListenerScriptPacketParser>INT i := 4;
+UINT8 key := 171;
+COLLECTION&lt;UINT8&gt; payload;
+
+WHILE i &lt; LENGTH(RECEIVEDBYTES)
+    UINT8 b := GETAT(RECEIVEDBYTES, i);
+    payload := APPEND(payload, b XOR key);
+    key := b;
+    i += 1;
+LOOP
+
+VAR json := TOSTRING(payload);
+VAR sysInfo := PARSEJSON(payload, "$.system.get_sysinfo", 1);
+
+IF sysInfo != null
+    SysInfoJson := sysInfo;
+END</ListenerScriptPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>9999</Port>
+        <StayConnected>False</StayConnected>
+        <MessageFramingDefinition>{"Framing":0,"Configuration":""}</MessageFramingDefinition>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>TP-Link HS110 Wi-Fi Electric meter</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>VAR payload := "{\"emeter\":{\"get_realtime\":{}}}";
+
+COLLECTION&lt;UINT8&gt; encrypted;
+VAR payloadLength := LENGTH(payload);
+
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 24);
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 16);
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 8);
+encrypted := APPEND(encrypted, payloadLength);
+
+INT i := 0;
+UINT8 key := 171;
+
+WHILE i &lt; payloadLength
+    key := GETAT(payload, i) XOR key;
+    encrypted := APPEND(encrypted, key);
+    i += 1;
+LOOP
+
+SENDDATA(encrypted);</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>INT i := 4;
+UINT8 key := 171;
+COLLECTION&lt;UINT8&gt; payload;
+
+WHILE i &lt; LENGTH(RECEIVEDBYTES)
+    UINT8 b := GETAT(RECEIVEDBYTES, i);
+    payload := APPEND(payload, b XOR key);
+    key := b;
+    i += 1;
+LOOP
+
+VAR json := TOSTRING(payload);
+VAR emeterInfo := PARSEJSON(payload, "$.emeter.get_realtime", 1);
+
+IF emeterInfo != null
+    Ed := PARSEJSON(emeterInfo, "$.power", 1) / 1000.0;
+    To := PARSEJSON(emeterInfo, "$.total", 1);
+    EMeterInfoJson := emeterInfo;
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>TP-Link HS110 Wi-Fi Switch</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"debounce","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF debounce &gt; 0
+    debounce -= 1;
+    RETURN(NaN);
+END
+
+VAR isOn := PARSEJSON(SysInfoJson, "$.relay_state", 1); 
+St := IF(ISNULL(isOn), NaN, isOn);</ListenerScriptPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR payload := "{\"system\":{\"set_relay_state\":{\"state\":" + St + "}}}";
+
+COLLECTION&lt;UINT8&gt; encrypted;
+VAR payloadLength := LENGTH(payload);
+
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 24);
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 16);
+encrypted := APPEND(encrypted, payloadLength &gt;&gt; 8);
+encrypted := APPEND(encrypted, payloadLength);
+
+INT i := 0;
+UINT8 key := 171;
+
+WHILE i &lt; payloadLength
+    key := GETAT(payload, i) XOR key;
+    encrypted := APPEND(encrypted, key);
+    i += 1;
+LOOP
+
+SENDDATA(encrypted);
+debounce := 1;</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
