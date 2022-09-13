@@ -65,6 +65,9 @@ ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
     temp := TODOUBLE(value);
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
     battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
     luminance := TODOUBLE(value);
 END</ListenerScriptPacketParser>
@@ -106,6 +109,9 @@ ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
     temp := TODOUBLE(value);
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
     battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
     luminance := TODOUBLE(value);
 END</ListenerScriptPacketParser>
@@ -147,6 +153,9 @@ ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
     temp := TODOUBLE(value);
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
     battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
     luminance := TODOUBLE(value);
 END</ListenerScriptPacketParser>
@@ -188,6 +197,9 @@ ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
     temp := TODOUBLE(value);
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
     battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
     luminance := TODOUBLE(value);
 END</ListenerScriptPacketParser>
@@ -229,6 +241,9 @@ ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
     temp := TODOUBLE(value);
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
     battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
 ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
     luminance := TODOUBLE(value);
 END</ListenerScriptPacketParser>
