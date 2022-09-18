@@ -44,7 +44,8 @@ SENDDATA(encrypted);</ReadScriptPacketParser>
         <InternalPollInterval>2500</InternalPollInterval>
         <CustomVariables>[{"Name":"SysInfoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"EMeterInfoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"SW version"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.sw_ver\u0022, 1);"},{"AttributeDefinition":{"Name":"HW version"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.hw_ver\u0022, 1);"},{"AttributeDefinition":{"Name":"Model"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.model\u0022, 0);"},{"AttributeDefinition":{"Name":"MAC address"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.mac\u0022, 0);"},{"AttributeDefinition":{"Name":"Signal strength (RSSI)"},"ReadFormula":"PARSEJSON(SysInfoJson, \u0022$.rssi\u0022, 0);"},{"AttributeDefinition":{"Name":"Voltage"},"ReadFormula":"VAR voltage := ROUND(PARSEJSON(EMeterInfoJson, \u0022$.voltage\u0022, 0));\r\nRETURN(voltage \u002B \u0022V\u0022);"}]</ServiceAttributesScriptsPacketParser>
-        <ListenerScriptPacketParser>INT i := 4;
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR payload := \u0022{\\\u0022system\\\u0022:{\\\u0022reboot\\\u0022:{\\\u0022delay\\\u0022:1}}}\u0022;\r\n\r\nCOLLECTION\u003CUINT8\u003E encrypted;\r\nVAR payloadLength := LENGTH(payload);\r\n\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 24);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 16);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 8);\r\nencrypted := APPEND(encrypted, payloadLength);\r\n\r\nINT i := 0;\r\nUINT8 key := 171;\r\n\r\nWHILE i \u003C payloadLength\r\n    key := GETAT(payload, i) XOR key;\r\n    encrypted := APPEND(encrypted, key);\r\n    i \u002B= 1;\r\nLOOP\r\n\r\nSENDDATA(encrypted);\r\n\r\nRETURN(\u0022OK\u0022);"}]</ServiceActionsScriptsPacketParser>
+		<ListenerScriptPacketParser>INT i := 4;
 UINT8 key := 171;
 COLLECTION&lt;UINT8&gt; payload;
 
@@ -70,7 +71,6 @@ END</ListenerScriptPacketParser>
         <Device>
           <Name>TP-Link HS110 Wi-Fi Electric meter</Name>
           <Model>PacketParserElectricityMeter</Model>
-          <Id>-2</Id>
           <DeviceProperties>
             <ReadScriptPacketParser>VAR payload := "{\"emeter\":{\"get_realtime\":{}}}";
 
@@ -94,7 +94,7 @@ LOOP
 SENDDATA(encrypted);</ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables />
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Daily Consumption"},"ReadFormula":"VAR time := NOW();\r\nVAR payload := \u0022{\\\u0022emeter\\\u0022:{\\\u0022get_daystat\\\u0022:{\\\u0022month\\\u0022:\u0022 \u002B time.Month \u002B \u0022,\\\u0022year\\\u0022:\u0022 \u002B time.Year \u002B \u0022}}}\u0022;\r\n\r\nCOLLECTION\u003CUINT8\u003E encrypted;\r\nVAR payloadLength := LENGTH(payload);\r\n\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 24);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 16);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 8);\r\nencrypted := APPEND(encrypted, payloadLength);\r\n\r\nINT i := 0;\r\nUINT8 key := 171;\r\n\r\nWHILE i \u003C payloadLength\r\n    key := GETAT(payload, i) XOR key;\r\n    encrypted := APPEND(encrypted, key);\r\n    i \u002B= 1;\r\nLOOP\r\n\r\nSENDDATA(encrypted);\r\nRETURN(NULL);"},{"AttributeDefinition":{"Name":"Monthly Consumption"},"ReadFormula":"VAR time := NOW();\r\nVAR payload := \u0022{\\\u0022emeter\\\u0022:{\\\u0022get_monthstat\\\u0022:{\\\u0022year\\\u0022:\u0022 \u002B time.Year \u002B \u0022}}}\u0022;\r\n\r\nCOLLECTION\u003CUINT8\u003E encrypted;\r\nVAR payloadLength := LENGTH(payload);\r\n\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 24);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 16);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 8);\r\nencrypted := APPEND(encrypted, payloadLength);\r\n\r\nINT i := 0;\r\nUINT8 key := 171;\r\n\r\nWHILE i \u003C payloadLength\r\n    key := GETAT(payload, i) XOR key;\r\n    encrypted := APPEND(encrypted, key);\r\n    i \u002B= 1;\r\nLOOP\r\n\r\nSENDDATA(encrypted);\r\nRETURN(NULL);"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>INT i := 4;
 UINT8 key := 171;
@@ -114,7 +114,23 @@ IF emeterInfo != null
     Ed := PARSEJSON(emeterInfo, "$.power", 1) / 1000.0;
     To := PARSEJSON(emeterInfo, "$.total", 1);
     EMeterInfoJson := emeterInfo;
-END</ListenerScriptPacketParser>
+END
+
+VAR dateTime := NOW();
+VAR dailyInfo := PARSEJSON(payload, "$.emeter.get_daystat.day_list[?(@.day==" + dateTime.Day + ")]", 1);
+
+IF dailyInfo != null
+    VAR dailyConsumption := PARSEJSON(dailyInfo, "$.energy", 1);
+    COMPLETESERVICEATTRIBUTE("Daily Consumption", dailyConsumption + "KWh");
+END
+
+VAR monthlyInfo := PARSEJSON(payload, "$.emeter.get_monthstat.month_list[?(@.month==" + dateTime.Month + ")]", 1);
+
+IF monthlyInfo != null
+    VAR monthlyConsumption := PARSEJSON(monthlyInfo, "$.energy", 1);
+    COMPLETESERVICEATTRIBUTE("Monthly Consumption", monthlyConsumption + "KWh");
+END
+</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
             <Calibration>0</Calibration>
@@ -123,7 +139,6 @@ END</ListenerScriptPacketParser>
         <Device>
           <Name>TP-Link HS110 Wi-Fi Switch</Name>
           <Model>PacketParserSwitch</Model>
-          <Id>-3</Id>
           <DeviceProperties>
             <ReadScriptPacketParser />
             <InternalPollInterval>2500</InternalPollInterval>
