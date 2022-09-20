@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72" locationId="edc67ee6-816c-4512-8f3f-c0369e24d3e3">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Sensibo Air Conditioner Smart Control</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Sensibo Air Conditioner Smart Control</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>responseJson := "error";
+
+VAR response := SENDHTTPREQUEST("/api/v2/pods/"+pod+"/?fields=*&amp;apiKey="+apiKey, "GET", "");
+
+IF(response.IsSuccess)
+    responseJson := response.Content;
+    mode := PARSEJSON(responseJson,"$.result.acState.mode");
+ELSE
+    VAR contentJson := response.Content;
+    VAR errCode := PARSEJSON(response, "StatusCode");
+    VAR message := PARSEJSON(contentJson, "message");
+    ADDERROR("Failed to read data - (" + errCode + ") " + message);
+END</ReadScriptPacketParser>
+        <InternalPollInterval>2500</InternalPollInterval>
+        <CustomVariables>[{"Name":"apiKey","ValueTypeId":2,"NumericValue":0,"StringValue":"qwertzuiopasdfghjklyxcvbnmjkl"},{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":"error"},{"Name":"pod","ValueTypeId":2,"NumericValue":0,"StringValue":"abcdefgh"},{"Name":"mode","ValueTypeId":2,"NumericValue":0,"StringValue":"undefined"}]</CustomVariables>
+        <IpAddress>home.sensibo.com</IpAddress>
+        <Port>443</Port>
+        <UseHttps>True</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Sensibo current temp, hum</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <TemperatureCalibration>0</TemperatureCalibration>
+            <ReadTemperatureScriptPacketParser>PARSEJSON(responseJson,"$.result.measurements.temperature");</ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser>PARSEJSON(responseJson,"$.result.measurements.humidity")/100.0;</ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Sensibo Fan Level</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <Value0Index>64</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>0</Value0Name>
+            <Value1Name>low</Value1Name>
+            <Value2Name>medium</Value2Name>
+            <Value3Name>high</Value3Name>
+            <Value4Name>auto</Value4Name>
+            <Value5Name>strong</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>5</Value0IconId>
+            <Value1IconId>6</Value1IconId>
+            <Value2IconId>7</Value2IconId>
+            <Value3IconId>8</Value3IconId>
+            <Value4IconId>9</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>VAR fanLevel := PARSEJSON(responseJson,"$.result.acState.fanLevel");
+SWITCH(fanLevel, "low", 1, "medium", 2, "high", 3, "auto", 4, "strong", 5, 0);</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localfan := SWITCH(Mu, 1, "low", 2, "medium", 3, "high", 4, "auto", 5, "strong", "");
+
+SENDHTTPREQUEST("/api/v2/pods/"+pod+"/acStates/fanLevel?apiKey="+apiKey, "PATCH", "{\"newValue\": \""+localfan+"\"}");
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Sensibo light</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>IF(PARSEJSON(responseJson,"$.result.acState.light")="on",1,0)</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>SENDHTTPREQUEST("/api/v2/pods/"+pod+"/acStates/light?apiKey="+apiKey, "PATCH", "{\"newValue\": "+IF(St,"true","false")+"}");</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Sensibo mode</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>OFF</Value0Name>
+            <Value1Name>Cool</Value1Name>
+            <Value2Name>Heat</Value2Name>
+            <Value3Name>Fan</Value3Name>
+            <Value4Name>Dry</Value4Name>
+            <Value5Name>Auto</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>5</Value0IconId>
+            <Value1IconId>6</Value1IconId>
+            <Value2IconId>7</Value2IconId>
+            <Value3IconId>8</Value3IconId>
+            <Value4IconId>9</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>SWITCH(mode, "cool", 1, "heat", 2, "fan", 3, "dry", 4, "auto", 5, 0);</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localmode := SWITCH(Mu, 1, "cool", 2, "heat", 3, "fan", 4, "dry", 5, "auto", "");
+
+IF (Mu &gt; 0)
+SENDHTTPREQUEST("/api/v2/pods/"+pod+"/acStates/mode?apiKey="+apiKey, "PATCH", "{\"newValue\": \""+localmode+"\"}");
+
+ELSE
+
+SENDHTTPREQUEST("/api/v2/pods/"+pod+"/acStates/on?apiKey="+apiKey, "PATCH", "{\"newValue\": false}");
+
+END</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Sensibo POWER</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>IF(PARSEJSON(responseJson,"$.result.acState.on"),1,0)</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>SENDHTTPREQUEST("/api/v2/pods/"+pod+"/acStates/on?apiKey="+apiKey, "PATCH", "{\"newValue\": "+IF(St,"true","false")+"}");</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Sensibo should Clean Filters</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <OnStateIconId>57</OnStateIconId>
+            <OffStateIconId>39</OffStateIconId>
+            <OnStateName>yes</OnStateName>
+            <OffStateName>no</OffStateName>
+            <ReadStateScriptPacketParser>IF(PARSEJSON(responseJson,"$.result.filtersCleaning.shouldCleanFilters"),1,0)</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Sensibo Swing</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>7</Value7Index>
+            <Value8Index>8</Value8Index>
+            <Value9Index>9</Value9Index>
+            <Value0Name>stopped</Value0Name>
+            <Value1Name>fixedTop</Value1Name>
+            <Value2Name>fixedMiddleTop</Value2Name>
+            <Value3Name>fixedMiddle</Value3Name>
+            <Value4Name>fixedMiddleBottom</Value4Name>
+            <Value5Name>fixedBottom</Value5Name>
+            <Value6Name>rangeTop</Value6Name>
+            <Value7Name>rangeMiddle</Value7Name>
+            <Value8Name>rangeBottom</Value8Name>
+            <Value9Name>rangeFull</Value9Name>
+            <Value0IconId>141</Value0IconId>
+            <Value1IconId>131</Value1IconId>
+            <Value2IconId>131</Value2IconId>
+            <Value3IconId>134</Value3IconId>
+            <Value4IconId>135</Value4IconId>
+            <Value5IconId>137</Value5IconId>
+            <Value6IconId>132</Value6IconId>
+            <Value7IconId>134</Value7IconId>
+            <Value8IconId>136</Value8IconId>
+            <Value9IconId>140</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>VAR swing := PARSEJSON(responseJson,"$.result.acState.swing");
+SWITCH(swing, 
+"stopped", 0, 
+"fixedTop", 1, 
+"fixedMiddleTop", 2, 
+"fixedMiddle", 3, 
+"fixedMiddleBottom", 4, 
+"fixedBottom", 5, 
+"rangeTop", 6, 
+"rangeMiddle", 7, 
+"rangeBottom", 8, 
+"rangeFull", 9, 
+0);</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localswing := SWITCH(Mu, 
+
+0, "stopped", 
+1, "fixedTop", 
+2, "fixedMiddleTop", 
+3, "fixedMiddle", 
+4, "fixedMiddleBottom", 
+5, "fixedBottom", 
+6, "rangeTop", 
+7, "rangeMiddle", 
+8, "rangeBottom", 
+9, "rangeFull"
+
+, "");
+
+SENDHTTPREQUEST("/api/v2/pods/"+pod+"/acStates/swing?apiKey="+apiKey, "PATCH", "{\"newValue\": \""+localswing+"\"}");
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Sensibo termostat</Name>
+          <Model>PacketParserThermostat</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <MinTemperature>18</MinTemperature>
+            <MaxTemperature>30</MaxTemperature>
+            <ReadCurrentTemperatureScriptPacketParser>PARSEJSON(responseJson,"$.result.measurements.temperature");</ReadCurrentTemperatureScriptPacketParser>
+            <ReadTemperatureSetPointScriptPacketParser>PARSEJSON(responseJson,"$.result.acState.targetTemperature");</ReadTemperatureSetPointScriptPacketParser>
+            <ReadHumidityScriptPacketParser>PARSEJSON(responseJson,"$.result.measurements.humidity")/100.0;</ReadHumidityScriptPacketParser>
+            <WriteTemperatureSetPointScriptPacketParser>SENDHTTPREQUEST("/api/v2/pods/"+pod+"/acStates/targetTemperature?apiKey="+apiKey, "PATCH", "{\"newValue\": "+Se+"}");</WriteTemperatureSetPointScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
