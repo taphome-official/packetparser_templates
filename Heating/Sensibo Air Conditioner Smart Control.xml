@@ -1,21 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="72" locationId="edc67ee6-816c-4512-8f3f-c0369e24d3e3">
-  <Template revision="1.0">
+<Templates format="2" protocolVersion="72" id="14222018-b16d-43eb-b46a-a3379ac1e24e">
+  <Template revision="1.1">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+	  <Revision id="1.1">Added parameters, fixed error sate</Revision>
     </RevisionHistory>
     <Name>Sensibo Air Conditioner Smart Control</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
     <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>API Key</Name>
+			<Value></Value>
+			<Id>paramApiKey</Id>
+		</Parameter>
+		<Parameter>
+			<Name>POD</Name>
+			<Value></Value>
+			<Id>paramPod</Id>
+		</Parameter>
+	</ImportParameters>
     <Module>
       <Name>Sensibo Air Conditioner Smart Control</Name>
-      <Id>-1</Id>
       <Model>PacketParserModuleHttp</Model>
       <DeviceProperties>
         <ReadScriptPacketParser>responseJson := "error";
+IF LENGTH(apiKey) = 0
+    ADDERROR("API Key is empty. Fill API Key in module variables");
+	RETURN(0);
+END
+
+IF LENGTH(pod) = 0
+    ADDERROR("Pod is empty. Fill pod in module variables");
+	RETURN(0);
+END
 
 VAR response := SENDHTTPREQUEST("/api/v2/pods/"+pod+"/?fields=*&amp;apiKey="+apiKey, "GET", "");
 
@@ -24,12 +45,15 @@ IF(response.IsSuccess)
     mode := PARSEJSON(responseJson,"$.result.acState.mode");
 ELSE
     VAR contentJson := response.Content;
-    VAR errCode := PARSEJSON(response, "StatusCode");
-    VAR message := PARSEJSON(contentJson, "message");
+    VAR errCode := response.StatusCode;
+    VAR message := PARSEJSON(contentJson, "message", 1);
+	IF ISNULL(message)
+		message := PARSETEXT(response.Content, "&lt;title&gt;", "&lt;/title&gt;");
+	END
     ADDERROR("Failed to read data - (" + errCode + ") " + message);
 END</ReadScriptPacketParser>
         <InternalPollInterval>2500</InternalPollInterval>
-        <CustomVariables>[{"Name":"apiKey","ValueTypeId":2,"NumericValue":0,"StringValue":"qwertzuiopasdfghjklyxcvbnmjkl"},{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":"error"},{"Name":"pod","ValueTypeId":2,"NumericValue":0,"StringValue":"abcdefgh"},{"Name":"mode","ValueTypeId":2,"NumericValue":0,"StringValue":"undefined"}]</CustomVariables>
+        <CustomVariables>[{"Name":"apiKey","ValueTypeId":2,"NumericValue":0,"StringValue":"$[paramApiKey]"},{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":"error"},{"Name":"pod","ValueTypeId":2,"NumericValue":0,"StringValue":"$[paramPod]"},{"Name":"mode","ValueTypeId":2,"NumericValue":0,"StringValue":"undefined"}]</CustomVariables>
         <IpAddress>home.sensibo.com</IpAddress>
         <Port>443</Port>
         <UseHttps>True</UseHttps>
