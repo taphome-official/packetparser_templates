@@ -356,7 +356,7 @@ DO
     playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
@@ -469,7 +469,7 @@ DO
     playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
@@ -582,7 +582,7 @@ DO
     playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
@@ -695,7 +695,7 @@ DO
     playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
@@ -808,7 +808,7 @@ DO
     playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
     
     IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
@@ -909,7 +909,7 @@ DO
     radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readFavorites &lt; numberOfFavorites
 
@@ -996,7 +996,7 @@ DO
     radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readFavorites &lt; numberOfFavorites
 
@@ -1083,7 +1083,7 @@ DO
     radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readFavorites &lt; numberOfFavorites
 
@@ -1170,7 +1170,7 @@ DO
     radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readFavorites &lt; numberOfFavorites
 
@@ -1257,7 +1257,7 @@ DO
     radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
     
     IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
-        BREAK();
+        BREAK;
     END
 LOOP WHILE readFavorites &lt; numberOfFavorites
 
