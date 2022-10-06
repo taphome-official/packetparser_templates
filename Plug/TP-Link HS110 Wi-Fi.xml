@@ -31,7 +31,7 @@ UINT8 key := 171;
 
 WHILE i &lt; payloadLength
     key := GETAT(payload, i) XOR key;
-    encrypted := APPEND(encrypted, key);
+    APPEND(encrypted, key);
     i += 1;
 LOOP
 
@@ -43,10 +43,12 @@ SENDDATA(encrypted);</ReadScriptPacketParser>
 		<ListenerScriptPacketParser>INT i := 4;
 UINT8 key := 171;
 COLLECTION&lt;UINT8&gt; payload;
+INT dataLength := LENGTH(RECEIVEDBYTES);
+UINT8 b;
 
-WHILE i &lt; LENGTH(RECEIVEDBYTES)
-    UINT8 b := GETAT(RECEIVEDBYTES, i);
-    payload := APPEND(payload, b XOR key);
+WHILE i &lt; dataLength
+    b := GETAT(RECEIVEDBYTES, i);
+    APPEND(payload, b XOR key);
     key := b;
     i += 1;
 LOOP
@@ -82,12 +84,12 @@ UINT8 key := 171;
 
 WHILE i &lt; payloadLength
     key := GETAT(payload, i) XOR key;
-    encrypted := APPEND(encrypted, key);
+    APPEND(encrypted, key);
     i += 1;
 LOOP
 
 SENDDATA(encrypted);</ReadScriptPacketParser>
-            <InternalPollInterval>2500</InternalPollInterval>
+            <InternalPollInterval>5000</InternalPollInterval>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Daily Consumption"},"ReadFormula":"VAR time := NOW();\r\nVAR payload := \u0022{\\\u0022emeter\\\u0022:{\\\u0022get_daystat\\\u0022:{\\\u0022month\\\u0022:\u0022 \u002B time.Month \u002B \u0022,\\\u0022year\\\u0022:\u0022 \u002B time.Year \u002B \u0022}}}\u0022;\r\n\r\nCOLLECTION\u003CUINT8\u003E encrypted;\r\nVAR payloadLength := LENGTH(payload);\r\n\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 24);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 16);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 8);\r\nencrypted := APPEND(encrypted, payloadLength);\r\n\r\nINT i := 0;\r\nUINT8 key := 171;\r\n\r\nWHILE i \u003C payloadLength\r\n    key := GETAT(payload, i) XOR key;\r\n    encrypted := APPEND(encrypted, key);\r\n    i \u002B= 1;\r\nLOOP\r\n\r\nSENDDATA(encrypted);\r\nRETURN(NULL);"},{"AttributeDefinition":{"Name":"Monthly Consumption"},"ReadFormula":"VAR time := NOW();\r\nVAR payload := \u0022{\\\u0022emeter\\\u0022:{\\\u0022get_monthstat\\\u0022:{\\\u0022year\\\u0022:\u0022 \u002B time.Year \u002B \u0022}}}\u0022;\r\n\r\nCOLLECTION\u003CUINT8\u003E encrypted;\r\nVAR payloadLength := LENGTH(payload);\r\n\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 24);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 16);\r\nencrypted := APPEND(encrypted, payloadLength \u003E\u003E 8);\r\nencrypted := APPEND(encrypted, payloadLength);\r\n\r\nINT i := 0;\r\nUINT8 key := 171;\r\n\r\nWHILE i \u003C payloadLength\r\n    key := GETAT(payload, i) XOR key;\r\n    encrypted := APPEND(encrypted, key);\r\n    i \u002B= 1;\r\nLOOP\r\n\r\nSENDDATA(encrypted);\r\nRETURN(NULL);"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
@@ -115,8 +117,7 @@ VAR monthlyInfo := PARSEJSON(EMeterInfoJson, "$.get_monthstat.month_list[?(@.mon
 IF monthlyInfo != null
     VAR monthlyConsumption := PARSEJSON(monthlyInfo, "$.energy", 1);
     COMPLETESERVICEATTRIBUTE("Monthly Consumption", monthlyConsumption + "KWh");
-END
-</ListenerScriptPacketParser>
+END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
             <Calibration>0</Calibration>
@@ -127,7 +128,7 @@ END
           <Model>PacketParserSwitch</Model>
           <DeviceProperties>
             <ReadScriptPacketParser />
-            <InternalPollInterval>2500</InternalPollInterval>
+            <InternalPollInterval>5000</InternalPollInterval>
             <CustomVariables>[{"Name":"debounce","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
@@ -154,7 +155,7 @@ UINT8 key := 171;
 
 WHILE i &lt; payloadLength
     key := GETAT(payload, i) XOR key;
-    encrypted := APPEND(encrypted, key);
+    APPEND(encrypted, key);
     i += 1;
 LOOP
 
