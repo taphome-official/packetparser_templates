@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72" >
+  <Template revision="1.0" id = "25742764-86bd-4feb-8b83-cb7d90291f78">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Dimmer2</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Shelly Dimmer2</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/settings\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(PARSEJSON(content, \u0022$.wifi_sta.ssid\u0022));\r\n  End"}]</ServiceAttributesScriptsPacketParser>
+        <IpAddress>192.168.1.181</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Brightness</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Transition"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/light/0\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(PARSEJSON(content, \u0022transition\u0022) \u002B \u0022 ms\u0022);\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Transition","NumericParameters":[{"FriendlyName":"Transition time [ms]","Abbreviation":"G","IsFloat":false,"MinValue":0,"MaxValue":5000}],"BoolParameters":[],"EnumParameters":[]},"Script":" VAR response := SENDHTTPREQUEST(\u0022/light/0?transition=\u0022 \u002B G);"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>
+ VAR response := SENDHTTPREQUEST("/light/0");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(PARSEJSON(content, "brightness")/100);
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+
+</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>
+ VAR response := SENDHTTPREQUEST("/light/0?brightness=" + Le*100);
+IF response.IsSuccess = false
+ ADDERROR(response.StatusCode);
+ END
+ </WriteLevelScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceElectricityMeter}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser> VAR response := SENDHTTPREQUEST("/status");
+ IF response.IsSuccess
+  VAR content := response.Content;
+ VAR responseHeaders := response.Headers;
+ RETURN(PARSEJSON(content, "$..meters..total")/60000);
+ ELSE 
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser> VAR response := SENDHTTPREQUEST("/status");
+ IF response.IsSuccess
+  VAR content := response.Content;
+ VAR responseHeaders := response.Headers;
+ RETURN(PARSEJSON(content, "$..meters..power")/1000);
+ ELSE 
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Light</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>70</OnStateIconId>
+            <OffStateIconId>71</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/light/0");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(PARSEJSON(content, "ison"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser> var Ru := Switch(St, 1, "on", "off");
+ VAR response := SENDHTTPREQUEST("/light/0?turn=" + Ru);
+ IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+ END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
