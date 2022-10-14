@@ -10,6 +10,13 @@
     <Producer></Producer>
     <Model></Model>
     <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>
     <Module>
       <Name>Shelly i3</Name>
       <Id>-1</Id>
@@ -17,7 +24,6 @@
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/status\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(PARSEJSON(content, \u0022$.wifi_sta.ssid\u0022));\r\n  End"}]</ServiceAttributesScriptsPacketParser>
-        <IpAddress>192.168.1.161</IpAddress>
         <Port>80</Port>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
