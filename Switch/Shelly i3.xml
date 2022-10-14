@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72" >
+  <Template revision="1.0" id = "797e91a1-827c-4b2f-975a-e2b8ba545b2f">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly i3</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Shelly i3</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/status\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(PARSEJSON(content, \u0022$.wifi_sta.ssid\u0022));\r\n  End"}]</ServiceAttributesScriptsPacketParser>
+        <IpAddress>192.168.1.161</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Events I1</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>None</Value0Name>
+            <Value1Name>Shortpush</Value1Name>
+            <Value2Name>Longpush</Value2Name>
+            <Value3Name>Double Shortpush</Value3Name>
+            <Value4Name>Triple Shortpush</Value4Name>
+            <Value5Name>Shortpush + Longpush</Value5Name>
+            <Value6Name>Longpush + Shortpush</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>5</Value0IconId>
+            <Value1IconId>6</Value1IconId>
+            <Value2IconId>261</Value2IconId>
+            <Value3IconId>7</Value3IconId>
+            <Value4IconId>8</Value4IconId>
+            <Value5IconId>262</Value5IconId>
+            <Value6IconId>263</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/input/0");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(SWITCH(PARSEJSON(content, "event"),"S", 1, "L", 2, "SS", 3, "SSS", 4, "SL", 5, "LS", 6, 0));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser></WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Events I2</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>None</Value0Name>
+            <Value1Name>Shortpush</Value1Name>
+            <Value2Name>Longpush</Value2Name>
+            <Value3Name>Double Shortpush</Value3Name>
+            <Value4Name>Triple Shortpush</Value4Name>
+            <Value5Name>Shortpush + Longpush</Value5Name>
+            <Value6Name>Longpush + Shortpush</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>5</Value0IconId>
+            <Value1IconId>6</Value1IconId>
+            <Value2IconId>261</Value2IconId>
+            <Value3IconId>7</Value3IconId>
+            <Value4IconId>8</Value4IconId>
+            <Value5IconId>262</Value5IconId>
+            <Value6IconId>263</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/input/1");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(SWITCH(PARSEJSON(content, "event"),"S", 1, "L", 2, "SS", 3, "SSS", 4, "SL", 5, "LS", 6, 0));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Mu);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Mu, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Mu + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Mu + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Mu, "write"); # use "append" mode to append data to existing file</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Events I3</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>None</Value0Name>
+            <Value1Name>Shortpush</Value1Name>
+            <Value2Name>Longpush</Value2Name>
+            <Value3Name>Double Shortpush</Value3Name>
+            <Value4Name>Triple Shortpush</Value4Name>
+            <Value5Name>Shortpush + Longpush</Value5Name>
+            <Value6Name>Longpush + Shortpush</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>5</Value0IconId>
+            <Value1IconId>6</Value1IconId>
+            <Value2IconId>261</Value2IconId>
+            <Value3IconId>7</Value3IconId>
+            <Value4IconId>8</Value4IconId>
+            <Value5IconId>262</Value5IconId>
+            <Value6IconId>263</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/input/2");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(SWITCH(PARSEJSON(content, "event"),"S", 1, "L", 2, "SS", 3, "SSS", 4, "SL", 5, "LS", 6, 0));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Mu);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Mu, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Mu + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Mu + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Mu, "write"); # use "append" mode to append data to existing file</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>I1</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Button Type"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/settings/input/0\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(PARSEJSON(content, \u0022btn_type\u0022));\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Button Type","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Button Type","Abbreviation":"Bu","Values":[{"Item1":0,"Item2":"Toggle"},{"Item1":1,"Item2":"Momentary"}]}]},"Script":" var Ru := SWITCH(Bu, 0, \u0022toggle\u0022,\u0022momentary\u0022) ;\r\n VAR response := SENDHTTPREQUEST(\u0022/settings/input/0?btn_type=\u0022 \u002B Ru);\r\n"}]</ServiceActionsScriptsPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>On</OnStateName>
+            <OffStateName>Off</OffStateName>
+            <ReadStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/input/0");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(PARSEJSON(content, "input"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>I2</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Button Type"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/settings/input/1\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(PARSEJSON(content, \u0022btn_type\u0022));\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Button Type","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Button Type","Abbreviation":"Bu","Values":[{"Item1":0,"Item2":"Toggle"},{"Item1":1,"Item2":"Momentary"}]}]},"Script":" var Ru := SWITCH(Bu, 0, \u0022toggle\u0022,\u0022momentary\u0022) ;\r\n VAR response := SENDHTTPREQUEST(\u0022/settings/input/1?btn_type=\u0022 \u002B Ru);\r\n"}]</ServiceActionsScriptsPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>On</OnStateName>
+            <OffStateName>Off</OffStateName>
+            <ReadStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/input/1");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(PARSEJSON(content, "input"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>I3</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Button Type"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/settings/input/2\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(PARSEJSON(content, \u0022btn_type\u0022));\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Button Type","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Button Type","Abbreviation":"Bu","Values":[{"Item1":0,"Item2":"Toggle"},{"Item1":1,"Item2":"Momentary"}]}]},"Script":" var Ru := SWITCH(Bu, 0, \u0022toggle\u0022,\u0022momentary\u0022) ;\r\n VAR response := SENDHTTPREQUEST(\u0022/settings/input/2?btn_type=\u0022 \u002B Ru);"}]</ServiceActionsScriptsPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>On</OnStateName>
+            <OffStateName>Off</OffStateName>
+            <ReadStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/input/2");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN(PARSEJSON(content, "input"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
