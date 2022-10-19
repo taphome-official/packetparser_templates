@@ -26,6 +26,7 @@
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Mode"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/settings\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  VAR responseHeaders := response.Headers;\r\n  RETURN(PARSEJSON(content, \u0022mode\u0022));\r\n END"}]</ServiceAttributesScriptsPacketParser>
         <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Mode","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Mode","Abbreviation":"mo","Values":[{"Item1":0,"Item2":"relay"},{"Item1":1,"Item2":"roller"}]}]},"Script":"var St := SWITCH(mo, 1, \u0022roller\u0022, \u0022relay\u0022);\r\n VAR response := SENDHTTPREQUEST(\u0022/settings?mode=\u0022 \u002B St);"}]</ServiceActionsScriptsPacketParser>
         <Port>80</Port>
+		<IpAddress>$[IpAddress]</IpAddress>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
       <Devices>
