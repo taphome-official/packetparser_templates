@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+  <Template id="af7dffb2-6655-4988-8bc6-299e2f651963" revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Ecowitt WS2910</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>Application key</Name>
+			<Value></Value>
+			<Id>appKeyImport</Id>
+		</Parameter>
+		<Parameter>
+			<Name>API key</Name>
+			<Value></Value>
+			<Id>apiKeyImport</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mac address</Name>
+			<Value></Value>
+			<Id>macImport</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Poll interval</Name>
+			<Value>60000</Value>
+			<Id>internalPollInterval</Id>
+		</Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>Ecowitt</Name>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+		<UseHttps>True</UseHttps>
+        <ReadScriptPacketParser>responseJson := "error";
+
+IF(ISNULL(api_key) OR LENGTH(api_key) = 0)
+   ADDERROR("Please set API key in module variables");
+   RETURN(-1);
+END
+
+IF(ISNULL(application_key) OR LENGTH(application_key) = 0)
+   ADDERROR("Please set Application key in module variables");
+   RETURN(-2);
+END
+
+IF(ISNULL(mac_address) OR LENGTH(mac_address) = 0)
+   ADDERROR("Please set MAC address in module variables");
+   RETURN(-3);
+END
+
+VAR path := "api/v3/device/real_time?application_key=" + application_key + "&amp;api_key=" + api_key + "&amp;mac=" + mac_address + "&amp;call_back=all&amp;temp_unitid=1&amp;pressure_unitid=3&amp;wind_speed_unitid=7&amp;rainfall_unitid=12&amp;solar_irradiance_unitid=16";
+
+VAR response := SENDHTTPREQUEST(path);
+
+IF response.IsSuccess
+    responseJson := response.Content;
+ELSE
+    VAR contentJson := response.Content;
+    VAR errCode := response.StatusCode;
+    VAR message := PARSEJSON(contentJson, "message");
+    ADDERROR("Failed to read data - (" + errCode + ") " + message);
+    RETURN(-4);
+END
+
+VAR code := PARSEJSON(responseJson, "code");
+
+IF code != 0
+    
+    VAR msg := PARSEJSON(responseJson, "msg");
+    ADDERROR("Failed to read data - " + msg);
+    responseJson := "error";
+END
+</ReadScriptPacketParser>
+        <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+        <CustomVariables>[{"Name":"application_key","ValueTypeId":2,"NumericValue":0,"StringValue":"$[appKeyImport]"},{"Name":"api_key","ValueTypeId":2,"NumericValue":0,"StringValue":"$[apiKeyImport]"},{"Name":"mac_address","ValueTypeId":2,"NumericValue":0,"StringValue":"$[macImport]"},{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>api.ecowitt.net</IpAddress>
+        <Port>443</Port>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Air pressure (absolute)</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"25":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:25}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.pressure.absolute.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Air pressure (relative)</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"25":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:25}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.pressure.relative.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Daily precipitation</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"13":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:13}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.rainfall.daily.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Hourly precipitation</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"13":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:13}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.rainfall.hourly.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Indoor temperature</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <TemperatureCalibration>0</TemperatureCalibration>
+            <ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.indoor.temperature.value");
+RETURN(TODOUBLE(value));</ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.indoor.humidity.value");
+RETURN(TODOUBLE(value) / 100);</ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Monthly precipitation</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"13":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:13}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.rainfall.monthly.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Outdoor dew point</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"5":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:5}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.outdoor.dew_point.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Outdoor feels like temperature</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"5":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:5}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.outdoor.feels_like.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Outdoor temperature</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <TemperatureCalibration>0</TemperatureCalibration>
+            <ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.outdoor.temperature.value");
+RETURN(TODOUBLE(value));</ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.outdoor.humidity.value");
+RETURN(TODOUBLE(value) / 100.0);</ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Rain rate</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-11</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"13":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:13}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.rainfall.rain_rate.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Solar</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.solar_and_uvi.solar.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>UV index</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-13</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser>
+</ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.solar_and_uvi.uvi.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Weekly precipitation</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-14</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"13":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:13}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.rainfall.weekly.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Wind direction</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-15</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.wind.wind_direction.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Wind gust</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-16</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"14":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:14}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.wind.wind_gust.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Wind speed</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-17</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"14":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:14}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR value := PARSEJSON(responseJson,"data.wind.wind_speed.value");
+RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="8ea10926-39aa-4180-9dc1-da1cbbcb9ce3" revision="1.0">
+		<Name>Fonestar</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Fonestar</Name>
+			<Model>PacketParserModuleHttp</Model>
+			<DeviceProperties>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>49152</Port>
+				<InternalPollInterval>15000</InternalPollInterval>
+				<ReadRequest></ReadRequest>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Volume</Name>
+					<Model>PacketParserDimmer</Model>
+					<DeviceProperties>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<ReadLevelScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;/u:GetVolume&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("/upnp/control/rendercontrol1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#GetVolume\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"" );
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    RETURN(PARSEXML(responseXml, "//CurrentVolume") / 100.0);
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadLevelScriptPacketParser>
+						<WriteLevelScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;DesiredVolume&gt;" + ROUND(Le * 100) + "&lt;/DesiredVolume&gt;&lt;/u:SetVolume&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendercontrol1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#SetVolume\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");
+</WriteLevelScriptPacketParser>
+						<IconId>0</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Next</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Next xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Next&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Next\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");</WriteButtonPressedStateScriptPacketParser>
+						<IconId>212</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Pause</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Pause xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Pause&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Pause\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");</WriteButtonPressedStateScriptPacketParser>
+						<IconId>214</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");</WriteButtonPressedStateScriptPacketParser>
+						<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Previous</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Previous xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Previous&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Previous\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");</WriteButtonPressedStateScriptPacketParser>
+						<IconId>211</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Stop</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Stop xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Stop&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Stop\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");</WriteButtonPressedStateScriptPacketParser>
+						<IconId>215</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Mute</Name>
+					<Model>PacketParserSwitch</Model>
+					<DeviceProperties>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<OnStateIconId>206</OnStateIconId>
+						<OffStateIconId>205</OffStateIconId>
+						<OnStateName>${general_on}</OnStateName>
+						<OffStateName>${general_off}</OffStateName>
+						<ReadSwitchStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;/u:GetMute&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("/upnp/control/rendercontrol1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#GetMute\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    RETURN(PARSEXML(responseXml, "//CurrentMute"));
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadSwitchStateScriptPacketParser>
+						<WriteSwitchStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;DesiredMute&gt;" + St +"&lt;/DesiredMute&gt;&lt;/u:SetMute&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendercontrol1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#SetMute\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");</WriteSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play Mode</Name>
+					<Model>PacketParserMultiValueSwitch</Model>
+					<DeviceProperties>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<Value0Index>0</Value0Index>
+						<Value1Index>1</Value1Index>
+						<Value2Index>2</Value2Index>
+						<Value3Index>67</Value3Index>
+						<Value4Index>68</Value4Index>
+						<Value5Index>69</Value5Index>
+						<Value6Index>70</Value6Index>
+						<Value7Index>71</Value7Index>
+						<Value8Index>72</Value8Index>
+						<Value9Index>73</Value9Index>
+						<Value0Name>Normal</Value0Name>
+						<Value1Name>Repeat all</Value1Name>
+						<Value2Name>Repeat one</Value2Name>
+						<Value3Name>Shuffle no repeat</Value3Name>
+						<Value4Name>Shuffle</Value4Name>
+						<Value5Name>Shuffle repeat one</Value5Name>
+						<Value6Name>6</Value6Name>
+						<Value7Name>7</Value7Name>
+						<Value8Name>8</Value8Name>
+						<Value9Name>9</Value9Name>
+						<Value0IconId>210</Value0IconId>
+						<Value1IconId>209</Value1IconId>
+						<Value2IconId>209</Value2IconId>
+						<Value3IconId>216</Value3IconId>
+						<Value4IconId>216</Value4IconId>
+						<Value5IconId>216</Value5IconId>
+						<Value6IconId>11</Value6IconId>
+						<Value7IconId>12</Value7IconId>
+						<Value8IconId>13</Value8IconId>
+						<Value9IconId>14</Value9IconId>
+						<ReadSwitchStateScriptPacketParser>VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:GetTransportSettings&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    VAR mode := PARSEXML(responseXml, "//PlayMode");
+    RETURN(SWITCH(mode, "NORMAL", 0, "REPEAT_ALL", 1, "REPEAT_TRACK", 2, 0));
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadSwitchStateScriptPacketParser>
+						<WriteSwitchStateScriptPacketParser>VAR mode := SWITCH(Mu, 0, "NORMAL", 1, "REPEAT_ALL", 2, "REPEAT_TRACK", "NORMAL");
+
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetPlayMode xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;NewPlayMode&gt;" + mode +"&lt;/NewPlayMode&gt;&lt;/u:SetPlayMode&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("/upnp/control/rendertransport1", "POST", body, "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetPlayMode\"", "CONTENT-TYPE: text/xml; charset=\"utf-8\"");</WriteSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

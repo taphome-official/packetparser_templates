@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="bc9f1632-89ea-4b11-8649-6f01fd41b7ed" revision="1.0">
+		<SuggestedCCUParameters />
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<Name>Yeelight Color</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Producer></Producer>
+		<Model></Model>
+		<Description></Description>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>ipAddress</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Port</Name>
+				<Value>55443</Value>
+				<Id>port</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Internal poll interval</Name>
+				<Value>10000</Value>
+				<Id>internalPollInterval</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Yeelight color module</Name>
+			<Model>PacketParserModuleTcp</Model>
+			<DeviceProperties>
+				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+				<IpAddress>$[ipAddress]</IpAddress>
+				<Port>$[port]</Port>
+				<StayConnected>True</StayConnected>
+				<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Color mode","Section":null},"ReadFormula":"VAR json := \"{\\\"id\\\":981, \\\"method\\\":\\\"get_prop\\\", \\\"params\\\":[\\\"color_mode\\\", \\\"ct\\\"]}\";\r\nSENDDATA(json);\r\nRETURN(NULL);"},{"AttributeDefinition":{"Name":"Color temperature","Section":null},"ReadFormula":null}]</ServiceAttributesScriptsPacketParser>
+                <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR id := PARSEJSON(jsonResponse, "id", 1);
+
+IF(id = 981)
+   VAR error := PARSEJSON(jsonResponse, "error.message", 1);
+   
+   IF(!ISNULL(error))
+      COMPLETESERVICEATTRIBUTE("Color mode", "", "error");
+      COMPLETESERVICEATTRIBUTE("Color temperature", "", "error");
+   ELSE
+      VAR colorMode := PARSEJSON(jsonResponse, "result[0]", 1);
+      VAR colorTemp := PARSEJSON(jsonResponse, "result[1]", 1);
+      
+      IF(!ISNULL(colorMode))
+      VAR colorModeValue := SWITCH(TODOUBLE(colorMode), 1, "RGB", 2, "Temperature", 3, "HSV", "Unknown");
+         COMPLETESERVICEATTRIBUTE("Color mode", colorModeValue, "");
+      ELSE
+         COMPLETESERVICEATTRIBUTE("Color mode", "", "error");
+      END
+      
+      IF(!ISNULL(colorTemp))
+         COMPLETESERVICEATTRIBUTE("Color temperature", colorTemp + "K", "");
+      ELSE
+         COMPLETESERVICEATTRIBUTE("Color temperature", "", "error");
+      END
+   END
+END</ListenerScriptPacketParser>
+                <MessageFramingDefinition>{"Framing":1,"Configuration":"{\"SendMessageBeginDelimiter\":null,\"SendMessageEndDelimiter\":\"DQo=\",\"ReceiveMessageBeginDelimiter\":null,\"ReceiveMessageEndDelimiter\":\"DQo=\"}"}</MessageFramingDefinition>
+            </DeviceProperties>
+            <Devices>
+                <Device>
+                    <Name>Yeelight color</Name>
+                    <Model>PacketParserHSBLight</Model>
+                    <DeviceProperties>
+                        <InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<CustomVariables>[{"Name":"receiveError1","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"receiveError2","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"notificationError","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"debounce","ValueTypeId":1,"NumericValue":0},{"Name":"writeErrorBrightness","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"writeErrorHue","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"writeErrorSaturation","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+						<ReadScriptPacketParser>IF(debounce &gt; 0)
+    debounce = debounce - 1;
+ELSE
+    VAR json := "{\"id\":951, \"method\":\"get_prop\", \"params\":[\"hue\", \"sat\", \"bright\", \"power\", \"color_mode\"]}";
+    SENDDATA(json);
+END</ReadScriptPacketParser>
+                        <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR method := PARSEJSON(jsonResponse, "method", 1);
+VAR id := PARSEJSON(jsonResponse, "id", 1);
+
+INT brightness;
+STRING brightnessStr;
+STRING onOff;
+VAR error := PARSEJSON(jsonResponse, "error.message", 1);
+
+IF(id = 951)
+   receiveError1 := error;
+   
+   IF(LENGTH(receiveError1) = 0)
+      VAR hueStr := PARSEJSON(jsonResponse, "result[0]", 1);
+      VAR satStr := PARSEJSON(jsonResponse, "result[1]", 1);
+      brightnessStr := PARSEJSON(jsonResponse, "result[2]", 1);
+      onOff := PARSEJSON(jsonResponse, "result[3]", 1);
+      
+      IF(!ISNULL(hueStr))
+         Hd := TODOUBLE(hueStr);
+      END
+
+      IF(!ISNULL(satStr))
+        Sa := TODOUBLE(satStr) / 100.0;
+      END
+      
+      IF(!ISNULL(brightnessStr))
+        Hb := TODOUBLE(brightnessStr) / 100.0;
+      END
+   
+      IF(onOff = "on")
+         St := 1;
+      ELSEIF(onOff = "off")
+         Hb := 0;
+         St := 0;
+      END
+   END
+ELSEIF(id = 952)
+   receiveError2 := error;
+   
+   IF(LENGTH(receiveError2) = 0)
+   brightnessStr := PARSEJSON(jsonResponse, "result[0]", 1);
+      IF(!ISNULL(brightnessStr))
+        Hb := TODOUBLE(brightnessStr) / 100.0;
+      END
+   END
+END
+
+IF(id &gt;= 941 AND id &lt;= 943)
+   writeErrorBrightness := error;
+ELSEIF(id = 944)
+   writeErrorHue := error;
+ELSEIF(id = 945)
+   writeErrorSaturation := error;
+END
+
+IF(method = "props")
+   notificationError := error;
+   
+   IF(LENGTH(notificationError) = 0)
+      brightness := PARSEJSON(jsonResponse, "params.bright", 1);
+      onOff := PARSEJSON(jsonResponse, "params.power", 1);
+      VAR hue := PARSEJSON(jsonResponse, "params.hue", 1);
+      VAR sat := PARSEJSON(jsonResponse, "params.sat", 1);
+      VAR colorMode := PARSEJSON(jsonResponse, "params.color_mode", 1);
+      
+      IF(!ISNULL(brightness))
+         Hb := brightness / 100.0;
+      END
+      
+      IF(!ISNULL(hue))
+         Hd := hue;
+      END      
+
+      IF(!ISNULL(sat))
+        Sa := sat / 100;
+      END 
+      
+      IF(onOff = "on")
+         St := 1;
+         IF(ISNULL(brightness))
+            SENDDATA("{\"id\":952, \"method\":\"get_prop\", \"params\":[\"bright\"]}");
+         END
+      ELSEIF(onOff = "off")
+         Hb := 0;
+         St := 0;
+      END
+   END
+END
+
+IF(LENGTH(receiveError1) &gt; 0)
+   ADDERROR(951, "Read error: " + receiveError1);
+END
+
+IF(LENGTH(receiveError2) &gt; 0)
+   ADDERROR(952, "Read error: " + receiveError2);
+END
+
+IF(LENGTH(writeErrorBrightness) &gt; 0)
+   ADDERROR(941, "Brightness write error: " + writeErrorBrightness);
+END
+
+IF(LENGTH(writeErrorHue) &gt; 0)
+   ADDERROR(944, "Hue write error: " + writeErrorHue);
+END
+
+IF(LENGTH(writeErrorSaturation) &gt; 0)
+   ADDERROR(945, "Saturation write error: " + writeErrorSaturation);
+END
+
+IF(LENGTH(notificationError) &gt; 0)
+   ADDERROR(1, notificationError);
+END</ListenerScriptPacketParser>
+                        <WriteHueScriptPacketParser>VAR hueJson := "{\"id\":944,\"method\":\"set_hsv\",\"params\":[" + ROUND(Hd) + ", " + ROUND(Sa*100) + ", \"smooth\", 300]}";
+SENDDATA(hueJson);
+
+debounce = 1;</WriteHueScriptPacketParser>
+                        <WriteSaturationScriptPacketParser>VAR satJson := "{\"id\":945,\"method\":\"set_hsv\",\"params\":[" + ROUND(Hd) + ", " + ROUND(Sa*100) + ", \"smooth\", 300]}";
+SENDDATA(satJson);
+
+debounce = 1;</WriteSaturationScriptPacketParser>
+                        <WriteBrightnessScriptPacketParser>IF(Hb &gt; 0)
+    VAR jsonPowerOn := "{\"id\":941,\"method\":\"set_power\",\"params\":[\"on\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOn);
+
+    VAR jsonBrightness := "{\"id\":942,\"method\":\"set_bright\",\"params\":[" + ROUND(Hb*100) + ",\"smooth\", 500]}";
+    SENDDATA(jsonBrightness);
+ELSE
+    VAR jsonPowerOff := "{\"id\":943,\"method\":\"set_power\",\"params\":[\"off\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOff);
+END
+
+debounce = 1;</WriteBrightnessScriptPacketParser>
+						<IconId>0</IconId>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

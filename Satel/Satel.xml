@@ -1,0 +1,2090 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="1" protocolVersion="72">
+	<Template id="4aa81532-7100-4322-a4d8-4f3955c803dd" revision="1.0">
+		<Name>Satel</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Port</Name>
+				<Value>7094</Value>
+				<Id>Port</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Internal poll interval</Name>
+				<Value>2500</Value>
+				<Id>internalPollInterval</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Satel</Name>
+			<Model>PacketParserModuleTcp</Model>
+			<DeviceProperties>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>$[Port]</Port>
+				<StayConnected>True</StayConnected>
+				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+				<ReadScriptPacketParser>SENDDATA(BYTECOLLECTION("00"));</ReadScriptPacketParser>
+				<MessageFramingDefinition>{"Framing":2,"Configuration":""}</MessageFramingDefinition>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Zone1</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone2</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone3</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone4</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone5</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone6</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone7</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone8</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,1) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone9</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone10</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone11</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone12</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone13</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone14</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone15</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone16</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,2) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone17</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone18</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone19</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone20</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone21</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone22</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone23</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone24</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,3) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone25</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone26</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone27</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone28</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone29</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone30</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone31</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone32</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,4) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone33</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone34</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone35</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone36</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone37</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone38</Name>
+						<Model>PacketParserReedContact</Model>
+						<DeviceProperties>
+							<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+							<OnStateIconId>87</OnStateIconId>
+							<OffStateIconId>88</OffStateIconId>
+							<OnStateName>${general_open}</OnStateName>
+							<OffStateName>${general_closed}</OffStateName>
+							<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+						</DeviceProperties>
+					</Device>
+				<Device>
+					<Name>Zone39</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone40</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,5) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone41</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone42</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone43</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone44</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone45</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone46</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone47</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone48</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,6) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone49</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone50</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone51</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone52</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone53</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone54</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone55</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone56</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,7) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone57</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone58</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone59</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone60</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone61</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone62</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone63</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone64</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,8) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone65</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone66</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone67</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone68</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone69</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone70</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone71</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone72</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,9) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone73</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone74</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone75</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone76</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone77</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone78</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone79</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone80</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,10) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone81</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone82</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone83</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone84</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone85</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone86</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone87</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone88</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,11) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone89</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone90</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone91</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone92</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone93</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone94</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone95</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone96</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,12) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone97</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone98</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone99</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone100</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone101</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone102</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone103</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone104</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,13) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone105</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone106</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone107</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone108</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone109</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone110</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone111</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone112</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,14) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone113</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone114</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone115</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone116</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone117</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone118</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone119</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone120</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,15) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone121</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x01) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone122</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x02) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone123</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x04) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone124</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x08) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone125</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x10) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone126</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x20) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone127</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x40) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Zone128</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<OnStateIconId>87</OnStateIconId>
+						<OffStateIconId>88</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ListenerScriptPacketParser>VAR cmd := GETAT(RECEIVEDBYTES,0);
+
+IF(cmd = 0)
+   Rc := (GETAT(RECEIVEDBYTES,16) &amp; 0x80) &gt; 0;
+END</ListenerScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

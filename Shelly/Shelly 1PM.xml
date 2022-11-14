@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="103c7317-bbbc-4f58-918f-f96479ad8cb2" revision="1.0">
+		<Name>Shelly 1PM</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>	
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Shelly 1PM Module</Name>
+			<Model>PacketParserModuleHttp</Model>
+			<DeviceProperties>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>80</Port>
+				<InternalPollInterval>5000</InternalPollInterval>
+				<ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/status", "GET");
+StatusJson := response.Content;</ReadScriptPacketParser>		
+				<CustomVariables>[{"Name":"StatusJson","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"SettingsJson","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+				<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Power protection","Section":null},"ReadFormula":"VAR response := SENDHTTPREQUEST(\"/settings\", \"GET\");\r\nSettingsJson := response.Content;\r\n\r\nresponse := SENDHTTPREQUEST(\"/status\", \"GET\");\r\nStatusJson := response.Content;\r\n\r\nPARSEJSON(SettingsJson, \"max_power\") + \"W\";"},{"AttributeDefinition":{"Name":"Host name","Section":null},"ReadFormula":"PARSEJSON(SettingsJson, \"device.hostname\");"},{"AttributeDefinition":{"Name":"Mac address","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"mac\");"},{"AttributeDefinition":{"Name":"Device time","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"time\")"},{"AttributeDefinition":{"Name":"Uptime","Section":null},"ReadFormula":"VAR upTimeSeconds := PARSEJSON(StatusJson, \"uptime\");\r\nVAR days := FLOOR(upTimeSeconds/86400, 1);\r\nuptimeSeconds := MOD(upTimeSeconds, 86400);\r\nvar hours := FLOOR(upTimeSeconds/3600, 1);\r\nuptimeSeconds := MOD(upTimeSeconds, 3600);\r\nvar minutes := FLOOR(upTimeSeconds/60, 1);\r\ndays + \"day(s) \" + hours + \"h \" + minutes + \"m\""},{"AttributeDefinition":{"Name":"RAM","Section":null},"ReadFormula":"var ramTotal := PARSEJSON(StatusJson, \"ram_total\");\r\nvar ramFree := PARSEJSON(StatusJson, \"ram_free\");\r\nramFree + \" bytes free of \" + ramTotal"},{"AttributeDefinition":{"Name":"Internal device temperature","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"temperature\") + \"°C\""},{"AttributeDefinition":{"Name":"Temperature status","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"temperature_status\");"},{"AttributeDefinition":{"Name":"FW update","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"has_update\");"},{"AttributeDefinition":{"Name":"Cloud enabled","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"cloud.enabled\");"},{"AttributeDefinition":{"Name":"Cloud connected","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"cloud.connected\");"},{"AttributeDefinition":{"Name":"MQTT connected","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"mqtt.connected\");"},{"AttributeDefinition":{"Name":"Overheated","Section":null},"ReadFormula":"PARSEJSON(StatusJson, \"overtemperature\");"}]</ServiceAttributesScriptsPacketParser>
+				<ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set power protection","NumericParameters":[{"FriendlyName":"Maximum power","Abbreviation":"Watts","IsFloat":false,"MinValue":1.0,"MaxValue":3500.0}],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\"settings?max_power=\" + Watts);\r\nVAR contentJson := response.Content;\r\nVAR limitSet := PARSEJSON(contentJson, \"max_power\");\r\n\r\n\"Power limit set to \" + limitSet + \"W\"\r\n"},{"ActionDefinition":{"Name":"Enable cloud","NumericParameters":[],"BoolParameters":[{"FriendlyName":"Enable","Abbreviation":"enable","OffValueName":"Disable","OnValueName":"Enable"}],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\"/settings/cloud?enabled=\" + enable);\r\nVAR contentJson := response.Content;\r\nVAR wasEnabled := PARSEJSON(contentJson, \"enabled\");\r\n\r\nIF(wasEnabled, \"Cloud enabled\", \"Cloud disabled\");"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\"/reboot\");\r\nVAR contentJson := response.Content;\r\nVAR wasRebooted := PARSEJSON(contentJson, \"ok\");\r\n\r\nIF(wasRebooted, \"Reboot successful\", \"Error\");"}]</ServiceActionsScriptsPacketParser>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Shelly 1PM Switch</Name>
+					<Model>PacketParserSwitch</Model>
+					<DeviceProperties>
+						<InternalPollInterval>5000</InternalPollInterval>
+						<OnStateIconId>60</OnStateIconId>
+						<OffStateIconId>61</OffStateIconId>
+						<OnStateName>${general_on}</OnStateName>
+						<OffStateName>${general_off}</OffStateName>
+						<ReadSwitchStateScriptPacketParser>VAR value := PARSEJSON(StatusJson, "relays[0].ison", 1);
+IF(ISNULL(value), NaN, value);</ReadSwitchStateScriptPacketParser>
+						<WriteSwitchStateScriptPacketParser>VAR path := "relay/0?turn=" + SWITCH(St, 0, "off", 1, "on","off");
+SENDHTTPREQUEST(path);</WriteSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Shelly 1PM Power</Name>
+					<Model>PacketParserElectricityMeter</Model>
+					<DeviceProperties>
+						<InternalPollInterval>5000</InternalPollInterval>
+						<ReadTotalConsumptionScriptPacketParser>VAR total := PARSEJSON(StatusJson, "meters[0].total", 1);
+IF(ISNULL(total), NaN, total / 60000.0);</ReadTotalConsumptionScriptPacketParser>
+						<ReadDemandScriptPacketParser>VAR power := PARSEJSON(StatusJson, "meters[0].power", 1);
+IF(ISNULL(power), NaN, power / 1000.0);</ReadDemandScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

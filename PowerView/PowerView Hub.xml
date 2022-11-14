@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="0425ed41-3fd8-4516-b6d1-3edd2a350d68" revision="1.0">
+		<Name>PowerView Hub</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Internal poll interval</Name>
+				<Value>10000</Value>
+				<Id>internalPollInterval</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>PowerView Hub</Name>
+			<Model>PacketParserModuleHttp</Model>
+			<DeviceProperties>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>80</Port>
+				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+				<CustomVariables>[{"Name":"SlideDeviceId","ValueTypeId":1,"NumericValue":1.0,"StringValue":null}]</CustomVariables>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>PowerView Slide</Name>
+					<Model>PacketParserSlide</Model>
+					<DeviceProperties>
+						<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+						<ReadBlindsLevelScriptPacketParser>VAR response := SENDHTTPREQUEST("api/shades/" + SlideDeviceId);
+
+IF response.IsSuccess
+    VAR responseJson := response.Content;
+    VAR pos := PARSEJSON(responseJson, "$.shade.positions.position1");
+    RETURN(1 - (pos/65535));
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadBlindsLevelScriptPacketParser>
+						<WriteBlindsLevelScriptPacketParser>VAR pos := ROUND((1 - Bl) * 65535);
+VAR contentJson := "{\"shade\": { \"positions\": { \"posKind1\": 1, \"position1\":" + pos + "}}}";
+
+SENDHTTPREQUEST("/api/shades/" + SlideDeviceId, "PUT", contentJson, "Content-Type:application/json");
+</WriteBlindsLevelScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

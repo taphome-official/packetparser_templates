@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="0c37ea48-3be2-44fc-bb25-79b1e511fb99" revision="1.0">
+		<SuggestedCCUParameters />
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<Name>Shelly Door/Window MQTT</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Producer>Shelly</Producer>
+		<Model>Door/Window 1/2</Model>
+		<Description></Description>
+		<ImportParameters>
+			<Parameter>
+				<Name>Mqtt Broker ${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Mqtt Broker port</Name>
+				<Value>1883</Value>
+				<Id>Port</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Shelly Door/Window MQTT</Name>
+			<Id>-1</Id>
+			<Model>PacketParserModuleMqtt</Model>
+			<DeviceProperties>
+				<InternalPollInterval>5000</InternalPollInterval>
+				<CustomVariables>[{"Name":"sensor1_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellydw2-deviceid"},{"Name":"sensor2_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellydw2-deviceid"},{"Name":"sensor3_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellydw2-deviceid"},{"Name":"sensor4_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellydw2-deviceid"},{"Name":"sensor5_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellydw2-deviceid"}]</CustomVariables>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>$[Port]</Port>
+				<RootTopic>shellies/#</RootTopic>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Shelly Door/Window Sensor 1</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<ReadScriptPacketParser></ReadScriptPacketParser>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<CustomVariables>[{"Name":"temp","ValueTypeId":1,"NumericValue":0},{"Name":"battery","ValueTypeId":1,"NumericValue":0},{"Name":"luminance","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+						<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"battery \u002B \u0022%\u0022"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"temp \u002B \u0022\u00B0C\u0022"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"luminance \u002B \u0022 lux\u0022"}]</ServiceAttributesScriptsPacketParser>
+						<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+						<ListenerScriptPacketParser>IF (INDEXOF(sensor1_topic, "shellydw2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor1_topic' value in module variables. Topic format is 'shellydw2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR value := PARSEJSON(json, "Payload");
+VAR topicPrefix := "shellies/" + sensor1_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+    IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
+        Rc := 1;
+    ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
+        Rc := 0;
+    ELSE
+        Rc := NaN;
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(value);
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(value);
+END</ListenerScriptPacketParser>
+						<OnStateIconId>91</OnStateIconId>
+						<OffStateIconId>92</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Shelly Door/Window Sensor 2</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<ReadScriptPacketParser></ReadScriptPacketParser>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<CustomVariables>[{"Name":"temp","ValueTypeId":1,"NumericValue":0},{"Name":"battery","ValueTypeId":1,"NumericValue":0},{"Name":"luminance","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+						<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"battery \u002B \u0022%\u0022"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"temp \u002B \u0022\u00B0C\u0022"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"luminance \u002B \u0022 lux\u0022"}]</ServiceAttributesScriptsPacketParser>
+						<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+						<ListenerScriptPacketParser>IF (INDEXOF(sensor2_topic, "shellydw2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor2_topic' value in module variables. Topic format is 'shellydw2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR value := PARSEJSON(json, "Payload");
+VAR topicPrefix := "shellies/" + sensor2_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+    IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
+        Rc := 1;
+    ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
+        Rc := 0;
+    ELSE
+        Rc := NaN;
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(value);
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(value);
+END</ListenerScriptPacketParser>
+						<OnStateIconId>91</OnStateIconId>
+						<OffStateIconId>92</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Shelly Door/Window Sensor 3</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<ReadScriptPacketParser></ReadScriptPacketParser>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<CustomVariables>[{"Name":"temp","ValueTypeId":1,"NumericValue":0},{"Name":"battery","ValueTypeId":1,"NumericValue":0},{"Name":"luminance","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+						<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"battery \u002B \u0022%\u0022"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"temp \u002B \u0022\u00B0C\u0022"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"luminance \u002B \u0022 lux\u0022"}]</ServiceAttributesScriptsPacketParser>
+						<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+						<ListenerScriptPacketParser>IF (INDEXOF(sensor3_topic, "shellydw2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor3_topic' value in module variables. Topic format is 'shellydw2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR value := PARSEJSON(json, "Payload");
+VAR topicPrefix := "shellies/" + sensor3_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+    IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
+        Rc := 1;
+    ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
+        Rc := 0;
+    ELSE
+        Rc := NaN;
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(value);
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(value);
+END</ListenerScriptPacketParser>
+						<OnStateIconId>91</OnStateIconId>
+						<OffStateIconId>92</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Shelly Door/Window Sensor 4</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<ReadScriptPacketParser></ReadScriptPacketParser>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<CustomVariables>[{"Name":"temp","ValueTypeId":1,"NumericValue":0},{"Name":"battery","ValueTypeId":1,"NumericValue":0},{"Name":"luminance","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+						<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"battery \u002B \u0022%\u0022"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"temp \u002B \u0022\u00B0C\u0022"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"luminance \u002B \u0022 lux\u0022"}]</ServiceAttributesScriptsPacketParser>
+						<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+						<ListenerScriptPacketParser>IF (INDEXOF(sensor4_topic, "shellydw2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor4_topic' value in module variables. Topic format is 'shellydw2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR value := PARSEJSON(json, "Payload");
+VAR topicPrefix := "shellies/" + sensor4_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+    IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
+        Rc := 1;
+    ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
+        Rc := 0;
+    ELSE
+        Rc := NaN;
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(value);
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(value);
+END</ListenerScriptPacketParser>
+						<OnStateIconId>91</OnStateIconId>
+						<OffStateIconId>92</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Shelly Door/Window Sensor 5</Name>
+					<Model>PacketParserReedContact</Model>
+					<DeviceProperties>
+						<ReadScriptPacketParser></ReadScriptPacketParser>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<CustomVariables>[{"Name":"temp","ValueTypeId":1,"NumericValue":0},{"Name":"battery","ValueTypeId":1,"NumericValue":0},{"Name":"luminance","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+						<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"battery \u002B \u0022%\u0022"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"temp \u002B \u0022\u00B0C\u0022"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"luminance \u002B \u0022 lux\u0022"}]</ServiceAttributesScriptsPacketParser>
+						<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+						<ListenerScriptPacketParser>IF (INDEXOF(sensor5_topic, "shellydw2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor5_topic' value in module variables. Topic format is 'shellydw2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR value := PARSEJSON(json, "Payload");
+VAR topicPrefix := "shellies/" + sensor5_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+    IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
+        Rc := 1;
+    ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
+        Rc := 0;
+    ELSE
+        Rc := NaN;
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(value);
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(value);
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(value);
+END</ListenerScriptPacketParser>
+						<OnStateIconId>91</OnStateIconId>
+						<OffStateIconId>92</OffStateIconId>
+						<OnStateName>${general_open}</OnStateName>
+						<OffStateName>${general_closed}</OffStateName>
+						<ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

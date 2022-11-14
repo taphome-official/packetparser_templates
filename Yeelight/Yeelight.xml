@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="f06365b5-1734-4db8-a610-febdda40da28" revision="1.0">
+		<SuggestedCCUParameters />
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<Name>Yeelight</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Producer></Producer>
+		<Model></Model>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>ipAddress</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Port</Name>
+				<Value>55443</Value>
+				<Id>port</Id>
+			</Parameter>
+			<Parameter>
+				<Name>Internal poll interval</Name>
+				<Value>10000</Value>
+				<Id>internalPollInterval</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Yeelight module</Name>
+			<Model>PacketParserModuleTcp</Model>
+			<DeviceProperties>
+				<InternalPollInterval>$[internalPollInterval]</InternalPollInterval>
+				<IpAddress>$[ipAddress]</IpAddress>
+				<Port>$[port]</Port>
+				<StayConnected>True</StayConnected>
+				<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Color mode","Section":null},"ReadFormula":"VAR json := \"{\\\"id\\\":981, \\\"method\\\":\\\"get_prop\\\", \\\"params\\\":[\\\"color_mode\\\", \\\"ct\\\"]}\";\r\nSENDDATA(json);"},{"AttributeDefinition":{"Name":"Color temperature","Section":null},"ReadFormula":null}]</ServiceAttributesScriptsPacketParser>
+				<ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR id := PARSEJSON(jsonResponse, "id", 1);
+
+IF(id = 981)
+   VAR error := PARSEJSON(jsonResponse, "error.message", 1);
+   
+   IF(!ISNULL(error))
+      COMPLETESERVICEATTRIBUTE("Color mode", "", "error");
+      COMPLETESERVICEATTRIBUTE("Color temperature", "", "error");
+   ELSE
+      VAR colorMode := PARSEJSON(jsonResponse, "result[0]", 1);
+      VAR colorTemp := PARSEJSON(jsonResponse, "result[1]", 1);
+      
+      IF(!ISNULL(colorMode))
+      VAR colorModeValue := SWITCH(TODOUBLE(colorMode), 1, "RGB", 2, "Temperature", 3, "HSV", "Unknown");
+         COMPLETESERVICEATTRIBUTE("Color mode", colorModeValue, "");
+      ELSE
+         COMPLETESERVICEATTRIBUTE("Color mode", "", "error");
+      END
+      
+      IF(!ISNULL(colorTemp))
+         COMPLETESERVICEATTRIBUTE("Color temperature", colorTemp + "K", "");
+      ELSE
+         COMPLETESERVICEATTRIBUTE("Color temperature", "", "error");
+      END
+   END
+END</ListenerScriptPacketParser>
+				<MessageFramingDefinition>{"Framing":1,"Configuration":"{\"SendMessageBeginDelimiter\":null,\"SendMessageEndDelimiter\":\"DQo=\",\"ReceiveMessageBeginDelimiter\":null,\"ReceiveMessageEndDelimiter\":\"DQo=\"}"}</MessageFramingDefinition>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Yeelight dimmer</Name>
+					<Model>PacketParserDimmer</Model>
+					<DeviceProperties>
+						<ReadScriptPacketParser></ReadScriptPacketParser>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<CustomVariables>[{"Name":"receiveError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"notificationError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""},{"Name":"sendError","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+						<ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR method := PARSEJSON(jsonResponse, "method", 1);
+VAR id := PARSEJSON(jsonResponse, "id", 1);
+STRING onOff;
+
+IF(id = 951)
+   receiveError := PARSEJSON(jsonResponse, "error.message", 1);
+   
+   IF(LENGTH(receiveError) = 0)
+      VAR brightnessStr := PARSEJSON(jsonResponse, "result[0]", 1);
+      onOff := PARSEJSON(jsonResponse, "result[1]", 1);
+   
+      IF(!ISNULL(brightnessStr))
+         Le := TODOUBLE(brightnessStr) / 100.0;
+      END
+   
+      IF(onOff = "on")
+         St := 1;
+      ELSEIF(onOff = "off")
+         Le := 0;
+         St := 0;
+      END
+   END
+END
+
+IF(id &gt; 951 AND id &lt; 955)
+   sendError := PARSEJSON(jsonResponse, "error.message", 1);
+END
+
+IF(method = "props")
+   notificationError := PARSEJSON(jsonResponse, "error.message", 1);
+   
+   IF(LENGTH(notificationError) = 0)
+      VAR brightness := PARSEJSON(jsonResponse, "params.bright", 1);
+      onOff := PARSEJSON(jsonResponse, "params.power", 1);
+   
+      IF(!ISNULL(brightness))
+         Le := brightness / 100.0;
+      END
+   
+      IF(onOff = "on")
+         St := 1;
+         IF(ISNULL(brightness))
+            SENDDATA("{\"id\":951, \"method\":\"get_prop\", \"params\":[\"bright\", \"power\"]}");
+         END
+      ELSEIF(onOff = "off")
+         Le := 0;
+         St := 0;
+      END
+   END
+END
+
+IF(LENGTH(receiveError) &gt; 0)
+   ADDERROR("Read error: " + receiveError);
+END
+
+IF(LENGTH(sendError) &gt; 0)
+   ADDERROR("Write error: " + sendError);
+END
+
+IF(LENGTH(notificationError) &gt; 0)
+   ADDERROR(notificationError);
+END</ListenerScriptPacketParser>
+						<ReadLevelScriptPacketParser>VAR json := "{\"id\":951, \"method\":\"get_prop\", \"params\":[\"bright\", \"power\"]}";
+SENDDATA(json);</ReadLevelScriptPacketParser>
+						<WriteLevelScriptPacketParser>IF(Le &gt; 0)
+    VAR jsonPowerOn := "{\"id\":952,\"method\":\"set_power\",\"params\":[\"on\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOn);
+
+    VAR jsonBrightness := "{\"id\":953,\"method\":\"set_bright\",\"params\":[" + ROUND(Le*100) + ",\"smooth\", 500]}";
+    SENDDATA(jsonBrightness);
+ELSE
+    VAR jsonPowerOff := "{\"id\":954,\"method\":\"set_power\",\"params\":[\"off\", \"smooth\", 300]}";
+    SENDDATA(jsonPowerOff);
+END</WriteLevelScriptPacketParser>
+						<IconId>0</IconId>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

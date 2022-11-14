@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+  <Template id="482e4a25-63a7-43ec-89b1-52f7dcf1a424" revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Motion 2 MQTT</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>Shelly Motion 2 MQTT</Name>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"sensor1_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellymotion2-deviceid"},{"Name":"sensor2_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellymotion2-deviceid"},{"Name":"sensor3_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellymotion2-deviceid"},{"Name":"sensor4_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellymotion2-deviceid"},{"Name":"sensor5_topic","ValueTypeId":2,"NumericValue":0,"StringValue":"shellymotion2-deviceid"}]</CustomVariables>
+		<IpAddress>$[IpAddress]</IpAddress>
+		<Port>$[Port]</Port>
+        <RootTopic>shellies/#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Shelly Motion Detector 1</Name>
+          <Model>PacketParserReedContact</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"infoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IP Address"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.ip\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"MAC Address"},"ReadFormula":"IF(LENGTH(infoJson) = 0, \u0022-\u0022, PARSEJSON(infoJson, \u0022$.mac\u0022));\r\n\r\nIF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.mac\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR voltage := PARSEJSON(infoJson, \u0022$.bat.voltage\u0022);\r\n    VAR percentage := PARSEJSON(infoJson, \u0022$.bat.value\u0022);\r\n\r\n    RETURN(voltage \u002B \u0022V (\u0022 \u002B percentage \u002B \u0022%)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Signal"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.rssi\u0022, 1) \u002B \u0022db\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Cloud enabled"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.enabled\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Cloud connected"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.connected\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Device time"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.time\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.lux.value\u0022, 1) \u002B \u0022lux\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.tmp.value\u0022, 1) \u002B PARSEJSON(infoJson, \u0022$.tmp.units\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Uptime"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR upTimeSeconds := PARSEJSON(infoJson, \u0022$.uptime\u0022, 1);\r\n    VAR days := FLOOR(upTimeSeconds/86400, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 86400);\r\n    var hours := FLOOR(upTimeSeconds/3600, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 3600);\r\n    var minutes := FLOOR(upTimeSeconds/60, 1);\r\n    RETURN(days \u002B \u0022day(s) \u0022 \u002B hours \u002B \u0022h \u0022 \u002B minutes \u002B \u0022m\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"FW version"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.fw_info.fw\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"FW update"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.update.has_update\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Free RAM"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.ram_total\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.ram_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Free FS space"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.fs_size\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.fs_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF (INDEXOF(sensor1_topic, "shellymotion2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor1_topic' value in module variables. Topic format is 'shellymotion2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR topicPrefix := "shellies/" + sensor1_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/info") = 0)
+    infoJson := PARSEJSON(json, "Payload");
+    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+    
+    IF ISNULL(status)
+        Rc := NaN;
+    ELSE
+        Rc := status;
+    END
+    
+    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>101</OnStateIconId>
+            <OffStateIconId>102</OffStateIconId>
+            <OnStateName>Motion</OnStateName>
+            <OffStateName>None</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly Motion Detector 2</Name>
+          <Model>PacketParserReedContact</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"infoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IP Address"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.ip\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"MAC Address"},"ReadFormula":"IF(LENGTH(infoJson) = 0, \u0022-\u0022, PARSEJSON(infoJson, \u0022$.mac\u0022));\r\n\r\nIF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.mac\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR voltage := PARSEJSON(infoJson, \u0022$.bat.voltage\u0022);\r\n    VAR percentage := PARSEJSON(infoJson, \u0022$.bat.value\u0022);\r\n\r\n    RETURN(voltage \u002B \u0022V (\u0022 \u002B percentage \u002B \u0022%)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Signal"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.rssi\u0022, 1) \u002B \u0022db\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Cloud enabled"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.enabled\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Cloud connected"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.connected\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Device time"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.time\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.lux.value\u0022, 1) \u002B \u0022lux\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.tmp.value\u0022, 1) \u002B PARSEJSON(infoJson, \u0022$.tmp.units\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Uptime"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR upTimeSeconds := PARSEJSON(infoJson, \u0022$.uptime\u0022, 1);\r\n    VAR days := FLOOR(upTimeSeconds/86400, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 86400);\r\n    var hours := FLOOR(upTimeSeconds/3600, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 3600);\r\n    var minutes := FLOOR(upTimeSeconds/60, 1);\r\n    RETURN(days \u002B \u0022day(s) \u0022 \u002B hours \u002B \u0022h \u0022 \u002B minutes \u002B \u0022m\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"FW version"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.fw_info.fw\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"FW update"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.update.has_update\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Free RAM"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.ram_total\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.ram_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Free FS space"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.fs_size\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.fs_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF (INDEXOF(sensor2_topic, "shellymotion2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor2_topic' value in module variables. Topic format is 'shellymotion2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR topicPrefix := "shellies/" + sensor2_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/info") = 0)
+    infoJson := PARSEJSON(json, "Payload");
+    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+    
+    IF ISNULL(status)
+        Rc := NaN;
+    ELSE
+        Rc := status;
+    END
+    
+    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>101</OnStateIconId>
+            <OffStateIconId>102</OffStateIconId>
+            <OnStateName>Motion</OnStateName>
+            <OffStateName>None</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly Motion Detector 3</Name>
+          <Model>PacketParserReedContact</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"infoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IP Address"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.ip\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"MAC Address"},"ReadFormula":"IF(LENGTH(infoJson) = 0, \u0022-\u0022, PARSEJSON(infoJson, \u0022$.mac\u0022));\r\n\r\nIF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.mac\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR voltage := PARSEJSON(infoJson, \u0022$.bat.voltage\u0022);\r\n    VAR percentage := PARSEJSON(infoJson, \u0022$.bat.value\u0022);\r\n\r\n    RETURN(voltage \u002B \u0022V (\u0022 \u002B percentage \u002B \u0022%)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Signal"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.rssi\u0022, 1) \u002B \u0022db\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Cloud enabled"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.enabled\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Cloud connected"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.connected\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Device time"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.time\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.lux.value\u0022, 1) \u002B \u0022lux\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.tmp.value\u0022, 1) \u002B PARSEJSON(infoJson, \u0022$.tmp.units\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Uptime"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR upTimeSeconds := PARSEJSON(infoJson, \u0022$.uptime\u0022, 1);\r\n    VAR days := FLOOR(upTimeSeconds/86400, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 86400);\r\n    var hours := FLOOR(upTimeSeconds/3600, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 3600);\r\n    var minutes := FLOOR(upTimeSeconds/60, 1);\r\n    RETURN(days \u002B \u0022day(s) \u0022 \u002B hours \u002B \u0022h \u0022 \u002B minutes \u002B \u0022m\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"FW version"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.fw_info.fw\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"FW update"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.update.has_update\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Free RAM"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.ram_total\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.ram_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Free FS space"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.fs_size\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.fs_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF (INDEXOF(sensor3_topic, "shellymotion2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor3_topic' value in module variables. Topic format is 'shellymotion2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR topicPrefix := "shellies/" + sensor3_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/info") = 0)
+    infoJson := PARSEJSON(json, "Payload");
+    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+    
+    IF ISNULL(status)
+        Rc := NaN;
+    ELSE
+        Rc := status;
+    END
+    
+    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>101</OnStateIconId>
+            <OffStateIconId>102</OffStateIconId>
+            <OnStateName>Motion</OnStateName>
+            <OffStateName>None</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly Motion Detector 4</Name>
+          <Model>PacketParserReedContact</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"infoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IP Address"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.ip\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"MAC Address"},"ReadFormula":"IF(LENGTH(infoJson) = 0, \u0022-\u0022, PARSEJSON(infoJson, \u0022$.mac\u0022));\r\n\r\nIF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.mac\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR voltage := PARSEJSON(infoJson, \u0022$.bat.voltage\u0022);\r\n    VAR percentage := PARSEJSON(infoJson, \u0022$.bat.value\u0022);\r\n\r\n    RETURN(voltage \u002B \u0022V (\u0022 \u002B percentage \u002B \u0022%)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Signal"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.rssi\u0022, 1) \u002B \u0022db\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Cloud enabled"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.enabled\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Cloud connected"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.connected\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Device time"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.time\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.lux.value\u0022, 1) \u002B \u0022lux\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.tmp.value\u0022, 1) \u002B PARSEJSON(infoJson, \u0022$.tmp.units\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Uptime"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR upTimeSeconds := PARSEJSON(infoJson, \u0022$.uptime\u0022, 1);\r\n    VAR days := FLOOR(upTimeSeconds/86400, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 86400);\r\n    var hours := FLOOR(upTimeSeconds/3600, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 3600);\r\n    var minutes := FLOOR(upTimeSeconds/60, 1);\r\n    RETURN(days \u002B \u0022day(s) \u0022 \u002B hours \u002B \u0022h \u0022 \u002B minutes \u002B \u0022m\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"FW version"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.fw_info.fw\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"FW update"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.update.has_update\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Free RAM"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.ram_total\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.ram_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Free FS space"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.fs_size\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.fs_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF (INDEXOF(sensor4_topic, "shellymotion2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor4_topic' value in module variables. Topic format is 'shellymotion2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR topicPrefix := "shellies/" + sensor4_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/info") = 0)
+    infoJson := PARSEJSON(json, "Payload");
+    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+    
+    IF ISNULL(status)
+        Rc := NaN;
+    ELSE
+        Rc := status;
+    END
+    
+    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>101</OnStateIconId>
+            <OffStateIconId>102</OffStateIconId>
+            <OnStateName>Motion</OnStateName>
+            <OffStateName>None</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly Motion Detector 5</Name>
+          <Model>PacketParserReedContact</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"infoJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IP Address"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.ip\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"MAC Address"},"ReadFormula":"IF(LENGTH(infoJson) = 0, \u0022-\u0022, PARSEJSON(infoJson, \u0022$.mac\u0022));\r\n\r\nIF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.mac\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR voltage := PARSEJSON(infoJson, \u0022$.bat.voltage\u0022);\r\n    VAR percentage := PARSEJSON(infoJson, \u0022$.bat.value\u0022);\r\n\r\n    RETURN(voltage \u002B \u0022V (\u0022 \u002B percentage \u002B \u0022%)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Signal"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.wifi_sta.rssi\u0022, 1) \u002B \u0022db\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Cloud enabled"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.enabled\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Cloud connected"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.cloud.connected\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Device time"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.time\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"Luminance"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.lux.value\u0022, 1) \u002B \u0022lux\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Temperature"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.tmp.value\u0022, 1) \u002B PARSEJSON(infoJson, \u0022$.tmp.units\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Uptime"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR upTimeSeconds := PARSEJSON(infoJson, \u0022$.uptime\u0022, 1);\r\n    VAR days := FLOOR(upTimeSeconds/86400, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 86400);\r\n    var hours := FLOOR(upTimeSeconds/3600, 1);\r\n    uptimeSeconds := MOD(upTimeSeconds, 3600);\r\n    var minutes := FLOOR(upTimeSeconds/60, 1);\r\n    RETURN(days \u002B \u0022day(s) \u0022 \u002B hours \u002B \u0022h \u0022 \u002B minutes \u002B \u0022m\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"FW version"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.fw_info.fw\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"FW update"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    RETURN(PARSEJSON(infoJson, \u0022$.update.has_update\u0022, 1));\r\nEND"},{"AttributeDefinition":{"Name":"Free RAM"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.ram_total\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.ram_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"},{"AttributeDefinition":{"Name":"Free FS space"},"ReadFormula":"IF LENGTH(infoJson) = 0\r\n    RETURN(\u0022-\u0022);\r\nELSE\r\n    VAR total := PARSEJSON(infoJson, \u0022$.fs_size\u0022);\r\n    VAR free := PARSEJSON(infoJson, \u0022$.fs_free\u0022);\r\n    RETURN(free \u002B \u0022/\u0022 \u002B total \u002B \u0022(B)\u0022);\r\nEND"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF (INDEXOF(sensor5_topic, "shellymotion2-deviceid") = 0)
+    ADDERROR("Set correct 'sensor5_topic' value in module variables. Topic format is 'shellymotion2-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR topicPrefix := "shellies/" + sensor5_topic;
+
+IF (INDEXOF(topic, topicPrefix + "/info") = 0)
+    infoJson := PARSEJSON(json, "Payload");
+    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+    
+    IF ISNULL(status)
+        Rc := NaN;
+    ELSE
+        Rc := status;
+    END
+    
+    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    IF battery &lt; 20
+        ADDWARNING("Battery low (" + battery + "%)");
+    END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>101</OnStateIconId>
+            <OffStateIconId>102</OffStateIconId>
+            <OnStateName>Motion</OnStateName>
+            <OffStateName>None</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>

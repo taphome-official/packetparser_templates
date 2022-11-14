@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72" >
+  <Template revision="1.0" id = "0adc7629-4b04-44d0-a0a5-09649aafdb75">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly2.5</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>    
+    <Module>
+      <Name>Shelly2.5</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Mode"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/settings\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  VAR responseHeaders := response.Headers;\r\n  RETURN(PARSEJSON(content, \u0022mode\u0022));\r\n END"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Mode","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Mode","Abbreviation":"mo","Values":[{"Item1":0,"Item2":"relay"},{"Item1":1,"Item2":"roller"}]}]},"Script":"var St := SWITCH(mo, 1, \u0022roller\u0022, \u0022relay\u0022);\r\n VAR response := SENDHTTPREQUEST(\u0022/settings?mode=\u0022 \u002B St);"}]</ServiceActionsScriptsPacketParser>
+        <Port>80</Port>
+		<IpAddress>$[IpAddress]</IpAddress>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>01</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Overpower"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/meter/0\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n RETURN((PARSEJSON(content, \u0022overpower\u0022)/1000) \u002B \u0022 W\u0022);\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser> VAR response := SENDHTTPREQUEST("/meter/0");
+ IF response.IsSuccess
+  VAR content := response.Content;
+ VAR responseHeaders := response.Headers;
+ RETURN(PARSEJSON(content, "total")/6000);
+ ELSE 
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser> VAR response := SENDHTTPREQUEST("/meter/0");
+ IF response.IsSuccess
+  VAR content := response.Content;
+ VAR responseHeaders := response.Headers;
+ RETURN(PARSEJSON(content, "power")/1000);
+ ELSE 
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>02</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Overpower"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/meter/1\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n VAR responseHeaders := response.Headers;\r\n RETURN((PARSEJSON(content, \u0022overpower\u0022)/1000) \u002B \u0022 W\u0022);\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser> VAR response := SENDHTTPREQUEST("/meter/1");
+ IF response.IsSuccess
+  VAR content := response.Content;
+ VAR responseHeaders := response.Headers;
+ RETURN(PARSEJSON(content, "total")/60000);
+ ELSE 
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser> VAR response := SENDHTTPREQUEST("/meter/1");
+ IF response.IsSuccess
+  VAR content := response.Content;
+ VAR responseHeaders := response.Headers;
+ RETURN(PARSEJSON(content, "power")/1000);
+ ELSE 
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Relay 01</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Overpower"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/relay/0\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(IF(PARSEJSON(content, \u0022overpower\u0022),\u0022Yes\u0022, \u0022No\u0022));\r\n END"},{"AttributeDefinition":{"Name":"Overtemperature"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/relay/0\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(IF(PARSEJSON(content, \u0022overtemperature\u0022),\u0022Yes\u0022, \u0022No\u0022));\r\n END"},{"AttributeDefinition":{"Name":"Power Meter"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/relay/0\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(IF(PARSEJSON(content, \u0022is_valid\u0022),\u0022OK\u0022,\u0022Fault\u0022));\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/relay/0");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  VAR responseHeaders := response.Headers;
+  RETURN(PARSEJSON(content, "ison"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser> var turn := Switch(St, 1, "on", "off");
+ VAR response := SENDHTTPREQUEST("/relay/0?turn=" + turn);
+ IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+ END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Relay 02</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Overpower"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/relay/1\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(IF(PARSEJSON(content, \u0022overpower\u0022),\u0022Yes\u0022, \u0022No\u0022));\r\n END"},{"AttributeDefinition":{"Name":"Overtemperature"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/relay/1\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(IF(PARSEJSON(content, \u0022overtemperature\u0022),\u0022Yes\u0022, \u0022No\u0022));\r\n END"},{"AttributeDefinition":{"Name":"Power Meter"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/relay/1\u0022);\r\n IF response.IsSuccess\r\n  VAR content := response.Content;\r\n  RETURN(IF(PARSEJSON(content, \u0022is_valid\u0022),\u0022OK\u0022,\u0022Fault\u0022));\r\n END"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser> VAR response := SENDHTTPREQUEST("/relay/1");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  VAR responseHeaders := response.Headers;
+  RETURN(PARSEJSON(content, "ison"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser> var turn := Switch(St, 1, "on", "off");
+ VAR response := SENDHTTPREQUEST("/relay/1?turn=" + turn);
+ IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+ END</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>

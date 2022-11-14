@@ -1,0 +1,1310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="fdbf001d-e1dc-4112-b4dc-2e3a287d4b62" revision="1.0">
+		<Name>Sonos</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${ipAddress}</Name>
+				<Value>192.168.0.1</Value>
+				<Id>IpAddress</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>Sonos</Name>
+			<Model>PacketParserModuleHttp</Model>
+			<DeviceProperties>
+				<IpAddress>$[IpAddress]</IpAddress>
+				<Port>1400</Port>
+				<ConnectionType>http</ConnectionType>
+				<InternalPollInterval>15000</InternalPollInterval>
+				<CustomVariables>[{"Name":"deviceDescription","ValueTypeId":2,"NumericValue":0.0,"StringValue":null}]</CustomVariables>
+				<ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Model name","Section":null},"ReadFormula":"VAR response := SENDHTTPREQUEST(\"/xml/device_description.xml\");\r\ndeviceDescription := response.Content;\r\n\r\nPARSEXML(deviceDescription, \"//root:modelName[1]\");"},{"AttributeDefinition":{"Name":"Model url","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:modelURL[1]\");"},{"AttributeDefinition":{"Name":"SW version","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:softwareVersion[1]\");"},{"AttributeDefinition":{"Name":"SW generation","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:swGen[1]\");"},{"AttributeDefinition":{"Name":"HW revision","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:hardwareVersion[1]\");"},{"AttributeDefinition":{"Name":"Serial number","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:serialNum[1]\");"},{"AttributeDefinition":{"Name":"Mac address","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:MACAddress[1]\");"},{"AttributeDefinition":{"Name":"Host name","Section":null},"ReadFormula":"VAR macAddress := PARSEXML(deviceDescription, \"//root:MACAddress[1]\");\r\n\"Sonos-\" + REPLACE(macAddress, \":\", \"\") + \".local\""},{"AttributeDefinition":{"Name":"UDN","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:UDN[1]\");"},{"AttributeDefinition":{"Name":"API version","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:apiVersion[1]\");"},{"AttributeDefinition":{"Name":"Min API version","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:minApiVersion[1]\");"},{"AttributeDefinition":{"Name":"Room name","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:roomName[1]\");"},{"AttributeDefinition":{"Name":"Display name","Section":null},"ReadFormula":"PARSEXML(deviceDescription, \"//root:displayName[1]\");"},{"AttributeDefinition":{"Name":"Current track","Section":null},"ReadFormula":"VAR header := \"SOAPACTION: \\\"urn:schemas-upnp-org:service:AVTransport:1#GetPositionInfo\\\"\";\r\nVAR body := \"&lt;?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\"?&gt;&lt;s:Envelope s:encodingStyle=\\\"http://schemas.xmlsoap.org/soap/encoding/\\\" xmlns:s=\\\"http://schemas.xmlsoap.org/soap/envelope/\\\"&gt;&lt;s:Body&gt;&lt;u:GetPositionInfo xmlns:u=\\\"urn:schemas-upnp-org:service:AVTransport:1\\\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:GetPositionInfo&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;\";\r\n\r\nVAR response := SENDHTTPREQUEST(\"MediaRenderer/AVTransport/Control\", \"POST\", body, header);\r\n\r\nIF response.IsSuccess\r\n    VAR responseXml := response.Content;\r\n    VAR metaData := DECODE(PARSETEXT(responseXml, \"&lt;TrackMetaData&gt;\", \"&lt;/TrackMetaData&gt;\"), \"xml\");\r\n    \r\n    IF(metaData = \"NOT_IMPLEMENTED\")\r\n        RETURN(\"Not supported\");\r\n    END\r\n\r\n    IF(LENGTH(metaData) = 0)\r\n        RETURN(\"\");\r\n    END\r\n\r\n    VAR title := PARSEXML(metaData, \"//dc:title\");\r\n    VAR artist := PARSEXML(metaData, \"//dc:creator\");\r\n    VAR album := PARSEXML(metaData, \"//upnp:album\");\r\n    \r\n    VAR result := \"\";\r\n    \r\n    IF(LENGTH(title) &gt; 0)\r\n        result := \"Title: \" + title + \"\\n\";\r\n    END\r\n    \r\n    IF(LENGTH(artist) &gt; 0)\r\n         result := result + \"Artist: \" + artist + \"\\n\";\r\n    END\r\n    \r\n    IF(LENGTH(album) &gt; 0)\r\n        result := result + \"Album: \" + album;\r\n    END\r\n\r\n    RETURN(result);\r\nELSE\r\n    RETURN(\"Error\");\r\nEND"}]</ServiceAttributesScriptsPacketParser>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Volume</Name>
+					<Model>PacketParserDimmer</Model>
+					<DeviceProperties>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<ReadLevelScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#GetVolume\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;/u:GetVolume&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("MediaRenderer/RenderingControl/Control", "POST", body, header);
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    RETURN(PARSEXML(responseXml, "//CurrentVolume") / 100.0);
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadLevelScriptPacketParser>
+						<WriteLevelScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#SetVolume\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;DesiredVolume&gt;" + ROUND(Le*100) + "&lt;/DesiredVolume&gt;&lt;/u:SetVolume&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/RenderingControl/Control", "POST", body, header);
+</WriteLevelScriptPacketParser>
+						<IconId>0</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Next</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Next\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Next xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Next&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>212</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Pause</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Pause\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Pause xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Pause&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>214</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Previous</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Previous\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Previous xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Previous&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>211</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Stop</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Stop\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Stop xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Stop&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>215</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Volume Up</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#SetRelativeVolume\"";
+
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetRelativeVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;Adjustment&gt;5&lt;/Adjustment&gt;&lt;/u:SetRelativeVolume&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/RenderingControl/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>207</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Volume Down</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#SetRelativeVolume\"";
+
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetRelativeVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;Adjustment&gt;-5&lt;/Adjustment&gt;&lt;/u:SetRelativeVolume&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/RenderingControl/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>208</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Mute</Name>
+					<Model>PacketParserSwitch</Model>
+					<DeviceProperties>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<OnStateIconId>60</OnStateIconId>
+						<OffStateIconId>61</OffStateIconId>
+						<OnStateName>${general_on}</OnStateName>
+						<OffStateName>${general_off}</OffStateName>
+						<ReadSwitchStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#GetMute\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;/u:GetMute&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("MediaRenderer/RenderingControl/Control", "POST", body, header);
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    RETURN(PARSEXML(responseXml, "//CurrentMute"));
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:RenderingControl:1#SetMute\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Channel&gt;Master&lt;/Channel&gt;&lt;DesiredMute&gt;" + St + "&lt;/DesiredMute&gt;&lt;/u:SetMute&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/RenderingControl/Control", "POST", body, header);</WriteSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play Mode</Name>
+					<Model>PacketParserMultiValueSwitch</Model>
+					<DeviceProperties>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<Value0Index>0</Value0Index>
+						<Value1Index>1</Value1Index>
+						<Value2Index>2</Value2Index>
+						<Value3Index>3</Value3Index>
+						<Value4Index>4</Value4Index>
+						<Value5Index>5</Value5Index>
+						<Value6Index>70</Value6Index>
+						<Value7Index>71</Value7Index>
+						<Value8Index>72</Value8Index>
+						<Value9Index>73</Value9Index>
+						<Value0Name>Normal</Value0Name>
+						<Value1Name>Repeat all</Value1Name>
+						<Value2Name>Repeat one</Value2Name>
+						<Value3Name>Shuffle no repeat</Value3Name>
+						<Value4Name>Shuffle</Value4Name>
+						<Value5Name>Shuffle repeat one</Value5Name>
+						<Value6Name>6</Value6Name>
+						<Value7Name>7</Value7Name>
+						<Value8Name>8</Value8Name>
+						<Value9Name>9</Value9Name>
+						<Value0IconId>210</Value0IconId>
+						<Value1IconId>209</Value1IconId>
+						<Value2IconId>209</Value2IconId>
+						<Value3IconId>216</Value3IconId>
+						<Value4IconId>216</Value4IconId>
+						<Value5IconId>216</Value5IconId>
+						<Value6IconId>11</Value6IconId>
+						<Value7IconId>12</Value7IconId>
+						<Value8IconId>13</Value8IconId>
+						<Value9IconId>14</Value9IconId>
+						<ReadSwitchStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:GetTransportSettings&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    VAR mode := PARSEXML(responseXml, "//PlayMode");
+    RETURN(SWITCH(mode , "NORMAL", 0, "REPEAT_ALL", 1, "REPEAT_ONE", 2, "SHUFFLE_NOREPEAT", 3, "SHUFFLE", 4, "SHUFFLE_REPEAT_ONE", 5, -1));
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetPlayMode\"";
+
+VAR mode := SWITCH(Mu, 0, "NORMAL", 1, "REPEAT_ALL", 2, "REPEAT_ONE", 3, "SHUFFLE_NOREPEAT", 4, "SHUFFLE", 5, "SHUFFLE_REPEAT_ONE", "NORMAL");
+
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:SetPlayMode xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;NewPlayMode&gt;" + mode +"&lt;/NewPlayMode&gt;&lt;/u:SetPlayMode&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Sleep in 1 hour</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#ConfigureSleepTimer\"";
+
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:ConfigureSleepTimer xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;NewSleepTimerDuration&gt;01:00:00&lt;/NewSleepTimerDuration&gt;&lt;/u:ConfigureSleepTimer&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Sleep in 15 minutes</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<InternalPollInterval>10000</InternalPollInterval>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#ConfigureSleepTimer\"";
+
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:ConfigureSleepTimer xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;NewSleepTimerDuration&gt;00:15:00&lt;/NewSleepTimerDuration&gt;&lt;/u:ConfigureSleepTimer&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);</WriteButtonPressedStateScriptPacketParser>
+						<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Status</Name>
+					<Model>PacketParserReedContact</Model>
+					<Id>-12</Id>
+					<DeviceProperties>
+						<InternalPollInterval>2500</InternalPollInterval>
+						<OnStateIconId>213</OnStateIconId>
+						<OffStateIconId>215</OffStateIconId>
+						<OnStateName>Playing</OnStateName>
+						<OffStateName>Inactive</OffStateName>
+						<ReadStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetTransportInfo xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:GetTransportInfo&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    VAR state := PARSEXML(responseXml, "//CurrentTransportState");
+    RETURN(SWITCH(state , "PLAYING", 1, "TRANSITIONING", 1, "STOPPED", 0, "NO_MEDIA_PRESENT", 0, "PAUSED_PLAYBACK", 0, 0));
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play/Pause</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+						<WriteButtonPressedStateScriptPacketParser>VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo\"";
+VAR body := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:GetTransportInfo xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:GetTransportInfo&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+VAR response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+
+IF response.IsSuccess
+    VAR responseXml := response.Content;
+    VAR state := PARSEXML(responseXml, "//CurrentTransportState");
+    VAR isPlaying := SWITCH(state , "PLAYING", 1, "TRANSITIONING", 1, "STOPPED", 0, "NO_MEDIA_PRESENT", 0, "PAUSED_PLAYBACK", 0, 0);
+    
+    IF(isPlaying)
+        VAR headerPause := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Pause\"";
+        VAR bodyPause := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Pause xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:Pause&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+        SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", bodyPause, headerPause);
+    ELSE
+        VAR headerPlay := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+        VAR bodyPlay := "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+        SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", bodyPlay, headerPlay);
+    END
+ELSE
+    ADDERROR(response.Content);
+    RETURN(NaN);
+END</WriteButtonPressedStateScriptPacketParser>
+						<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play playlist 1</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+					<ReadScriptPacketParser />
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"playlist_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check playlist name is not empty
+IF(ISNULL(playlist_name) OR LENGTH(playlist_name) = 0)
+   ADDERROR("Please set playlist name in device variables");
+   RETURN(-1);
+END
+
+######################
+# get player uuid
+VAR response := SENDHTTPREQUEST("xml/device_description.xml");
+VAR content := response.Content;
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+
+IF(ISNULL(playerUuid))
+    ADDERROR("Failed to get player UUID");
+    RETURN(-2);
+END
+######################
+
+######################
+# fetch playlists
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := response.Content;
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
+    
+######################
+IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    RETURN(-3);
+END
+
+######################
+# clear play queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#RemoveAllTracksFromQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:RemoveAllTracksFromQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:RemoveAllTracksFromQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to RemoveAllTracksFromQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-4);
+END
+######################
+
+######################
+# add playlist to queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#AddURIToQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:AddURIToQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;EnqueuedURI&gt;" + playlistUri + "&lt;/EnqueuedURI&gt;&lt;EnqueuedURIMetaData&gt;&lt;/EnqueuedURIMetaData&gt;&lt;DesiredFirstTrackNumberEnqueued&gt;0&lt;/DesiredFirstTrackNumberEnqueued&gt;&lt;EnqueueAsNext&gt;0&lt;/EnqueueAsNext&gt;&lt;/u:AddURIToQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to AddURIToQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-5);
+END
+######################
+
+######################
+# set play uri
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;x-rincon-queue:" + playerUuid + "#0&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-6);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-7);
+END
+######################
+</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play playlist 2</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+					<ReadScriptPacketParser />
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"playlist_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check playlist name is not empty
+IF(ISNULL(playlist_name) OR LENGTH(playlist_name) = 0)
+   ADDERROR("Please set playlist name in device variables");
+   RETURN(-1);
+END
+
+######################
+# get player uuid
+VAR response := SENDHTTPREQUEST("xml/device_description.xml");
+VAR content := response.Content;
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+
+IF(ISNULL(playerUuid))
+    ADDERROR("Failed to get player UUID");
+    RETURN(-2);
+END
+######################
+
+######################
+# fetch playlists
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := response.Content;
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
+    
+######################
+IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    RETURN(-3);
+END
+
+######################
+# clear play queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#RemoveAllTracksFromQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:RemoveAllTracksFromQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:RemoveAllTracksFromQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to RemoveAllTracksFromQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-4);
+END
+######################
+
+######################
+# add playlist to queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#AddURIToQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:AddURIToQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;EnqueuedURI&gt;" + playlistUri + "&lt;/EnqueuedURI&gt;&lt;EnqueuedURIMetaData&gt;&lt;/EnqueuedURIMetaData&gt;&lt;DesiredFirstTrackNumberEnqueued&gt;0&lt;/DesiredFirstTrackNumberEnqueued&gt;&lt;EnqueueAsNext&gt;0&lt;/EnqueueAsNext&gt;&lt;/u:AddURIToQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to AddURIToQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-5);
+END
+######################
+
+######################
+# set play uri
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;x-rincon-queue:" + playerUuid + "#0&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-6);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-7);
+END
+######################
+</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play playlist 3</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+					<ReadScriptPacketParser />
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"playlist_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check playlist name is not empty
+IF(ISNULL(playlist_name) OR LENGTH(playlist_name) = 0)
+   ADDERROR("Please set playlist name in device variables");
+   RETURN(-1);
+END
+
+######################
+# get player uuid
+VAR response := SENDHTTPREQUEST("xml/device_description.xml");
+VAR content := response.Content;
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+
+IF(ISNULL(playerUuid))
+    ADDERROR("Failed to get player UUID");
+    RETURN(-2);
+END
+######################
+
+######################
+# fetch playlists
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := response.Content;
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
+    
+######################
+IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    RETURN(-3);
+END
+
+######################
+# clear play queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#RemoveAllTracksFromQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:RemoveAllTracksFromQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:RemoveAllTracksFromQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to RemoveAllTracksFromQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-4);
+END
+######################
+
+######################
+# add playlist to queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#AddURIToQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:AddURIToQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;EnqueuedURI&gt;" + playlistUri + "&lt;/EnqueuedURI&gt;&lt;EnqueuedURIMetaData&gt;&lt;/EnqueuedURIMetaData&gt;&lt;DesiredFirstTrackNumberEnqueued&gt;0&lt;/DesiredFirstTrackNumberEnqueued&gt;&lt;EnqueueAsNext&gt;0&lt;/EnqueueAsNext&gt;&lt;/u:AddURIToQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to AddURIToQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-5);
+END
+######################
+
+######################
+# set play uri
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;x-rincon-queue:" + playerUuid + "#0&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-6);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-7);
+END
+######################
+</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play playlist 4</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+					<ReadScriptPacketParser />
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"playlist_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check playlist name is not empty
+IF(ISNULL(playlist_name) OR LENGTH(playlist_name) = 0)
+   ADDERROR("Please set playlist name in device variables");
+   RETURN(-1);
+END
+
+######################
+# get player uuid
+VAR response := SENDHTTPREQUEST("xml/device_description.xml");
+VAR content := response.Content;
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+
+IF(ISNULL(playerUuid))
+    ADDERROR("Failed to get player UUID");
+    RETURN(-2);
+END
+######################
+
+######################
+# fetch playlists
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := response.Content;
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
+    
+######################
+IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    RETURN(-3);
+END
+
+######################
+# clear play queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#RemoveAllTracksFromQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:RemoveAllTracksFromQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:RemoveAllTracksFromQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to RemoveAllTracksFromQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-4);
+END
+######################
+
+######################
+# add playlist to queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#AddURIToQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:AddURIToQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;EnqueuedURI&gt;" + playlistUri + "&lt;/EnqueuedURI&gt;&lt;EnqueuedURIMetaData&gt;&lt;/EnqueuedURIMetaData&gt;&lt;DesiredFirstTrackNumberEnqueued&gt;0&lt;/DesiredFirstTrackNumberEnqueued&gt;&lt;EnqueueAsNext&gt;0&lt;/EnqueueAsNext&gt;&lt;/u:AddURIToQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to AddURIToQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-5);
+END
+######################
+
+######################
+# set play uri
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;x-rincon-queue:" + playerUuid + "#0&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-6);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-7);
+END
+######################
+</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Play playlist 5</Name>
+					<Model>PacketParserPushButton</Model>
+					<DeviceProperties>
+					<ReadScriptPacketParser />
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"playlist_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check playlist name is not empty
+IF(ISNULL(playlist_name) OR LENGTH(playlist_name) = 0)
+   ADDERROR("Please set playlist name in device variables");
+   RETURN(-1);
+END
+
+######################
+# get player uuid
+VAR response := SENDHTTPREQUEST("xml/device_description.xml");
+VAR content := response.Content;
+VAR playerUuid := PARSETEXT(content, "&lt;UDN&gt;uuid:", "&lt;/UDN&gt;");
+
+IF(ISNULL(playerUuid))
+    ADDERROR("Failed to get player UUID");
+    RETURN(-2);
+END
+######################
+
+######################
+# fetch playlists
+VAR playlistUri := NULL;
+VAR numberOfPlaylists := -1;
+VAR readPlaylists := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;SQ:&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readPlaylists + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    content := response.Content;
+    
+    IF(numberOfPlaylists = -1)
+        numberOfPlaylists := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedPlaylists := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readPlaylists := readPlaylists + returnedPlaylists;
+    
+    VAR playlistsXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    playlistUri := PARSEXML(playlistsXml, "//DIDL-Lite:container[dc:title='" + playlist_name + "']/DIDL-Lite:res");
+    
+    IF(!ISNULL(playlistUri) AND LENGTH(playlistUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readPlaylists &lt; numberOfPlaylists
+    
+######################
+IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    RETURN(-3);
+END
+
+######################
+# clear play queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#RemoveAllTracksFromQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:RemoveAllTracksFromQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;/u:RemoveAllTracksFromQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to RemoveAllTracksFromQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-4);
+END
+######################
+
+######################
+# add playlist to queue
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#AddURIToQueue\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:AddURIToQueue xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;EnqueuedURI&gt;" + playlistUri + "&lt;/EnqueuedURI&gt;&lt;EnqueuedURIMetaData&gt;&lt;/EnqueuedURIMetaData&gt;&lt;DesiredFirstTrackNumberEnqueued&gt;0&lt;/DesiredFirstTrackNumberEnqueued&gt;&lt;EnqueueAsNext&gt;0&lt;/EnqueueAsNext&gt;&lt;/u:AddURIToQueue&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to AddURIToQueue (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-5);
+END
+######################
+
+######################
+# set play uri
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;x-rincon-queue:" + playerUuid + "#0&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-6);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+    ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+    RETURN(-7);
+END
+######################
+</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+					</DeviceProperties>
+				</Device>
+				<Device>
+				  <Name>Play radio 1</Name>
+				  <Model>PacketParserPushButton</Model>
+				  <DeviceProperties>
+					<ReadScriptPacketParser></ReadScriptPacketParser>
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"radio_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check radio name is not empty
+IF(ISNULL(radio_name) OR LENGTH(radio_name) = 0)
+   ADDERROR("Please set radio name in device variables");
+   RETURN(-1);
+END
+
+######################
+# fetch favorites
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := response.Content;
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readFavorites &lt; numberOfFavorites
+
+IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
+END
+
+######################
+# find radio metadata
+VAR radioMetaData := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "'and DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']]/r:resMD");
+
+IF(ISNULL(radioMetaData) OR LENGTH(radioMetaData) = 0)
+	ADDERROR("Unable to find radio metadata");
+	RETURN(-4);
+END
+
+######################
+# set radio uri
+VAR metaDataEncoded := ENCODE(radioMetaData, "xml");
+VAR uriEncoded := ENCODE(radioUri, "xml");
+
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;" + uriEncoded + "&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;" + metaDataEncoded + "&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-5);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-6);
+END
+######################</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+				  </DeviceProperties>
+				</Device>
+				<Device>
+				  <Name>Play radio 2</Name>
+				  <Model>PacketParserPushButton</Model>
+				  <DeviceProperties>
+					<ReadScriptPacketParser></ReadScriptPacketParser>
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"radio_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check radio name is not empty
+IF(ISNULL(radio_name) OR LENGTH(radio_name) = 0)
+   ADDERROR("Please set radio name in device variables");
+   RETURN(-1);
+END
+
+######################
+# fetch favorites
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := response.Content;
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readFavorites &lt; numberOfFavorites
+
+IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
+END
+
+######################
+# find radio metadata
+VAR radioMetaData := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "'and DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']]/r:resMD");
+
+IF(ISNULL(radioMetaData) OR LENGTH(radioMetaData) = 0)
+	ADDERROR("Unable to find radio metadata");
+	RETURN(-4);
+END
+
+######################
+# set radio uri
+VAR metaDataEncoded := ENCODE(radioMetaData, "xml");
+VAR uriEncoded := ENCODE(radioUri, "xml");
+
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;" + uriEncoded + "&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;" + metaDataEncoded + "&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-5);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-6);
+END
+######################</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+				  </DeviceProperties>
+				</Device>
+				<Device>
+				  <Name>Play radio 3</Name>
+				  <Model>PacketParserPushButton</Model>
+				  <DeviceProperties>
+					<ReadScriptPacketParser></ReadScriptPacketParser>
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"radio_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check radio name is not empty
+IF(ISNULL(radio_name) OR LENGTH(radio_name) = 0)
+   ADDERROR("Please set radio name in device variables");
+   RETURN(-1);
+END
+
+######################
+# fetch favorites
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := response.Content;
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readFavorites &lt; numberOfFavorites
+
+IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
+END
+
+######################
+# find radio metadata
+VAR radioMetaData := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "'and DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']]/r:resMD");
+
+IF(ISNULL(radioMetaData) OR LENGTH(radioMetaData) = 0)
+	ADDERROR("Unable to find radio metadata");
+	RETURN(-4);
+END
+
+######################
+# set radio uri
+VAR metaDataEncoded := ENCODE(radioMetaData, "xml");
+VAR uriEncoded := ENCODE(radioUri, "xml");
+
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;" + uriEncoded + "&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;" + metaDataEncoded + "&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-5);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-6);
+END
+######################</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+				  </DeviceProperties>
+				</Device>
+				<Device>
+				  <Name>Play radio 4</Name>
+				  <Model>PacketParserPushButton</Model>
+				  <DeviceProperties>
+					<ReadScriptPacketParser></ReadScriptPacketParser>
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"radio_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check radio name is not empty
+IF(ISNULL(radio_name) OR LENGTH(radio_name) = 0)
+   ADDERROR("Please set radio name in device variables");
+   RETURN(-1);
+END
+
+######################
+# fetch favorites
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := response.Content;
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readFavorites &lt; numberOfFavorites
+
+IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
+END
+
+######################
+# find radio metadata
+VAR radioMetaData := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "'and DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']]/r:resMD");
+
+IF(ISNULL(radioMetaData) OR LENGTH(radioMetaData) = 0)
+	ADDERROR("Unable to find radio metadata");
+	RETURN(-4);
+END
+
+######################
+# set radio uri
+VAR metaDataEncoded := ENCODE(radioMetaData, "xml");
+VAR uriEncoded := ENCODE(radioUri, "xml");
+
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;" + uriEncoded + "&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;" + metaDataEncoded + "&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-5);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-6);
+END
+######################</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+				  </DeviceProperties>
+				</Device>
+				<Device>
+				  <Name>Play radio 5</Name>
+				  <Model>PacketParserPushButton</Model>
+				  <DeviceProperties>
+					<ReadScriptPacketParser></ReadScriptPacketParser>
+					<InternalPollInterval>10000</InternalPollInterval>
+					<CustomVariables>[{"Name":"radio_name","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+					<ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+					<ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+					<WriteButtonPressedStateScriptPacketParser>######################
+# check radio name is not empty
+IF(ISNULL(radio_name) OR LENGTH(radio_name) = 0)
+   ADDERROR("Please set radio name in device variables");
+   RETURN(-1);
+END
+
+######################
+# fetch favorites
+VAR radioUri := NULL;
+VAR numberOfFavorites := -1;
+VAR readFavorites := 0;
+
+DO
+    VAR header := "SOAPACTION: \"urn:schemas-upnp-org:service:ContentDirectory:1#Browse\"";
+    VAR body := "&lt;s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"&gt;&lt;s:Body&gt;&lt;u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"&gt;&lt;ObjectID&gt;FV:2&lt;/ObjectID&gt;&lt;BrowseFlag&gt;BrowseDirectChildren&lt;/BrowseFlag&gt;&lt;Filter&gt;&lt;/Filter&gt;&lt;StartingIndex&gt;" + readFavorites + "&lt;/StartingIndex&gt;&lt;RequestedCount&gt;10&lt;/RequestedCount&gt;&lt;SortCriteria&gt;&lt;/SortCriteria&gt;&lt;/u:Browse&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+    VAR response := SENDHTTPREQUEST("MediaServer/ContentDirectory/Control", "POST", body, header);
+    VAR content := response.Content;
+   
+    IF(numberOfFavorites = -1)
+        numberOfFavorites := TODOUBLE(PARSETEXT(content, "&lt;TotalMatches&gt;", "&lt;/TotalMatches&gt;"));
+    END
+    
+    VAR returnedFavorites := TODOUBLE(PARSETEXT(content, "&lt;NumberReturned&gt;", "&lt;/NumberReturned&gt;"));
+    readFavorites := readFavorites + returnedFavorites;
+    
+    VAR favoritesXml := DECODE(PARSETEXT(content, "&lt;Result&gt;", "&lt;/Result&gt;"), "xml");
+    radioUri := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "']/DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']");
+    
+    IF(!ISNULL(radioUri) AND LENGTH(radioUri) &gt; 0)
+        BREAK;
+    END
+LOOP WHILE readFavorites &lt; numberOfFavorites
+
+IF(ISNULL(radioUri) OR LENGTH(radioUri) = 0)
+    ADDERROR("Unable to find radio with name '" + radio_name + "'. Make sure it's included in your Sonos favorite radio stations");
+    RETURN(-3);
+END
+
+######################
+# find radio metadata
+VAR radioMetaData := PARSEXML(favoritesXml, "//DIDL-Lite:item[dc:title='" + radio_name + "'and DIDL-Lite:res[@protocolInfo='x-sonosapi-stream:*:*:*']]/r:resMD");
+
+IF(ISNULL(radioMetaData) OR LENGTH(radioMetaData) = 0)
+	ADDERROR("Unable to find radio metadata");
+	RETURN(-4);
+END
+
+######################
+# set radio uri
+VAR metaDataEncoded := ENCODE(radioMetaData, "xml");
+VAR uriEncoded := ENCODE(radioUri, "xml");
+
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;CurrentURI&gt;" + uriEncoded + "&lt;/CurrentURI&gt;&lt;CurrentURIMetaData&gt;" + metaDataEncoded + "&lt;/CurrentURIMetaData&gt;&lt;/u:SetAVTransportURI&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to SetAVTransportURI (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-5);
+END
+######################
+
+######################
+# play
+header := "SOAPACTION: \"urn:schemas-upnp-org:service:AVTransport:1#Play\"";
+body := "&lt;s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"&gt;&lt;s:Body&gt;&lt;u:Play xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"&gt;&lt;InstanceID&gt;0&lt;/InstanceID&gt;&lt;Speed&gt;1&lt;/Speed&gt;&lt;/u:Play&gt;&lt;/s:Body&gt;&lt;/s:Envelope&gt;";
+
+response := SENDHTTPREQUEST("MediaRenderer/AVTransport/Control", "POST", body, header);
+IF(!response.IsSuccess)
+	ADDERROR("Unable to Play (" + PARSEJSON(response, "Content", 1) + ")");
+	RETURN(-6);
+END
+######################</WriteButtonPressedStateScriptPacketParser>
+					<IconId>86</IconId>
+				  </DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>

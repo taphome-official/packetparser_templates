@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+	<Template id="71326e8c-8445-4b69-9236-6880b4f73e68" revision="1.0">
+		<Name>OpenWeather - current, hourly, daily data</Name>
+		<CcuModel>PacketParserCCU</CcuModel>
+		<Description></Description>
+		<RevisionHistory>
+			<Revision id="1.0">Initial version</Revision>
+		</RevisionHistory>
+		<ImportParameters>
+			<Parameter>
+				<Name>${longitude}</Name>
+				<Value>17.42407715713157</Value>
+				<Id>longitude</Id>
+			</Parameter>
+			<Parameter>
+				<Name>${latitude}</Name>
+				<Value>48.56497004696078</Value>
+				<Id>latitude</Id>
+			</Parameter>
+			<Parameter>
+				<Name>OpenWeather application id</Name>
+				<Value>appid</Value>
+				<Id>appid</Id>
+			</Parameter>
+		</ImportParameters>
+		<Module>
+			<Name>OpenWeather - current, hourly, daily data</Name>
+			<Model>PacketParserModuleHttp</Model>
+			<DeviceProperties>
+				<IpAddress>api.openweathermap.org</IpAddress>
+				<Port>80</Port>
+				<InternalPollInterval>300000</InternalPollInterval>
+				<ReadScriptPacketParser>responseJson := "error";
+
+VAR path := "data/2.5/onecall?units=metric&amp;lat=" + latitude + "&amp;lon=" + longitude + "&amp;appid=" + AppId;
+VAR response := SENDHTTPREQUEST(path);
+
+IF response.IsSuccess
+    responseJson := response.Content;
+ELSE
+    VAR contentJson := response.Content;
+    VAR errCode := response.StatusCode;
+    VAR message := PARSEJSON(contentJson, "message");
+    ADDERROR("Failed to read data - (" + errCode + ") " + message);
+END</ReadScriptPacketParser>
+				<CustomVariables>[{"Name":"longitude","ValueTypeId":2,"NumericValue":0.0,"StringValue":"$[longitude]"}, {"Name":"latitude","ValueTypeId":2,"NumericValue":0.0,"StringValue":"$[latitude]"}, {"Name":"AppId","ValueTypeId":2,"NumericValue":0.0,"StringValue":"$[appid]"},{"Name":"responseJson","ValueTypeId":2,"NumericValue":0.0,"StringValue":""}]</CustomVariables>
+			</DeviceProperties>
+			<Devices>
+				<Device>
+					<Name>Current Air Temperature</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.temp"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.humidity") / 100)</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Feels like Temperature</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.feels_like"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Air Pressure [hPa]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.pressure"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+
+				<Device>
+					<Name>Current Dew point</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.dew_point"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Clouds [%]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.clouds"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current UV index</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.uvi"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Visibility [m]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR visibility := PARSEJSON(responseJson,"current.visibility", 1);
+
+IF(visibility, visibility, 10000);</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Wind Speed [km/h]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.wind_speed")*3.6)</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Wind Direction</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"current.wind_deg"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Weather</Name>
+					<Model>PacketParserMultiValueSwitch</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<Value0Index>0</Value0Index>
+						<Value1Index>1</Value1Index>
+						<Value2Index>2</Value2Index>
+						<Value3Index>3</Value3Index>
+						<Value4Index>4</Value4Index>
+						<Value5Index>5</Value5Index>
+						<Value6Index>6</Value6Index>
+						<Value7Index>71</Value7Index>
+						<Value8Index>72</Value8Index>
+						<Value9Index>73</Value9Index>
+						<Value0Name>Clear</Value0Name>
+						<Value1Name>Clouds</Value1Name>
+						<Value2Name>Rain</Value2Name>
+						<Value3Name> Drizzle</Value3Name>
+						<Value4Name>Thunderstorm</Value4Name>
+						<Value5Name> Snow</Value5Name>
+						<Value6Name>Atmosphere</Value6Name>
+						<Value7Name>7</Value7Name>
+						<Value8Name>8</Value8Name>
+						<Value9Name>9</Value9Name>
+						<Value0IconId>234</Value0IconId>
+						<Value1IconId>235</Value1IconId>
+						<Value2IconId>238</Value2IconId>
+						<Value3IconId>236</Value3IconId>
+						<Value4IconId>239</Value4IconId>
+						<Value5IconId>237</Value5IconId>
+						<Value6IconId>240</Value6IconId>
+						<Value7IconId>12</Value7IconId>
+						<Value8IconId>13</Value8IconId>
+						<Value9IconId>14</Value9IconId>
+						<ReadSwitchStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+	return(NaN);
+END
+
+VAR weather := PARSEJSON(responseJson, "current.weather[0].main");
+SWITCH(weather, "Clear", 0, "Clouds", 1, "Rain", 2, "Drizzle", 3, "Thunderstorm", 4, "Snow", 5, "Mist", 6, "Smoke", 6, "Haze", 6, "Dust", 6, "Fog", 6, "Sand", 6, "Ash", 6, "Squall", 6, "Tornado", 6, 0);</ReadSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Current Precipitation [mm/m2]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+	return(NaN);
+END
+
+VAR weather := PARSEJSON(responseJson, "current.weather[0].main");
+SWITCH(weather, "Rain", PARSEJSON(responseJson, "current.rain.1h"), "Snow",  PARSEJSON(responseJson, "current.snow.1h") ,0);
+</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Air Temperature</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].temp"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].humidity") / 100)</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Feels like Temperature</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].feels_like"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Air Pressure [hPa]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].pressure"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Dew point</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].dew_point"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Clouds [%]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].clouds"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Probability of precipitation [%]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].pop") * 100)</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly UV index</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].uvi"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Visibility [m]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR visibility := PARSEJSON(responseJson,"hourly[0].visibility", 1);
+
+IF(visibility, visibility, 10000);</ReadStateScriptPacketParser>				
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Wind Speed [km/h]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].wind_speed")*3.6)</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Wind Direction</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"hourly[0].wind_deg"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Weather</Name>
+					<Model>PacketParserMultiValueSwitch</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<Value0Index>0</Value0Index>
+						<Value1Index>1</Value1Index>
+						<Value2Index>2</Value2Index>
+						<Value3Index>3</Value3Index>
+						<Value4Index>4</Value4Index>
+						<Value5Index>5</Value5Index>
+						<Value6Index>6</Value6Index>
+						<Value7Index>71</Value7Index>
+						<Value8Index>72</Value8Index>
+						<Value9Index>73</Value9Index>
+						<Value0Name>Clear</Value0Name>
+						<Value1Name>Clouds</Value1Name>
+						<Value2Name>Rain</Value2Name>
+						<Value3Name> Drizzle</Value3Name>
+						<Value4Name>Thunderstorm</Value4Name>
+						<Value5Name> Snow</Value5Name>
+						<Value6Name>Atmosphere</Value6Name>
+						<Value7Name>7</Value7Name>
+						<Value8Name>8</Value8Name>
+						<Value9Name>9</Value9Name>
+						<Value0IconId>234</Value0IconId>
+						<Value1IconId>235</Value1IconId>
+						<Value2IconId>238</Value2IconId>
+						<Value3IconId>236</Value3IconId>
+						<Value4IconId>239</Value4IconId>
+						<Value5IconId>237</Value5IconId>
+						<Value6IconId>240</Value6IconId>
+						<Value7IconId>12</Value7IconId>
+						<Value8IconId>13</Value8IconId>
+						<Value9IconId>14</Value9IconId>
+						<ReadSwitchStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+	return(NaN);
+END
+
+VAR weather := PARSEJSON(responseJson, "hourly[0].weather[0].main");
+SWITCH(weather, "Clear", 0, "Clouds", 1, "Rain", 2, "Drizzle", 3, "Thunderstorm", 4, "Snow", 5, "Mist", 6, "Smoke", 6, "Haze", 6, "Dust", 6, "Fog", 6, "Sand", 6, "Ash", 6, "Squall", 6, "Tornado", 6, 0);</ReadSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Hourly Precipitation [mm/m2]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+	return(NaN);
+END
+
+VAR weather := PARSEJSON(responseJson, "hourly[0].weather[0].main");
+SWITCH(weather, "Rain", PARSEJSON(responseJson, "hourly[0].rain.1h"), "Snow",  PARSEJSON(responseJson, "hourly[0].snow.1h") ,0);
+</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+
+				<Device>
+					<Name>Daily Air Temperature</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].temp.day"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].humidity") / 100)</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Feels like Temperature</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].feels_like.day"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Air Pressure [hPa]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].pressure"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Dew point</Name>
+					<Model>PacketParserTemperatureSensor</Model>
+					<DeviceProperties>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadTemperatureScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].dew_point"))</ReadTemperatureScriptPacketParser>
+						<ReadHumidityScriptPacketParser>NaN</ReadHumidityScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Clouds [%]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].clouds"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Probability of precipitation [%]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].pop") * 100)</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily UV index</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].uvi"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Visibility [m]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+    RETURN(NaN);
+END
+
+VAR visibility := PARSEJSON(responseJson,"daily[0].visibility", 1);
+
+IF(visibility, visibility, 10000);</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Wind Speed [km/h]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].wind_speed") * 3.6)</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Wind Direction</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>\
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, PARSEJSON(responseJson,"daily[0].wind_deg"))</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Weather</Name>
+					<Model>PacketParserMultiValueSwitch</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<Value0Index>0</Value0Index>
+						<Value1Index>1</Value1Index>
+						<Value2Index>2</Value2Index>
+						<Value3Index>3</Value3Index>
+						<Value4Index>4</Value4Index>
+						<Value5Index>5</Value5Index>
+						<Value6Index>6</Value6Index>
+						<Value7Index>71</Value7Index>
+						<Value8Index>72</Value8Index>
+						<Value9Index>73</Value9Index>
+						<Value0Name>Clear</Value0Name>
+						<Value1Name>Clouds</Value1Name>
+						<Value2Name>Rain</Value2Name>
+						<Value3Name> Drizzle</Value3Name>
+						<Value4Name>Thunderstorm</Value4Name>
+						<Value5Name> Snow</Value5Name>
+						<Value6Name>Atmosphere</Value6Name>
+						<Value7Name>7</Value7Name>
+						<Value8Name>8</Value8Name>
+						<Value9Name>9</Value9Name>
+						<Value0IconId>234</Value0IconId>
+						<Value1IconId>235</Value1IconId>
+						<Value2IconId>238</Value2IconId>
+						<Value3IconId>236</Value3IconId>
+						<Value4IconId>239</Value4IconId>
+						<Value5IconId>237</Value5IconId>
+						<Value6IconId>240</Value6IconId>
+						<Value7IconId>12</Value7IconId>
+						<Value8IconId>13</Value8IconId>
+						<Value9IconId>14</Value9IconId>
+						<ReadSwitchStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+	return(NaN);
+END
+
+VAR weather := PARSEJSON(responseJson, "daily[0].weather[0].main");
+SWITCH(weather, "Clear", 0, "Clouds", 1, "Rain", 2, "Drizzle", 3, "Thunderstorm", 4, "Snow", 5, "Mist", 6, "Smoke", 6, "Haze", 6, "Dust", 6, "Fog", 6, "Sand", 6, "Ash", 6, "Squall", 6, "Tornado", 6, 0);</ReadSwitchStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+				<Device>
+					<Name>Daily Precipitation [mm/m2]</Name>
+					<Model>PacketParserVariable</Model>
+					<DeviceProperties>
+						<IsReadOnly>True</IsReadOnly>
+						<InternalPollInterval>300000</InternalPollInterval>
+						<ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
+	return(NaN);
+END
+
+VAR weather := PARSEJSON(responseJson, "daily[0].weather[0].main");
+SWITCH(weather, "Rain", PARSEJSON(responseJson, "daily[0].rain"), "Snow",  PARSEJSON(responseJson, "daily[0].snow.1h") ,0);
+</ReadStateScriptPacketParser>
+					</DeviceProperties>
+				</Device>
+			</Devices>
+		</Module>
+	</Template>
+</Templates>
