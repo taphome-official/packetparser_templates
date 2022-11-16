@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "6a672c9f-7296-4fae-8f39-2077d0e2dfef">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus 2 PM</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Plus 2 PM</Model>
+    <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>    
+    <Module>
+      <Name>Shelly Plus 2 PM</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Sys.GetConfig");
+IF response.IsSuccess
+  VAR content := response.Content;
+  VAR responseHeaders := response.Headers;
+  SysConfig := response.Content;
+END;
+ 
+response := SENDHTTPREQUEST("/rpc/Sys.GetStatus");
+IF response.IsSuccess
+  content := response.Content;
+  responseHeaders := response.Headers;
+  if(PARSEJSON(response.Content, "$.restart_required") = true, ADDERROR("Restart required"));
+END</ReadScriptPacketParser>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"SysConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(SysConfig, \u0022$.device.mac\u0022);"},{"AttributeDefinition":{"Name":"Profile"},"ReadFormula":"PARSEJSON(SysConfig, \u0022$.device.profile\u0022);"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Reboot\u0022);\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  VAR responseHeaders := response.Headers;\r\n  Return(\u0022OK\u0022);\r\nEND;"},{"ActionDefinition":{"Name":"Profile","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Profile","Abbreviation":"pr","Values":[{"Item1":0,"Item2":"switch"},{"Item1":1,"Item2":"cover"}]}]},"Script":"var profile := SWITCH(pr, 1, \u0022cover\u0022, \u0022switch\u0022);\r\nVAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.SetProfile?name=\\\u0022\u0022\u002Bprofile\u002B\u0022\\\u0022\u0022);\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  VAR responseHeaders := response.Headers;\r\n  Return(\u0022OK\u0022);\r\nEND;"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Power Meter (Shutter)</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
+    var response := SENDHTTPREQUEST("/rpc/Cover.GetStatus?id=" + Id);
+    IF response.IsSuccess
+        VAR content := response.Content;
+        VAR responseHeaders := response.Headers;
+        CoverStatus := response.Content;
+    END
+end
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":0},{"Name":"CoverStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Voltage [V]"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.voltage\u0022, true);"},{"AttributeDefinition":{"Name":"Current [A]"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.current\u0022, true);"},{"AttributeDefinition":{"Name":"Power Factor"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.pf\u0022, true);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    adderror("Device profile is set to switch");
+else
+    return(PARSEJSON(CoverStatus, "$.aenergy.total") / 1000);
+end</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
+    return(PARSEJSON(CoverStatus, "$.apower", true) / 1000);
+end
+</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Power Meter (Switch 1)</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    var response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=" + Id);
+    IF response.IsSuccess
+        VAR content := response.Content;
+        VAR responseHeaders := response.Headers;
+        SwitchStatus := response.Content;
+    END
+end
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":0},{"Name":"SwitchStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Voltage [V]"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.voltage\u0022, true);"},{"AttributeDefinition":{"Name":"Current [A]"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.current\u0022, true);"},{"AttributeDefinition":{"Name":"Power Factor"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.pf\u0022, true);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
+    adderror("Device profile is set to cover");
+else
+    return(PARSEJSON(SwitchStatus, "$.aenergy.total", true) / 1000);
+end</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    return(PARSEJSON(SwitchStatus, "$.apower", true) / 1000);
+end</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Power Meter (Switch 2)</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    var response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=" + Id);
+    IF response.IsSuccess
+        VAR content := response.Content;
+        VAR responseHeaders := response.Headers;
+        SwitchStatus := response.Content;
+    END
+end
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":1},{"Name":"SwitchStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Voltage [V]"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.voltage\u0022, true);"},{"AttributeDefinition":{"Name":"Current [A]"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.current\u0022, true);"},{"AttributeDefinition":{"Name":"Power Factor"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.pf\u0022, true);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
+    adderror("Device profile is set to cover");
+else
+    return(PARSEJSON(SwitchStatus, "$.aenergy.total", true) / 1000);
+end</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    return(PARSEJSON(SwitchStatus, "$.apower", true) / 1000);
+end</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shutter</Name>
+          <Model>PacketParserSlide</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    adderror("Device profile is set to switch");
+else
+    var response := SENDHTTPREQUEST("/rpc/Cover.GetStatus?id=" + Id);
+    IF response.IsSuccess
+        VAR content := response.Content;
+        VAR responseHeaders := response.Headers;
+        CoverStatus := response.Content;
+    END
+    
+    response := SENDHTTPREQUEST("/rpc/Cover.GetConfig?id=" + Id);
+    IF response.IsSuccess
+        content := response.Content;
+        responseHeaders := response.Headers;
+        CoverConfig := response.Content;
+    END
+end</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":0},{"Name":"CoverStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"CoverConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Source"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.source\u0022, true);"},{"AttributeDefinition":{"Name":"State"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.state\u0022, true);"},{"AttributeDefinition":{"Name":"Current Position"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.current_pos\u0022, true);"},{"AttributeDefinition":{"Name":"Target Position"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.target_pos\u0022, true);"},{"AttributeDefinition":{"Name":"Move Timeout"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.move_timeout\u0022, true);"},{"AttributeDefinition":{"Name":"Move Started at"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.move_started_at\u0022, true);"},{"AttributeDefinition":{"Name":"Calibrated"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.pos_control\u0022, true);"},{"AttributeDefinition":{"Name":"Temperature [\u00B0C]"},"ReadFormula":"PARSEJSON(CoverStatus, \u0022$.temperature.tC\u0022, true);"},{"AttributeDefinition":{"Name":"Initial State"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.initial_state\u0022, true);"},{"AttributeDefinition":{"Name":"Input Mode"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.in_mode\u0022, true);"},{"AttributeDefinition":{"Name":"Power Limit [W]"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.power_limit\u0022, true);"},{"AttributeDefinition":{"Name":"Voltage Limit [V]"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.voltage_limit\u0022, true);"},{"AttributeDefinition":{"Name":"Current Limit [A]"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.current_limit\u0022, true);"},{"AttributeDefinition":{"Name":"Motor Idle Power Threshold [W]"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.motor.idle_power_thr\u0022, true);"},{"AttributeDefinition":{"Name":"Motor Idle Confirm Period [s]"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.motor.idle_confirm_period\u0022, true);"},{"AttributeDefinition":{"Name":"Max Time Open [s]"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.maxtime_open\u0022, true);"},{"AttributeDefinition":{"Name":"Max Time Close [s]"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.maxtime_close\u0022, true);"},{"AttributeDefinition":{"Name":"Swap Inputs"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.swap_inputs\u0022, true);"},{"AttributeDefinition":{"Name":"Invert Directions"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.invert_directions\u0022, true);"},{"AttributeDefinition":{"Name":"Obstruction Detection"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.obstruction_detection\u0022, true);"},{"AttributeDefinition":{"Name":"Safety Switch"},"ReadFormula":"PARSEJSON(CoverConfig, \u0022$.safety_switch\u0022, true);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Open","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022rpc/Cover.Open?id=\u0022 \u002B Id );\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"},{"ActionDefinition":{"Name":"Close","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022rpc/Cover.Close?id=\u0022 \u002B Id );\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"},{"ActionDefinition":{"Name":"Stop","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022rpc/Cover.Stop?id=\u0022 \u002B Id );\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"},{"ActionDefinition":{"Name":"Calibrate","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022rpc/Cover.Calibrate?id=\u0022 \u002B Id );\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"},{"ActionDefinition":{"Name":"Go to Position","NumericParameters":[{"FriendlyName":"Position","Abbreviation":"pos","IsFloat":false,"MinValue":0,"MaxValue":100}],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022rpc/Cover.GoToPosition?id=\u0022 \u002B Id \u002B \u0022\u0026pos=\u0022 \u002B pos);\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"},{"ActionDefinition":{"Name":"Reverse directions","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var reverse := \u0022false\u0022;\r\nif(PARSEJSON(CoverConfig, \u0022$.invert_directions\u0022), reverse := \u0022false\u0022, reverse := \u0022true\u0022);\r\nVAR response := SENDHTTPREQUEST(\u0022rpc/Cover.SetConfig?id=0\u0026config={\\\u0022invert_directions\\\u0022:\u0022 \u002B reverse \u002B \u0022}\u0022);\r\nIF response.IsSuccess\r\n  SENDHTTPREQUEST(\u0022rpc/Shelly.Reboot\u0022);\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadBlindsLevelScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    adderror("Device profile is set to switch");
+else
+    var response := SENDHTTPREQUEST("/rpc/Cover.GetStatus?id=" + Id);
+    IF response.IsSuccess
+        CoverStatus := response.Content;
+    END
+    if PARSEJSON(CoverStatus, "$.pos_control", true) = true
+        var pos := -1;
+        var curpos := PARSEJSON(CoverStatus, "$.current_pos", true);
+        if ISNULL(curpos)
+            adderror("Device lost its position. Open or close the cover completely to enable back position control.");
+            return(0);
+        end
+        var target := PARSEJSON(CoverStatus, "$.target_pos", true);
+        if(ISNULL(target), pos := curpos, pos := target);
+        return(linear(pos, 0, 1, 100, 0));
+    else
+        adderror("Device is not calibrated");
+    end
+end</ReadBlindsLevelScriptPacketParser>
+            <WriteBlindsLevelScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    adderror("Device profile is set to switch");
+else
+    VAR response := SENDHTTPREQUEST("rpc/Cover.GoToPosition?id=" + Id + "&amp;pos=" + linear(Bl, 0, 100, 1, 0));
+    IF response.IsSuccess
+      VAR content := response.Content;
+      Return("OK");
+    else
+      return(parsejson(response.Content,"$.message"));
+    END
+end</WriteBlindsLevelScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 1</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    var response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=" + Id);
+    IF response.IsSuccess
+        VAR content := response.Content;
+        VAR responseHeaders := response.Headers;
+        SwitchStatus := response.Content;
+    END
+    
+    response := SENDHTTPREQUEST("/rpc/Switch.GetConfig?id=" + Id);
+    IF response.IsSuccess
+        content := response.Content;
+        responseHeaders := response.Headers;
+        SwitchConfig := response.Content;
+    END
+end
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"SwitchStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"SwitchConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"Id","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Source"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.source\u0022, true);"},{"AttributeDefinition":{"Name":"Temprature [\u00B0C]"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.temperature.tC\u0022, true);"},{"AttributeDefinition":{"Name":"Initial State"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.initial_state\u0022, true);"},{"AttributeDefinition":{"Name":"Input Mode"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.in_mode\u0022, true);"},{"AttributeDefinition":{"Name":"Power Limit [W]"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.power_limit\u0022, true);"},{"AttributeDefinition":{"Name":"Voltage Limit [V]"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.voltage_limit\u0022, true);"},{"AttributeDefinition":{"Name":"Current Limit [A]"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.current_limit\u0022, true);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set Initial State","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Mode","Abbreviation":"md","Values":[{"Item1":0,"Item2":"off"},{"Item1":1,"Item2":"on"},{"Item1":2,"Item2":"restore_last"},{"Item1":3,"Item2":"match_input"}]}]},"Script":"var mode := SWITCH(md, 1, \u0022on\u0022, 2, \u0022restore_last\u0022, 3, \u0022match_input\u0022, \u0022off\u0022);\r\nVAR response := SENDHTTPREQUEST(\u0022rpc/Switch.SetConfig?id=\u0022 \u002B Id \u002B\u0022\u0026config={\\\u0022initial_state\\\u0022:\\\u0022\u0022\u002Bmode\u002B\u0022\\\u0022}\u0022);\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"},{"ActionDefinition":{"Name":"Set Mode","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Mode","Abbreviation":"md","Values":[{"Item1":0,"Item2":"follow"},{"Item1":1,"Item2":"detached"}]}]},"Script":"var mode := SWITCH(md, 1, \u0022detached\u0022, \u0022follow\u0022);\r\nVAR response := SENDHTTPREQUEST(\u0022rpc/Switch.SetConfig?id=\u0022 \u002B Id \u002B\u0022\u0026config={\\\u0022in_mode\\\u0022:\\\u0022\u0022\u002Bmode\u002B\u0022\\\u0022}\u0022);\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
+    adderror("Device profile is set to cover");
+else
+    PARSEJSON(SwitchStatus, "$.output", true);
+end</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    VAR response := SENDHTTPREQUEST("rpc/Switch.Set?id=" + Id + "&amp;on=" + if(St,"true","false"));
+    IF response.IsSuccess = false
+      ADDERROR(response.StatusCode);
+    END
+end</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 2</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    var response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=" + Id);
+    IF response.IsSuccess
+        VAR content := response.Content;
+        VAR responseHeaders := response.Headers;
+        SwitchStatus := response.Content;
+    END
+    
+    response := SENDHTTPREQUEST("/rpc/Switch.GetConfig?id=" + Id);
+    IF response.IsSuccess
+        content := response.Content;
+        responseHeaders := response.Headers;
+        SwitchConfig := response.Content;
+    END
+end
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":1},{"Name":"SwitchStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"SwitchConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Source"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.source\u0022, true);"},{"AttributeDefinition":{"Name":"Temprature [\u00B0C]"},"ReadFormula":"PARSEJSON(SwitchStatus, \u0022$.temperature.tC\u0022, true);"},{"AttributeDefinition":{"Name":"Initial State"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.initial_state\u0022, true);"},{"AttributeDefinition":{"Name":"Input Mode"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.in_mode\u0022, true);"},{"AttributeDefinition":{"Name":"Power Limit [W]"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.power_limit\u0022, true);"},{"AttributeDefinition":{"Name":"Voltage Limit [V]"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.voltage_limit\u0022, true);"},{"AttributeDefinition":{"Name":"Current Limit [A]"},"ReadFormula":"PARSEJSON(SwitchConfig, \u0022$.current_limit\u0022, true);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set Initial State","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Mode","Abbreviation":"md","Values":[{"Item1":0,"Item2":"off"},{"Item1":1,"Item2":"on"},{"Item1":2,"Item2":"restore_last"},{"Item1":3,"Item2":"match_input"}]}]},"Script":"var mode := SWITCH(md, 1, \u0022on\u0022, 2, \u0022restore_last\u0022, 3, \u0022match_input\u0022, \u0022off\u0022);\r\nVAR response := SENDHTTPREQUEST(\u0022rpc/Switch.SetConfig?id=\u0022 \u002B Id \u002B\u0022\u0026config={\\\u0022initial_state\\\u0022:\\\u0022\u0022\u002Bmode\u002B\u0022\\\u0022}\u0022);\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"},{"ActionDefinition":{"Name":"Set Mode","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Mode","Abbreviation":"md","Values":[{"Item1":0,"Item2":"follow"},{"Item1":1,"Item2":"detached"}]}]},"Script":"var mode := SWITCH(md, 1, \u0022detached\u0022, \u0022follow\u0022);\r\nVAR response := SENDHTTPREQUEST(\u0022rpc/Switch.SetConfig?id=\u0022 \u002B Id \u002B\u0022\u0026config={\\\u0022in_mode\\\u0022:\\\u0022\u0022\u002Bmode\u002B\u0022\\\u0022}\u0022);\r\nIF response.IsSuccess\r\n  VAR content := response.Content;\r\n  Return(\u0022OK\u0022);\r\nelse\r\n  return(parsejson(response.Content,\u0022$.message\u0022));\r\nEND;"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
+    adderror("Device profile is set to cover");
+else
+    PARSEJSON(SwitchStatus, "$.output", true);
+end</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
+    VAR response := SENDHTTPREQUEST("rpc/Switch.Set?id=" + Id + "&amp;on=" + if(St,"true","false"));
+    IF response.IsSuccess = false
+      ADDERROR(response.StatusCode);
+    END
+end</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
