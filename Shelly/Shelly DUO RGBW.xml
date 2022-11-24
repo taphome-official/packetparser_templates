@@ -168,8 +168,7 @@ debounceTimestamp := now.Ticks + transitionTime + 500;</WriteCCTScriptPacketPars
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ReadTotalConsumptionScriptPacketParser>ADDINFO("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
-IF LENGTH(jsonStatus) = 0
+            <ReadTotalConsumptionScriptPacketParser>IF LENGTH(jsonStatus) = 0
     RETURN(NaN);
 END
 
@@ -178,6 +177,8 @@ VAR total := PARSEJSON(jsonStatus, "$.meters[0].total");
 BOOL isOn := PARSEJSON(jsonStatus, "$.lights[0].ison");
 
 IF ISNULL(power) OR ISNULL(total) OR (ison AND power=0)
+	ADDWARNING("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+	
     RETURN(NaN);
 END
 
