@@ -1,0 +1,703 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="74">
+  <Template id="b1bc9d39-2b7a-4fb8-8d37-ee7d591a87cb" revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly DUO RGBW MQTT Module</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>Shelly DUO RGBW MQTT Module</Name>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>15000</InternalPollInterval>
+        <CustomVariables>[{"Name":"bulb1topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shellycolorbulb-deviceid1"},{"Name":"bulb2topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shellycolorbulb-deviceid2"},{"Name":"bulb3topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shellycolorbulb-deviceid3"},{"Name":"bulb4topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shellycolorbulb-deviceid4"},{"Name":"bulb5topic","ValueTypeId":2,"NumericValue":0.0,"StringValue":"shellycolorbulb-deviceid5"}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+		<RootTopic>shellies/#</RootTopic>
+        <Port>$[Port]</Port>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Shelly DUO RGBW MQTT Electric meter 1</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>ADDINFO("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+
+IF(INDEXOF(bulb1topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb1topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb1topic + "/light/0/power") = 0
+    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
+ELSEIF INDEXOF(topic, "shellies/" + bulb1topic + "/light/0/energy") = 0
+    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly DUO RGBW MQTT Light 1</Name>
+          <Model>PacketParserHSBLight</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+			<MinColorTemperature>3000</MinColorTemperature>
+			<MaxColorTemperature>6500</MaxColorTemperature>
+            <ListenerScriptPacketParser>IF(INDEXOF(bulb1topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb1topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb1topic + "/color/0/status") != 0
+    RETURN(0);
+END
+
+VAR json := PARSEJSON(data, "Payload", 1);
+
+IF LENGTH(json) = 0
+    RETURN(0);
+END
+
+BOOL ison := PARSEJSON(json, "$.ison", 1);
+VAR mode := PARSEJSON(json, "$.mode", 1);
+
+IF ISNULL(mode)
+    RETURN(0);
+END
+
+jsonStatus := json;
+INT bright;
+
+IF mode = "color"
+    UINT8 red := PARSEJSON(jsonStatus, "$.red");
+    UINT8 green := PARSEJSON(jsonStatus, "$.green");
+    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
+    bright := PARSEJSON(jsonStatus, "$.gain");
+    
+    VAR hsvColor := RGBTOHSV(red, green, blue);
+    
+    Hd := hsvColor.Hue;
+    Sa := hsvColor.Saturation;
+    Ct := NaN;
+ELSE
+    Ct := PARSEJSON(jsonStatus, "$.temp");
+    bright := PARSEJSON(jsonStatus, "$.brightness");
+END
+
+IF ison
+    Hb:= bright / 100.0;
+    St := isOn;
+ELSE
+    Hb := 0;
+    St := 0;
+END
+
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser></ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser />
+            <ReadBrightnessScriptPacketParser />
+            <ReadCCTScriptPacketParser />
+            <WriteHueScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb1topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser />
+            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+    VAR topic := "shellies/" + bulb1topic + "/color/0/set";
+    
+	IF ISNAN(Ct)
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+    ELSE
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        
+    END
+ELSE
+    MQTTPUBLISH("shellies/" + bulb1topic + "/color/0/command", "off");
+END</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser>IF ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb1topic + "/color/0/set";
+
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+</WriteCCTScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+		<Device>
+          <Name>Shelly DUO RGBW MQTT Electric meter 2</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>ADDINFO("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+
+IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb2topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb2topic + "/light/0/power") = 0
+    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
+ELSEIF INDEXOF(topic, "shellies/" + bulb2topic + "/light/0/energy") = 0
+    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly DUO RGBW MQTT Light 2</Name>
+          <Model>PacketParserHSBLight</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+			<MinColorTemperature>3000</MinColorTemperature>
+			<MaxColorTemperature>6500</MaxColorTemperature>
+            <ListenerScriptPacketParser>IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb2topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb2topic + "/color/0/status") != 0
+    RETURN(0);
+END
+
+VAR json := PARSEJSON(data, "Payload", 1);
+
+IF LENGTH(json) = 0
+    RETURN(0);
+END
+
+BOOL ison := PARSEJSON(json, "$.ison", 1);
+VAR mode := PARSEJSON(json, "$.mode", 1);
+
+IF ISNULL(mode)
+    RETURN(0);
+END
+
+jsonStatus := json;
+INT bright;
+
+IF mode = "color"
+    UINT8 red := PARSEJSON(jsonStatus, "$.red");
+    UINT8 green := PARSEJSON(jsonStatus, "$.green");
+    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
+    bright := PARSEJSON(jsonStatus, "$.gain");
+    
+    VAR hsvColor := RGBTOHSV(red, green, blue);
+    
+    Hd := hsvColor.Hue;
+    Sa := hsvColor.Saturation;
+    Ct := NaN;
+ELSE
+    Ct := PARSEJSON(jsonStatus, "$.temp");
+    bright := PARSEJSON(jsonStatus, "$.brightness");
+END
+
+IF ison
+    Hb:= bright / 100.0;
+    St := isOn;
+ELSE
+    Hb := 0;
+    St := 0;
+END
+
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser></ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser />
+            <ReadBrightnessScriptPacketParser />
+            <ReadCCTScriptPacketParser />
+            <WriteHueScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb2topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser />
+            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+    VAR topic := "shellies/" + bulb2topic + "/color/0/set";
+    
+	IF ISNAN(Ct)
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+    ELSE
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        
+    END
+ELSE
+    MQTTPUBLISH("shellies/" + bulb2topic + "/color/0/command", "off");
+END</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser>IF ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb2topic + "/color/0/set";
+
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+</WriteCCTScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+				<Device>
+          <Name>Shelly DUO RGBW MQTT Electric meter 3</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>ADDINFO("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+
+IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb3topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb3topic + "/light/0/power") = 0
+    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
+ELSEIF INDEXOF(topic, "shellies/" + bulb3topic + "/light/0/energy") = 0
+    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly DUO RGBW MQTT Light 3</Name>
+          <Model>PacketParserHSBLight</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+			<MinColorTemperature>3000</MinColorTemperature>
+			<MaxColorTemperature>6500</MaxColorTemperature>
+            <ListenerScriptPacketParser>IF(INDEXOF(bulb3topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb3topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb3topic + "/color/0/status") != 0
+    RETURN(0);
+END
+
+VAR json := PARSEJSON(data, "Payload", 1);
+
+IF LENGTH(json) = 0
+    RETURN(0);
+END
+
+BOOL ison := PARSEJSON(json, "$.ison", 1);
+VAR mode := PARSEJSON(json, "$.mode", 1);
+
+IF ISNULL(mode)
+    RETURN(0);
+END
+
+jsonStatus := json;
+INT bright;
+
+IF mode = "color"
+    UINT8 red := PARSEJSON(jsonStatus, "$.red");
+    UINT8 green := PARSEJSON(jsonStatus, "$.green");
+    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
+    bright := PARSEJSON(jsonStatus, "$.gain");
+    
+    VAR hsvColor := RGBTOHSV(red, green, blue);
+    
+    Hd := hsvColor.Hue;
+    Sa := hsvColor.Saturation;
+    Ct := NaN;
+ELSE
+    Ct := PARSEJSON(jsonStatus, "$.temp");
+    bright := PARSEJSON(jsonStatus, "$.brightness");
+END
+
+IF ison
+    Hb:= bright / 100.0;
+    St := isOn;
+ELSE
+    Hb := 0;
+    St := 0;
+END
+
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser></ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser />
+            <ReadBrightnessScriptPacketParser />
+            <ReadCCTScriptPacketParser />
+            <WriteHueScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb3topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser />
+            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+    VAR topic := "shellies/" + bulb3topic + "/color/0/set";
+    
+	IF ISNAN(Ct)
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+    ELSE
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        
+    END
+ELSE
+    MQTTPUBLISH("shellies/" + bulb3topic + "/color/0/command", "off");
+END</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser>IF ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb3topic + "/color/0/set";
+
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+</WriteCCTScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+				<Device>
+          <Name>Shelly DUO RGBW MQTT Electric meter 4</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>ADDINFO("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+
+IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb4topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb4topic + "/light/0/power") = 0
+    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
+ELSEIF INDEXOF(topic, "shellies/" + bulb4topic + "/light/0/energy") = 0
+    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly DUO RGBW MQTT Light 4</Name>
+          <Model>PacketParserHSBLight</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+			<MinColorTemperature>3000</MinColorTemperature>
+			<MaxColorTemperature>6500</MaxColorTemperature>
+            <ListenerScriptPacketParser>IF(INDEXOF(bulb4topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb4topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb4topic + "/color/0/status") != 0
+    RETURN(0);
+END
+
+VAR json := PARSEJSON(data, "Payload", 1);
+
+IF LENGTH(json) = 0
+    RETURN(0);
+END
+
+BOOL ison := PARSEJSON(json, "$.ison", 1);
+VAR mode := PARSEJSON(json, "$.mode", 1);
+
+IF ISNULL(mode)
+    RETURN(0);
+END
+
+jsonStatus := json;
+INT bright;
+
+IF mode = "color"
+    UINT8 red := PARSEJSON(jsonStatus, "$.red");
+    UINT8 green := PARSEJSON(jsonStatus, "$.green");
+    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
+    bright := PARSEJSON(jsonStatus, "$.gain");
+    
+    VAR hsvColor := RGBTOHSV(red, green, blue);
+    
+    Hd := hsvColor.Hue;
+    Sa := hsvColor.Saturation;
+    Ct := NaN;
+ELSE
+    Ct := PARSEJSON(jsonStatus, "$.temp");
+    bright := PARSEJSON(jsonStatus, "$.brightness");
+END
+
+IF ison
+    Hb:= bright / 100.0;
+    St := isOn;
+ELSE
+    Hb := 0;
+    St := 0;
+END
+
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser></ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser />
+            <ReadBrightnessScriptPacketParser />
+            <ReadCCTScriptPacketParser />
+            <WriteHueScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb4topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser />
+            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+    VAR topic := "shellies/" + bulb4topic + "/color/0/set";
+    
+	IF ISNAN(Ct)
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+    ELSE
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        
+    END
+ELSE
+    MQTTPUBLISH("shellies/" + bulb4topic + "/color/0/command", "off");
+END</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser>IF ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb4topic + "/color/0/set";
+
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+</WriteCCTScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+				<Device>
+          <Name>Shelly DUO RGBW MQTT Electric meter 5</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>ADDINFO("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+
+IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb5topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb5topic + "/light/0/power") = 0
+    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
+ELSEIF INDEXOF(topic, "shellies/" + bulb5topic + "/light/0/energy") = 0
+    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly DUO RGBW MQTT Light 5</Name>
+          <Model>PacketParserHSBLight</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+			<MinColorTemperature>3000</MinColorTemperature>
+			<MaxColorTemperature>6500</MaxColorTemperature>
+            <ListenerScriptPacketParser>IF(INDEXOF(bulb5topic, "shellycolorbulb-deviceid") = 0)
+    ADDERROR("Set correct 'bulb5topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
+    RETURN(-1);
+END
+
+VAR data := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(data, "Topic");
+
+IF INDEXOF(topic, "shellies/" + bulb5topic + "/color/0/status") != 0
+    RETURN(0);
+END
+
+VAR json := PARSEJSON(data, "Payload", 1);
+
+IF LENGTH(json) = 0
+    RETURN(0);
+END
+
+BOOL ison := PARSEJSON(json, "$.ison", 1);
+VAR mode := PARSEJSON(json, "$.mode", 1);
+
+IF ISNULL(mode)
+    RETURN(0);
+END
+
+jsonStatus := json;
+INT bright;
+
+IF mode = "color"
+    UINT8 red := PARSEJSON(jsonStatus, "$.red");
+    UINT8 green := PARSEJSON(jsonStatus, "$.green");
+    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
+    bright := PARSEJSON(jsonStatus, "$.gain");
+    
+    VAR hsvColor := RGBTOHSV(red, green, blue);
+    
+    Hd := hsvColor.Hue;
+    Sa := hsvColor.Saturation;
+    Ct := NaN;
+ELSE
+    Ct := PARSEJSON(jsonStatus, "$.temp");
+    bright := PARSEJSON(jsonStatus, "$.brightness");
+END
+
+IF ison
+    Hb:= bright / 100.0;
+    St := isOn;
+ELSE
+    Hb := 0;
+    St := 0;
+END
+
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser></ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser />
+            <ReadBrightnessScriptPacketParser />
+            <ReadCCTScriptPacketParser />
+            <WriteHueScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb5topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser />
+            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+    VAR topic := "shellies/" + bulb5topic + "/color/0/set";
+    
+	IF ISNAN(Ct)
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+    ELSE
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        
+    END
+ELSE
+    MQTTPUBLISH("shellies/" + bulb5topic + "/color/0/command", "off");
+END</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser>IF ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR topic := "shellies/" + bulb5topic + "/color/0/set";
+
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+</WriteCCTScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
