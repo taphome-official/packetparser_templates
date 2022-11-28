@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id="6a27723d-f821-4190-9e3e-50b1ad9bb9be">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <ImportParameters>
+        <Parameter>
+            <Name>${token}</Name>
+            <Value>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</Value>
+            <Id>token</Id>
+        </Parameter>
+	</ImportParameters>
+    <Name>TapHome API</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>TapHome API</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"API_token","ValueTypeId":2,"NumericValue":0,"StringValue":"$[token]"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Devices"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/discovery\u0022, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF response.IsSuccess\r\n    var max := PARSEJSON(response.content, \u0022$.devices[-1:].deviceId\u0022);\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        ret := ret \u002B \u0022(\u0022 \u002B PARSEJSON(response.content, \u0022$.devices[\u0022 \u002B tostring(i) \u002B \u0022].deviceId\u0022, true) \u002B \u0022) \u0022;\r\n        ret := ret \u002B PARSEJSON(response.content, \u0022$.devices[\u0022 \u002B tostring(i) \u002B \u0022].name\u0022, true);\r\n        ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.devices[\u0022 \u002B tostring(i) \u002B \u0022].type\u0022, true);\r\n        ret := ret \u002B \u0022\\n\u0022;\r\n        i := i \u002B 1;\r\n    loop while i \u003C max\r\n    \r\n    RETURN(ret);\r\nEND"}]</ServiceAttributesScriptsPacketParser>
+        <IpAddress>cloudapi.taphome.com</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":0},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":1},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":2},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":3},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":4},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":5},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":6},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":7},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":8},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":9},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceVariable}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Id","ValueTypeId":1,"NumericValue":10},{"Name":"valueTypeId","ValueTypeId":1,"NumericValue":62}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value Types"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/cloudapi/v1/getDeviceValue/\u0022 \u002B Id, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF(response.IsSuccess)\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        if ! isnull(PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true))\r\n            ret := ret \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeId\u0022, true);\r\n            ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.values[\u0022 \u002B i \u002B \u0022].valueTypeName\u0022, true);\r\n            ret := ret \u002B \u0022\\n\u0022;\r\n        end\r\n        i := i \u002B 1;\r\n    loop while i \u003C 10\r\n    RETURN(ret);\r\nEND\r\n\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/cloudapi/v1/getDeviceValue/" + Id, "GET", "", "Authorization: TapHome " + API_token);
+IF(response.IsSuccess)
+ RETURN(PARSEJSON(response.content, "$.values[?(@.valueTypeId == " + valueTypeId + ")].value"));
+ELSE
+ ADDERROR("Response:" + response.StatusCode + "|" + PARSEJSON(response.content, "$.title") + " - " + PARSEJSON(response.content, "$.detail"));
+ RETURN(NaN);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>        
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
