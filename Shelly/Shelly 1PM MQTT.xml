@@ -5,7 +5,7 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Shelly 1PM MQTT Module</Name>
+    <Name>Shelly 1PM MQTT</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>

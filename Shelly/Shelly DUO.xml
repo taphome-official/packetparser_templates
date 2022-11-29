@@ -5,7 +5,7 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Shelly DUO Module</Name>
+    <Name>Shelly DUO</Name>
     <CcuModel>PacketParserCCU</CcuModel>
 	<ImportParameters>
 		<Parameter>

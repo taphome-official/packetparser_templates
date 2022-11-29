@@ -12,7 +12,7 @@
 			<Id>IpAddress</Id>
 		</Parameter>
 	</ImportParameters>
-    <Name>Shelly DUO RGBW Module</Name>
+    <Name>Shelly DUO RGBW</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
