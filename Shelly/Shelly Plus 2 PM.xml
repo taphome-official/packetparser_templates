@@ -175,7 +175,11 @@ else
         end
         var target := PARSEJSON(CoverStatus, "$.target_pos", true);
         if(ISNULL(target), pos := curpos, pos := target);
-        return(linear(pos, 0, 1, 100, 0));
+        if PARSEJSON(CoverConfig, "$.invert_directions", true)
+            return(linear(pos, 0, 0, 100, 1));
+        else
+            return(linear(pos, 0, 1, 100, 0));
+        end
     else
         adderror("Device is not calibrated");
     end
@@ -183,7 +187,13 @@ end</ReadBlindsLevelScriptPacketParser>
             <WriteBlindsLevelScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
     adderror("Device profile is set to switch");
 else
-    VAR response := SENDHTTPREQUEST("rpc/Cover.GoToPosition?id=" + Id + "&amp;pos=" + linear(Bl, 0, 100, 1, 0));
+    var pos := 0;
+    if PARSEJSON(CoverConfig, "$.invert_directions", true)
+        pos := linear(Bl, 0, 0, 1, 100);
+    else
+        pos := linear(Bl, 0, 100, 1, 0);
+    end
+    VAR response := SENDHTTPREQUEST("rpc/Cover.GoToPosition?id=" + Id + "&amp;pos=" + pos);
     IF response.IsSuccess
       VAR content := response.Content;
       Return("OK");
