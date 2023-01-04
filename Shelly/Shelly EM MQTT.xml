@@ -1,0 +1,453 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73" locationId="6e925d6a-2e56-4450-885f-4eb8b5a2b4ca">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly EM MQTT</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <ImportParameters>
+
+
+    <Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+    		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+    		<Parameter>
+			<Name>DeviceID</Name>	
+			<Value></Value>
+			<Id>dID</Id>
+		</Parameter>
+
+    </ImportParameters>
+    <Module>
+      <Name>Shelly EM MQTT</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":$[dID]},{"Name":"response","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ListenerScriptPacketParser>response := tostring(RECEIVEDBYTES);</ListenerScriptPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
+        <RootTopic>shellies/#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>mqttChannel 1 Electric meter</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Voltage [V]"},"ReadFormula":"if parsejson(response, \u0022Topic\u0022) = \u0022shellies/shellyem-\u0022\u002BdeviceID\u002B\u0022/emeter/0/voltage\u0022\r\n return(todouble(parsejson(response, \u0022Payload\u0022)));\r\nend"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR whatEd := "shellies/shellyem-"+deviceID+"/emeter/0/energy";
+VAR whatTo := "shellies/shellyem-"+deviceID+"/emeter/0/total";
+var c := PARSEJSON(jsonResponse, "Topic");
+IF (whatEd = PARSEJSON(jsonResponse, "Topic"))
+ Ed := todouble(parsejson(jsonResponse, "Payload"))/60000;
+END
+IF (whatTo = PARSEJSON(jsonResponse, "Topic"))
+ To := todouble(parsejson(jsonResponse, "Payload"));
+END
+    
+# ELSE
+# St := 0;
+# END
+#END
+
+# Parse received bytes:
+# VAR commmand := GETBYTE(RECEIVEDBYTES, 0);
+# IF(commmand = 1)
+#  To := GETBYTE(RECEIVEDBYTES, 1) &amp; 0x01;
+# END
+#
+# Convert bytes to string:
+# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#
+# Specify string encoding:
+# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
+#
+# Complete service attribute or service action:
+# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
+# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>mqttChannel 2 Electric meter</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"if parsejson(response, \u0022Topic\u0022) = \u0022shellies/shellyem-\u0022\u002BdeviceID\u002B\u0022/emeter/1/voltage\u0022\r\n return(parsejson(response, \u0022Payload\u0022));\r\nend"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR whatEd := "shellies/shellyem-"+deviceID+"/emeter/1/energy";
+VAR whatTo := "shellies/shellyem-"+deviceID+"/emeter/1/total";
+var c := PARSEJSON(jsonResponse, "Topic");
+IF (whatEd = PARSEJSON(jsonResponse, "Topic"))
+ Ed := todouble(parsejson(jsonResponse, "Payload"))/60000;
+END
+IF (whatTo = PARSEJSON(jsonResponse, "Topic"))
+ To := todouble(parsejson(jsonResponse, "Payload"));
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>mqttPower Switch</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR whatSt := "shellies/shellyem-"+deviceID+"/relay/0";
+IF (whatSt = PARSEJSON(jsonResponse, "Topic"))
+ IF (PARSEJSON(jsonResponse, "Payload") = "on")
+  St := 1;
+ ELSE
+  St := 0;
+ END
+END
+
+# Parse received bytes:
+# VAR commmand := GETBYTE(RECEIVEDBYTES, 0);
+# IF(commmand = 1)
+#  St := GETBYTE(RECEIVEDBYTES, 1) &amp; 0x01;
+# END
+#
+# Convert bytes to string:
+# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#
+# Specify string encoding:
+# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
+#
+# Complete service attribute or service action:
+# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
+# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>MQTTPUBLISH("shellies/shellyem-" + deviceID + "/relay/0/command",if(St = 1, "on","off"));
+
+# Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + St);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + St, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + St + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + St + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + St, "write"); # use "append" mode to append data to existing file</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>mqttTotal Electric meter</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR whatEd0 := "shellies/shellyem-"+deviceID+"/emeter/0/energy";
+VAR whatTo0 := "shellies/shellyem-"+deviceID+"/emeter/0/total";
+VAR whatEd1 := "shellies/shellyem-"+deviceID+"/emeter/1/energy";
+VAR whatTo1 := "shellies/shellyem-"+deviceID+"/emeter/1/total";
+var Ed0 := 0;
+var Ed1 := 0;
+var To0 := 0;
+var To1 := 0;
+var c := PARSEJSON(jsonResponse, "Topic");
+IF (whatEd0 = PARSEJSON(jsonResponse, "Topic"))
+ Ed0 := todouble(parsejson(jsonResponse, "Payload"))/60000;
+END
+IF (whatTo0 = PARSEJSON(jsonResponse, "Topic"))
+ To0 := todouble(parsejson(jsonResponse, "Payload"));
+END
+IF (whatEd1 = PARSEJSON(jsonResponse, "Topic"))
+ Ed1 := todouble(parsejson(jsonResponse, "Payload"))/60000;
+END
+IF (whatTo1 = PARSEJSON(jsonResponse, "Topic"))
+ To1 := todouble(parsejson(jsonResponse, "Payload"));
+END
+
+To := To0 + To1;
+Ed := Ed0 + Ed1;</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
