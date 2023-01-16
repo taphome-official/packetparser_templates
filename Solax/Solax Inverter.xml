@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="73" locationId="ae15b896-ec65-4d85-bad6-c1a89b2251d5">
-  <Template revision="1.0">
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "0409e0d1-59f4-48b4-ac6b-a4c890546c01">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
@@ -9,7 +9,7 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
-    <Description>You can obtain token ID on the API page of Solaxcloud</Description>
+    <Description>You can obtain token ID on the API page from Solaxcloud</Description>
     <ImportParameters>
 			<Parameter>
 				<Name>Token ID</Name>	
@@ -42,7 +42,7 @@ if statusCode = "110"
  addwarning("Inverter in standby mode");
 end</ReadScriptPacketParser>
         <InternalPollInterval>20000</InternalPollInterval>
-        <CustomVariables>[{"Name":"ans","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"tokenID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[tokenID]"},{"Name":"sn","ValueTypeId":2,"NumericValue":0,"StringValue":"$[sn]"}]</CustomVariables>
+        <CustomVariables>[{"Name":"ans","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"tokenID","ValueTypeId":2,"NumericValue":0,"StringValue":"202209250050590690102514"},{"Name":"sn","ValueTypeId":2,"NumericValue":0,"StringValue":"SXRCGUUQJ9"}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Inverter status code"},"ReadFormula":"var statusCode := (parsejson(parsejson(ans,\u0022result\u0022),\u0022inverterStatus\u0022));\r\n\r\nreturn(statusCode)"},{"AttributeDefinition":{"Name":"Inverter type"},"ReadFormula":"return(parsejson(parsejson(ans,\u0022result\u0022),\u0022inverterType\u0022))"}]</ServiceAttributesScriptsPacketParser>
         <IpAddress>www.solaxcloud.com</IpAddress>
         <Port>80</Port>
@@ -55,7 +55,13 @@ end</ReadScriptPacketParser>
           <Id>-2</Id>
           <DeviceProperties>
             <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser>return(parsejson(parsejson(ans,"result"),"batPower"))</ReadScriptPacketParser>
+            <ReadScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"batPower", true);
+
+if x = null
+ addwarning("No battery");
+end
+
+return(x)</ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
@@ -101,7 +107,12 @@ end</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>return(parsejson(parsejson(ans,"result"),"powerdc1"))</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc1",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
 # IF response.IsSuccess = false
@@ -140,7 +151,12 @@ end</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>return(parsejson(parsejson(ans,"result"),"powerdc2"))</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc2",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
 # IF response.IsSuccess = false
@@ -179,7 +195,12 @@ end</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>return(parsejson(parsejson(ans,"result"),"powerdc3"))</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc3",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
 # IF response.IsSuccess = false
@@ -219,7 +240,12 @@ end</ReadScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
             <ReadStateScriptPacketParser />
-            <WriteStateScriptPacketParser>return(parsejson(parsejson(ans,"result"),"powerdc4"))</WriteStateScriptPacketParser>
+            <WriteStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc4",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</WriteStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
@@ -352,7 +378,12 @@ end</ReadScriptPacketParser>
           <Id>-11</Id>
           <DeviceProperties>
             <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser>return(parsejson(parsejson(ans,"result"),"soc"))</ReadScriptPacketParser>
+            <ReadScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"soc",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
