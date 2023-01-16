@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="73" locationId="6e925d6a-2e56-4450-885f-4eb8b5a2b4ca">
-  <Template revision="1.0">
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "1d211aab-03a2-46af-b44c-a7482fad4f70">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
@@ -9,6 +9,7 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
+    <ImportParameters>
      <Parameter>
 			<Name>Mqtt Broker ${ipAddress}</Name>	
 			<Value>192.168.0.1</Value>
@@ -25,7 +26,6 @@
 			<Id>dID</Id>
 		</Parameter>
 		</ImportParameters>
-    <Module>
     <Description></Description>
     <Module>
       <Name>Shelly H&amp;M</Name>
