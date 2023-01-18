@@ -362,7 +362,7 @@ LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
-    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlists are supported.");
     RETURN(-3);
 END
 
@@ -475,7 +475,7 @@ LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
-    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlists are supported.");
     RETURN(-3);
 END
 
@@ -588,7 +588,7 @@ LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
-    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlists are supported.");
     RETURN(-3);
 END
 
@@ -701,7 +701,7 @@ LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
-    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlists are supported.");
     RETURN(-3);
 END
 
@@ -814,7 +814,7 @@ LOOP WHILE readPlaylists &lt; numberOfPlaylists
     
 ######################
 IF(ISNULL(playlistUri) OR LENGTH(playlistUri) = 0)
-    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlist are supported.");
+    ADDERROR("Unable to find playlist with name '" + playlist_name + "'. Only Sonos playlists are supported.");
     RETURN(-3);
 END
 

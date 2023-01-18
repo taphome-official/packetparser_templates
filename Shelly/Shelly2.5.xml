@@ -5,7 +5,7 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Shelly2.5</Name>
+    <Name>Shelly 2.5</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>

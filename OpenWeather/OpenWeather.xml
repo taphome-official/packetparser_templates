@@ -9,14 +9,14 @@
 		</RevisionHistory>
 		<ImportParameters>
 			<Parameter>
-				<Name>${longitude}</Name>
-				<Value>17.42407715713157</Value>
-				<Id>longitude</Id>
+				<Name>${latitude}</Name>
+				<Value>48.1778</Value>
+				<Id>latitude</Id>
 			</Parameter>
 			<Parameter>
-				<Name>${latitude}</Name>
-				<Value>48.56497004696078</Value>
-				<Id>latitude</Id>
+				<Name>${longitude}</Name>
+				<Value>17.1426</Value>
+				<Id>longitude</Id>
 			</Parameter>
 			<Parameter>
 				<Name>OpenWeather application id</Name>
