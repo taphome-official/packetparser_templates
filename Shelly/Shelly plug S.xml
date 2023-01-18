@@ -30,7 +30,7 @@
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Shelly plug S Electric meter</Name>
+          <Name>Electric meter</Name>
           <Model>PacketParserElectricityMeter</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -117,7 +117,7 @@ END;
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Shelly plug S Switch</Name>
+          <Name>Switch</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-3</Id>
           <DeviceProperties>
@@ -132,7 +132,7 @@ END;
             <OffStateIconId>61</OffStateIconId>
             <OnStateName>${general_on}</OnStateName>
             <OffStateName>${general_off}</OffStateName>
-            <ReadSwitchStateScriptPacketParser># Simple HTTP Request:
+            <ReadSwitchStateScriptPacketParser>
 VAR response := SENDHTTPREQUEST("/settings/relay/0");
 IF response.IsSuccess
  VAR content := response.Content;
