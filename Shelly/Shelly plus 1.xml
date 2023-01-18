@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="73" locationId="6e925d6a-2e56-4450-885f-4eb8b5a2b4ca">
-  <Template revision="1.0">
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "cf015601-d383-4b60-9f92-23673221d490">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>

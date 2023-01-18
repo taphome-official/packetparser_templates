@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "0409e0d1-59f4-48b4-ac6b-a4c890546c01">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Solax Inverter</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description>You can obtain token ID on the API page from Solaxcloud</Description>
+    <ImportParameters>
+			<Parameter>
+				<Name>Token ID</Name>	
+				<Value></Value>
+				<Id>tokenID</Id>
+			</Parameter>
+      <Parameter>
+				<Name>Registration No. (communication module)</Name>	
+				<Value></Value>
+				<Id>sn</Id>
+			</Parameter>
+		</ImportParameters>
+    <Module>
+      <Name>Solax Inverter</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>var response := sendhttprequest("/proxyApp/proxy/api/getRealtimeInfo.do?tokenId="+tokenID+"&amp;sn="+sn);
+
+ans := response.Content;
+var statusCode := (parsejson(parsejson(ans,"result"),"inverterStatus"));
+
+if statusCode =  "103"
+ addwarning("Inverter in fault mode");
+end
+if statusCode = "104"
+ addwarning("Inverter in permanent fault mode");
+end
+if statusCode = "110"
+ addwarning("Inverter in standby mode");
+end</ReadScriptPacketParser>
+        <InternalPollInterval>20000</InternalPollInterval>
+        <CustomVariables>[{"Name":"ans","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"tokenID","ValueTypeId":2,"NumericValue":0,"StringValue":$[tokenID]},{"Name":"sn","ValueTypeId":2,"NumericValue":0,"StringValue":$[sn]}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Inverter status code"},"ReadFormula":"var statusCode := (parsejson(parsejson(ans,\u0022result\u0022),\u0022inverterStatus\u0022));\r\n\r\nreturn(statusCode)"},{"AttributeDefinition":{"Name":"Inverter type"},"ReadFormula":"return(parsejson(parsejson(ans,\u0022result\u0022),\u0022inverterType\u0022))"}]</ServiceAttributesScriptsPacketParser>
+        <IpAddress>www.solaxcloud.com</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Battery power [W]</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"batPower", true);
+
+if x = null
+ addwarning("No battery");
+end
+
+return(x)</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Va, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Va + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Va + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Va, "write"); # use "append" mode to append data to existing file</WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>DC input 1 [W]</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc1",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Va, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Va + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Va + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Va, "write"); # use "append" mode to append data to existing file</WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>DC input 2 [W]</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc2",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Va, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Va + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Va + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Va, "write"); # use "append" mode to append data to existing file</WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>DC input 3 [W]</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc3",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Va, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Va + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Va + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Va, "write"); # use "append" mode to append data to existing file</WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>DC input 4 [W]</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"powerdc4",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Electric meter from grid</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(ans,"result"),"consumeenergy"))</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Electric meter inverter today</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(ans,"result"),"yieldtoday"))</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Electric meter inverter total</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(ans,"result"),"yieldtotal"))</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(parsejson(ans,"result"),"acpower")/1000)</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Electric meter to grid</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(ans,"result"),"feedinenergy"))</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(parsejson(ans,"result"),"feedinpower")/1000)</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>State of charge [%]</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-11</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"soc",true);
+
+if x = null
+ addwarning("Can not detect");
+end
+return(x)</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Va, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Va + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Va + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Va, "write"); # use "append" mode to append data to existing file</WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
