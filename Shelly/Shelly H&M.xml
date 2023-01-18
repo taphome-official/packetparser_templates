@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "1d211aab-03a2-46af-b44c-a7482fad4f70">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly H&amp;M</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <ImportParameters>
+     <Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+    <Parameter>
+			<Name>DEVICE Id</Name>	
+			<Value></Value>
+			<Id>dID</Id>
+		</Parameter>
+		</ImportParameters>
+    <Description></Description>
+    <Module>
+      <Name>Shelly H&amp;M</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"DeviceID","ValueTypeId":2,"NumericValue":0,"StringValue":$[dID]}]</CustomVariables>
+        <IpAddress>$[IpAdress]</IpAddress>
+        <Port>$[Port]</Port>
+        <RootTopic>shellies/#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${temperatureSensor}</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"listenTemp","ValueTypeId":1,"NumericValue":0},{"Name":"listenHum","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser># Parse received bytes:
+VAR command := tostring(RECEIVEDBYTES);
+IF(parsejson(command, "Topic") = "shellies/shellyht-"+DeviceID+"/sensor/temperature")
+ listenTemp := todouble(parsejson(command,"Payload"));
+END
+IF(parsejson(command, "Topic") = "shellies/shellyht-"+DeviceID+"/sensor/humidity")
+ listenHum := todouble(parsejson(command,"Payload"))/100;
+END
+#
+# Convert bytes to string:
+# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#
+# Specify string encoding:
+# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
+#
+# Complete service attribute or service action:
+# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
+# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+            <TemperatureCalibration>0</TemperatureCalibration>
+            <ReadTemperatureScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+te := listenTemp;
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+Hu := listenHum;
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
