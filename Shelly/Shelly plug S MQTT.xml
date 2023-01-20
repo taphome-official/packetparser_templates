@@ -9,23 +9,26 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
-    <Description></Description>
+    <Description>To enable MQTT in browser interface go to Internet and Security / Advanced - Developer Settings, tick "Enable action execution via MQTT" and fill out "Server" input by formula {MQTT broker IP address}:{port}" and press SAVE.
+
+To find Device ID in browser interface go to Settings / Device Info / Device ID. It is the first string of characters (not in the brackets!)
+</Description>
     <ImportParameters>
-    <Parameter>
-			<Name>Mqtt Broker ${ipAddress}</Name>	
-			<Value>192.168.0.1</Value>
-			<Id>IpAddress</Id>
-		</Parameter>
-		<Parameter>
-			<Name>Mqtt Broker port</Name>	
-			<Value>1883</Value>
-			<Id>Port</Id>
-		</Parameter>
-    <Parameter>
-			<Name>MQTT prefix</Name>	
-			<Value>shellyplug-s-[device-id]</Value>
-			<Id>Prefix</Id>
-		</Parameter>
+      <Parameter>
+        <Name>Mqtt Broker ${ipAddress}</Name>	
+        <Value>192.168.0.1</Value>
+        <Id>IpAddress</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Mqtt Broker port</Name>	
+        <Value>1883</Value>
+        <Id>Port</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Device ID</Name>	
+        <Value></Value>
+        <Id>dID</Id>
+      </Parameter>
 		</ImportParameters>
     <Module>
       <Name>Shelly plug S MQTT</Name>
@@ -33,11 +36,11 @@
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"topic","ValueTypeId":2,"NumericValue":0,"StringValue":"$[Prefix]"},{"Name":"temperatureC","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"},{"Name":"temperatureC","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Temperature [\u00B0C ]"},"ReadFormula":"temperatureC"}]</ServiceAttributesScriptsPacketParser>
         <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
 
-VAR whatT := "shellies/"+topic+"/temperature";
+VAR whatT := "shellies/shellyplug-s-"+deviceID+"/temperature";
 IF (whatT = PARSEJSON(jsonResponse, "Topic"))
  temperatureC := PARSEJSON(jsonResponse, "Payload");
 END</ListenerScriptPacketParser>
@@ -47,7 +50,7 @@ END</ListenerScriptPacketParser>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Shelly plug S Electric meter MQTT</Name>
+          <Name>Electric meter</Name>
           <Model>PacketParserElectricityMeter</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -57,11 +60,11 @@ END</ListenerScriptPacketParser>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-VAR whatTo := "shellies/"+topic+"/relay/0/energy";
+VAR whatTo := "shellies/shellyplug-s-"+deviceID+"/relay/0/energy";
 IF (whatTo = PARSEJSON(jsonResponse, "Topic"))
  To := TODOUBLE(PARSEJSON(jsonResponse, "Payload"))/60000;
 END
-VAR whatEd := "shellies/"+topic+"/relay/0/power";
+VAR whatEd := "shellies/shellyplug-s-"+deviceID+"/relay/0/power";
 IF (whatEd = PARSEJSON(jsonResponse, "Topic"))
  Ed :=TODOUBLE(PARSEJSON(jsonResponse, "Payload"))/1000;
 END</ListenerScriptPacketParser>
@@ -135,18 +138,18 @@ END</ListenerScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Shelly plug S MQTT Switch</Name>
+          <Name>Switch</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-3</Id>
           <DeviceProperties>
             <ReadScriptPacketParser />
             <InternalPollInterval>1000</InternalPollInterval>
             <CustomVariables>[]</CustomVariables>
-            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Temperature ( \u00B0C)"},"ReadFormula":""}]</ServiceAttributesScriptsPacketParser>
+            <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>
 VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-VAR whatSt := "shellies/"+topic+"/relay/0";
+VAR whatSt := "shellies/shellyplug-s-"+deviceID+"/relay/0";
 IF (whatSt = PARSEJSON(jsonResponse, "Topic"))
  IF (PARSEJSON(jsonResponse, "Payload") = "on")
   St := 1;
@@ -194,7 +197,7 @@ END</ListenerScriptPacketParser>
 # Download data from FTP:
 # FTPDOWNLOAD("filePath");</ReadSwitchStateScriptPacketParser>
             <WriteSwitchStateScriptPacketParser># Simple HTTP Request:
-MQTTPUBLISH("shellies/" + topic + "/relay/0/command",if(St = 1, "on","off"));
+MQTTPUBLISH("shellies/shellyplug-s-"+deviceID+ "/relay/0/command",if(St = 1, "on","off"));
 # IF response.IsSuccess = false
 #  ADDERROR(response.StatusCode);
 # END

@@ -9,6 +9,7 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
+    <Description></Description>
     <ImportParameters>
 			<Parameter>
 				<Name>${ipAddress}</Name>	
@@ -16,29 +17,14 @@
 				<Id>IpAddress</Id>
 			</Parameter>
 		</ImportParameters>
-    <Description></Description>
     <Module>
       <Name>Shelly plus 1PM</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleHttp</Model>
       <DeviceProperties>
-        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/shelly.GetDeviceInfo");
-IF response.IsSuccess
-  VAR content := response.Content;
-  VAR responseHeaders := response.Headers;
-  StatusJson := response.Content;
-END;
- 
-response := SENDHTTPREQUEST("/rpc/Sys.GetStatus");
-IF response.IsSuccess
-  content := response.Content;
-  responseHeaders := response.Headers;
-  if(PARSEJSON(response.Content, "$.restart_required") = true, ADDERROR("Restart required"));
-END
-</ReadScriptPacketParser>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"StatusJson","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"SettingsJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
-        <IpAddress>192.168.100.92</IpAddress>
+        <CustomVariables>[{"Name":"status","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
         <Port>80</Port>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
@@ -48,92 +34,20 @@ END
           <Model>PacketParserElectricityMeter</Model>
           <Id>-2</Id>
           <DeviceProperties>
-            <ReadScriptPacketParser />
+            <ReadScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
+status := x.Content;</ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
-            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Current [a]"},"ReadFormula":"var x := (sendhttprequest(\u0022/rpc/Switch.GetStatus?id=0\u0022));\r\nvar content := x.Content;\r\nreturn(parsejson(content,\u0022current\u0022));\r\n"},{"AttributeDefinition":{"Name":"Voltage [v]"},"ReadFormula":"var x := (sendhttprequest(\u0022/rpc/Switch.GetStatus?id=0\u0022));\r\nvar content := x.Content;\r\nreturn(parsejson(content,\u0022voltage\u0022));\r\n"},{"AttributeDefinition":{"Name":"Temperature [C]"},"ReadFormula":"var x := (sendhttprequest(\u0022/rpc/Switch.GetStatus?id=0\u0022));\r\nvar content := x.Content;\r\nreturn(parsejson(parsejson(content,\u0022temperature\u0022), \u0022tC\u0022));\r\n"}]</ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ReadTotalConsumptionScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
-var content := x.Content;
-return(parsejson(parsejson(content,"aenergy"), "total")/1000);
-
-
-# Simple HTTP Request:
-# VAR response := SENDHTTPREQUEST("/example/getValue");
-# IF response.IsSuccess
-#  VAR content := response.Content;
-#  VAR responseHeaders := response.Headers;
-#  RETURN(PARSEXML(content, "//element1/value1"));
-# ELSE
-#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-#  RETURN(NaN);
-# END
-#
-# Set Http request method, body and headers
-# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
-# OR
-# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
-# request.headers := { "header1:value1", "header2:value2", ...};
-# request.method := "GET";
-# request.data := null;
-# VAR response := SENDHTTPREQUEST(request);
-#
-#
-# Send TCP, UDP data:
-# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
-# SENDDATA(data1);
-# VAR data2 := "{\"name\":\"John\", \"age\":32}";
-# SENDDATA(data2);
-# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
-# SENDDATA(data3);
-# Process received TCP or UDP data and set device values in the Listener script
-#
-#
-# Download data from FTP:
-# FTPDOWNLOAD("filePath");</ReadTotalConsumptionScriptPacketParser>
-            <ReadDemandScriptPacketParser>VAR x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
-var content := x.Content;
-return(parsejson(content,"apower")/1000);
-
-
-# Simple HTTP Request:
-# VAR response := SENDHTTPREQUEST("/example/getValue");
-# IF response.IsSuccess
-#  VAR content := response.Content;
-#  VAR responseHeaders := response.Headers;
-#  RETURN(PARSEXML(content, "//element1/value1"));
-# ELSE
-#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-#  RETURN(NaN);
-# END
-#
-# Set Http request method, body and headers
-# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
-# OR
-# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
-# request.headers := { "header1:value1", "header2:value2", ...};
-# request.method := "GET";
-# request.data := null;
-# VAR response := SENDHTTPREQUEST(request);
-#
-#
-# Send TCP, UDP data:
-# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
-# SENDDATA(data1);
-# VAR data2 := "{\"name\":\"John\", \"age\":32}";
-# SENDDATA(data2);
-# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
-# SENDDATA(data3);
-# Process received TCP or UDP data and set device values in the Listener script
-#
-#
-# Download data from FTP:
-# FTPDOWNLOAD("filePath");</ReadDemandScriptPacketParser>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${current} [a]"},"ReadFormula":"return(parsejson(status,\u0022current\u0022));\r\n"},{"AttributeDefinition":{"Name":"${electric_voltage} [v]"},"ReadFormula":"return(parsejson(status,\u0022voltage\u0022));"},{"AttributeDefinition":{"Name":"${temp} [C]"},"ReadFormula":"return(parsejson(parsejson(status,\u0022temperature\u0022), \u0022tC\u0022));"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(status,"aenergy"), "total")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(status,"apower")/1000);
+</ReadDemandScriptPacketParser>
             <Calibration>0</Calibration>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Power switch</Name>
+          <Name>${digital_output}</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-3</Id>
           <DeviceProperties>
