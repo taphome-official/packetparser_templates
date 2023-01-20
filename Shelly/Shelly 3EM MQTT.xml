@@ -9,39 +9,42 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
+    <Description>To enable MQTT in browser interface go to Internet and Security / Advanced - Developer Settings, tick "Enable action execution via MQTT" and fill out "Server" input by formula {MQTT broker IP address}:{port}" and press SAVE.
+
+To find Device ID in browser interface go to Settings / Device Info / Device ID. It is the first string of characters (not in the brackets!)
+</Description>
 <ImportParameters>
-		<Parameter>
-			<Name>Mqtt Broker ${ipAddress}</Name>	
-			<Value>192.168.0.1</Value>
-			<Id>IpAddress</Id>
-		</Parameter>
-		<Parameter>
-			<Name>Mqtt Broker port</Name>	
-			<Value>1883</Value>
-			<Id>Port</Id>
-		</Parameter>
-    		<Parameter>
-			<Name>DeviceID</Name>	
-			<Value></Value>
-			<Id>dID</Id>
-		</Parameter>
-	</ImportParameters>
-    <Description></Description>
+      <Parameter>
+        <Name>Mqtt Broker ${ipAddress}</Name>	
+        <Value>192.168.0.1</Value>
+        <Id>IpAddress</Id>
+      </Parameter>
+          <Parameter>
+        <Name>Mqtt Broker port</Name>	
+        <Value>1883</Value>
+        <Id>Port</Id>
+      </Parameter>
+          <Parameter>
+        <Name>Device ID</Name>	
+        <Value></Value>
+        <Id>dID</Id>
+      </Parameter>
+    </ImportParameters>
     <Module>
-      <Name>mqttShelly 3EM</Name>
+      <Name>Shelly 3EM MQTT</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"dID","ValueTypeId":2,"NumericValue":0,"StringValue":$[dID]},{"Name":"x","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <CustomVariables>[{"Name":"dID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"},{"Name":"x","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
         <ListenerScriptPacketParser>x := tostring(RECEIVEDBYTES);</ListenerScriptPacketParser>
-        <IpAddress>$[IpAdress]</IpAddress>
+        <IpAddress>$[IpAddress]</IpAddress>
         <Port>$[Port]</Port>
         <RootTopic>shellies/#</RootTopic>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>mqttElectric meter (phase 1)</Name>
+          <Name>Electric meter (phase 1)</Name>
           <Model>PacketParserElectricityMeter</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -126,7 +129,7 @@ END</ListenerScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>mqttElectric meter (phase 2)</Name>
+          <Name>Electric meter (phase 2)</Name>
           <Model>PacketParserElectricityMeter</Model>
           <Id>-3</Id>
           <DeviceProperties>
@@ -211,7 +214,7 @@ END</ListenerScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>mqttElectric meter (phase 3)</Name>
+          <Name>Electric meter (phase 3)</Name>
           <Model>PacketParserElectricityMeter</Model>
           <Id>-4</Id>
           <DeviceProperties>
@@ -296,7 +299,7 @@ END</ListenerScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>mqttPower switch</Name>
+          <Name>Switch</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-5</Id>
           <DeviceProperties>

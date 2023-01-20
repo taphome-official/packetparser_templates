@@ -9,31 +9,34 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
-    <Description></Description>
+    <Description>To enable MQTT in browser interface go to Internet and Security / Advanced - Developer Settings, tick "Enable action execution via MQTT" and fill out "Server" input by formula {MQTT broker IP address}:{port}" and press SAVE.
+
+To find Device ID in browser interface go to Settings / Device Info / Device ID. It is the first string of characters (not in the brackets!)
+</Description>
     <ImportParameters>
-			<Parameter>
-				<Name>${ipAddress}</Name>	
-				<Value>192.168.0.1</Value>
-				<Id>IpAddress</Id>
-			</Parameter>
-			<Parameter>
-				<Name>Device ID</Name>	
-				<Value></Value>
-				<Id>dID</Id>
-			</Parameter>
       <Parameter>
-				<Name>Port</Name>	
-				<Value>80</Value>
-				<Id>Port</Id>
-			</Parameter>
+        <Name>Mqtt Broker ${ipAddress}</Name>	
+        <Value>192.168.0.1</Value>
+        <Id>IpAddress</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Mqtt Broker port</Name>	
+        <Value>1883</Value>
+        <Id>Port</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Device ID</Name>	
+        <Value></Value>
+        <Id>dID</Id>
+      </Parameter>
 		</ImportParameters>
     <Module>
-      <Name>Shelly GAS mqtt</Name>
+      <Name>Shelly GAS MQTT</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":$[dID]}]</CustomVariables>
+        <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"}]</CustomVariables>
         <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Self test","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"mqttpublish(\u0022shellies/shellygas-\u0022\u002BdeviceID\u002B\u0022/sensor/start_self_test\u0022,\u00221\u0022);"}]</ServiceActionsScriptsPacketParser>
         <IpAddress>$[IpAddress]</IpAddress>
         <Port>$[Port]</Port>
@@ -41,7 +44,7 @@
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>mqttAlarm state</Name>
+          <Name>Gas Alarm</Name>
           <Model>PacketParserMultiValueSwitch</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -81,19 +84,19 @@ END
             <Value7Index>71</Value7Index>
             <Value8Index>72</Value8Index>
             <Value9Index>73</Value9Index>
-            <Value0Name>There is no alarm</Value0Name>
-            <Value1Name>There is a mild gas leak</Value1Name>
-            <Value2Name>There is a heavy gas leak</Value2Name>
-            <Value3Name>self test</Value3Name>
+            <Value0Name>No alarm</Value0Name>
+            <Value1Name>Mild gas leak</Value1Name>
+            <Value2Name>Heavy gas leak</Value2Name>
+            <Value3Name>Self Test</Value3Name>
             <Value4Name>Alarm state is unknown</Value4Name>
             <Value5Name>5</Value5Name>
             <Value6Name>6</Value6Name>
             <Value7Name>7</Value7Name>
             <Value8Name>8</Value8Name>
             <Value9Name>9</Value9Name>
-            <Value0IconId>39</Value0IconId>
+            <Value0IconId>329</Value0IconId>
             <Value1IconId>328</Value1IconId>
-            <Value2IconId>57</Value2IconId>
+            <Value2IconId>327</Value2IconId>
             <Value3IconId>326</Value3IconId>
             <Value4IconId>326</Value4IconId>
             <Value5IconId>10</Value5IconId>
@@ -161,7 +164,7 @@ END
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>mqttGas concentration (parts per milion)</Name>
+          <Name>Gas concentration (parts per milion)</Name>
           <Model>PacketParserVariable</Model>
           <Id>-3</Id>
           <DeviceProperties>
@@ -247,7 +250,7 @@ END
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>mqttMute Active Alarm</Name>
+          <Name>Mute Active Alarm</Name>
           <Model>PacketParserPushButton</Model>
           <Id>-4</Id>
           <DeviceProperties>

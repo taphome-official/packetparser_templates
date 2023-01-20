@@ -5,36 +5,39 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Shelly H&amp;M</Name>
+    <Name>Shelly H&amp;M MQTT</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
+        <Description>To enable MQTT in browser interface go to Internet and Security / Advanced - Developer Settings, tick "Enable action execution via MQTT" and fill out "Server" input by formula {MQTT broker IP address}:{port}" and press SAVE.
+
+To find Device ID in browser interface go to Settings / Device Info / Device ID. It is the first string of characters (not in the brackets!)
+</Description>
     <ImportParameters>
-     <Parameter>
-			<Name>Mqtt Broker ${ipAddress}</Name>	
-			<Value>192.168.0.1</Value>
-			<Id>IpAddress</Id>
-		</Parameter>
-		<Parameter>
-			<Name>Mqtt Broker port</Name>	
-			<Value>1883</Value>
-			<Id>Port</Id>
-		</Parameter>
-    <Parameter>
-			<Name>DEVICE Id</Name>	
-			<Value></Value>
-			<Id>dID</Id>
-		</Parameter>
+      <Parameter>
+        <Name>Mqtt Broker ${ipAddress}</Name>	
+        <Value>192.168.0.1</Value>
+        <Id>IpAddress</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Mqtt Broker port</Name>	
+        <Value>1883</Value>
+        <Id>Port</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Device ID</Name>	
+        <Value></Value>
+        <Id>dID</Id>
+      </Parameter>
 		</ImportParameters>
-    <Description></Description>
     <Module>
-      <Name>Shelly H&amp;M</Name>
+      <Name>Shelly H&amp;M MQTT</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"DeviceID","ValueTypeId":2,"NumericValue":0,"StringValue":$[dID]}]</CustomVariables>
-        <IpAddress>$[IpAdress]</IpAddress>
+        <CustomVariables>[{"Name":"DeviceID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
         <Port>$[Port]</Port>
         <RootTopic>shellies/#</RootTopic>
       </DeviceProperties>

@@ -9,40 +9,34 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
+    <Description></Description>
     <ImportParameters>
 			<Parameter>
 				<Name>${ipAddress}</Name>	
 				<Value>192.168.0.1</Value>
 				<Id>IpAddress</Id>
 			</Parameter>
-			<Parameter>
-				<Name>Device ID</Name>	
-				<Value></Value>
-				<Id>dID</Id>
-			</Parameter>
-      <Parameter>
-				<Name>Port</Name>	
-				<Value>80</Value>
-				<Id>Port</Id>
-			</Parameter>
 		</ImportParameters>
-    <Description></Description>
     <Module>
       <Name>Shelly GAS</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleHttp</Model>
       <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/status");
+IF response.IsSuccess
+ status := response.Content;
+END</ReadScriptPacketParser>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":$[dID]}]</CustomVariables>
+        <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":"10521CF2BA9B"},{"Name":"status","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
         <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set Volume [1 to 11]","NumericParameters":[{"FriendlyName":"Volume [1 to 11]","Abbreviation":"Volume","IsFloat":false,"MinValue":1,"MaxValue":11}],"BoolParameters":[],"EnumParameters":[]},"Script":"sendhttprequest(\u0022/settings?set_volume=\u0022\u002BVolume);"},{"ActionDefinition":{"Name":"Self test","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"sendhttprequest(\u0022/self_test\u0022);"}]</ServiceActionsScriptsPacketParser>
         <IpAddress>$[IpAddress]</IpAddress>
-        <Port>$[Port]</Port>
+        <Port>80</Port>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Alarm state</Name>
+          <Name>Gas Alarm</Name>
           <Model>PacketParserMultiValueSwitch</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -62,19 +56,19 @@
             <Value7Index>71</Value7Index>
             <Value8Index>72</Value8Index>
             <Value9Index>73</Value9Index>
-            <Value0Name>There is no alarm</Value0Name>
-            <Value1Name>There is a mild gas leak</Value1Name>
-            <Value2Name>There is a heavy gas leak</Value2Name>
-            <Value3Name> Alarm state is unknown</Value3Name>
-            <Value4Name>self test</Value4Name>
+            <Value0Name>No alarm</Value0Name>
+            <Value1Name>Mild gas leak</Value1Name>
+            <Value2Name>Heavy gas leak</Value2Name>
+            <Value3Name>Alarm state is unknown</Value3Name>
+            <Value4Name>Self Test</Value4Name>
             <Value5Name>5</Value5Name>
             <Value6Name>6</Value6Name>
             <Value7Name>7</Value7Name>
             <Value8Name>8</Value8Name>
             <Value9Name>9</Value9Name>
-            <Value0IconId>39</Value0IconId>
+            <Value0IconId>329</Value0IconId>
             <Value1IconId>328</Value1IconId>
-            <Value2IconId>57</Value2IconId>
+            <Value2IconId>327</Value2IconId>
             <Value3IconId>326</Value3IconId>
             <Value4IconId>326</Value4IconId>
             <Value5IconId>10</Value5IconId>
@@ -83,16 +77,13 @@
             <Value8IconId>13</Value8IconId>
             <Value9IconId>14</Value9IconId>
             <OffStateValue>4</OffStateValue>
-            <ReadSwitchStateScriptPacketParser>var response := sendhttprequest("/status/gas_sensor");
-if response.issuccess
- var c := response.Content;
- var status := parsejson(parsejson(c,"gas_sensor"),"alarm_state");
- switch(status, "none", return(0),
- "mild", return(1),
- "heavy", return(2),
- "test", return(4),
- return(3));
-END
+            <ReadSwitchStateScriptPacketParser>var state := parsejson(parsejson(status,"gas_sensor"),"alarm_state");
+switch(state, "none", return(0),
+"mild", return(1),
+"heavy", return(2),
+"test", return(4),
+return(3));
+
 
 </ReadSwitchStateScriptPacketParser>
             <WriteSwitchStateScriptPacketParser>#return(2);
@@ -128,40 +119,7 @@ END
           <Id>-3</Id>
           <DeviceProperties>
             <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser>VAR V := sendhttprequest("/status/concentration");
-# Simple HTTP Request:
-# VAR response := SENDHTTPREQUEST("/example/getValue");
-# IF response.IsSuccess
-#  VAR content := response.Content;
-#  VAR responseHeaders := response.Headers;
-#  RETURN(PARSEXML(content, "//element1/value1"));
-# ELSE
-#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-#  RETURN(NaN);
-# END
-#
-# Set Http request method, body and headers
-# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
-# OR
-# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
-# request.headers := { "header1:value1", "header2:value2", ...};
-# request.method := "GET";
-# request.data := null;
-# VAR response := SENDHTTPREQUEST(request);
-#
-#
-# Send TCP, UDP data:
-# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
-# SENDDATA(data1);
-# VAR data2 := "{\"name\":\"John\", \"age\":32}";
-# SENDDATA(data2);
-# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
-# SENDDATA(data3);
-# Process received TCP or UDP data and set device values in the Listener script
-#
-#
-# Download data from FTP:
-# FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
+            <ReadScriptPacketParser>parsejson(status, "concentration")</ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
@@ -207,31 +165,7 @@ return(todouble(parsejson(content,"concentration.ppm")));</ReadStateScriptPacket
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <WriteButtonPressedStateScriptPacketParser>sendhttprequest("/mute");
-
-# Simple HTTP Request:
-# VAR response := SENDHTTPREQUEST("/example/set/value=" + Bp);
-# IF response.IsSuccess = false
-#  ADDERROR(response.StatusCode);
-# END
-#
-# Set Http request method, body and headers
-# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Bp, "header1:value1", "header2:value2", ...);\r
-# Or VAR request := HTTPREQUEST("/example/setValue");
-# request.Method := "PUT";
-# VAR response := SENDHTTPREQUEST(request);
-#r
-#
-# Send TCP, UDP data:
-# VAR data1 := "{\"name\":\"John\", \"age\":" + Bp + "}";
-# SENDDATA(data1);
-# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Bp + "}", "iso-8859-1");
-# SENDDATA(data2);
-# You can process received TCP or UDP data in the Listener script
-#
-#
-# Upload data to FTP:
-# FTPUPLOAD("filePath", "somedata=" + Bp, "write"); # use "append" mode to append data to existing file</WriteButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser>sendhttprequest("/mute");</WriteButtonPressedStateScriptPacketParser>
             <IconId>206</IconId>
           </DeviceProperties>
         </Device>

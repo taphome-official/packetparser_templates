@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="74">
+  <Template revision="1.0" id="1e1821a2-5db6-4dc3-96be-93458f2101c2">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly TRV</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Shelly TRV</Model>
+    <Description>Thermostatic radiator valve</Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>        
+    <Module>
+      <Name>Shelly TRV</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/status");
+IF response.IsSuccess
+    status := response.Content;
+END
+
+response := SENDHTTPREQUEST("/settings");
+IF response.IsSuccess
+    settings := response.Content;
+END
+
+if(PARSEJSON(status, "$.thermostats[0].schedule"), adderror("Schedule is enabled"));
+if(PARSEJSON(status, "$.update.has_update"), addwarning("Firmware update is available"));
+
+var bat := PARSEJSON(status, "$.bat.value");
+if bat &lt; 25
+    addwarning("Battery charge is criticaly low");
+elseif bat &lt; 50
+    addwarning("Low battery");
+end</ReadScriptPacketParser>
+        <InternalPollInterval>3000</InternalPollInterval>
+        <CustomVariables>[{"Name":"settings","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"status","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi "},"ReadFormula":"PARSEJSON(status, \u0022$.wifi_sta.ssid\u0022)"},{"AttributeDefinition":{"Name":"${ipAddress}"},"ReadFormula":"PARSEJSON(status, \u0022$.wifi_sta.ip\u0022)"},{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(status, \u0022$.mac\u0022)"},{"AttributeDefinition":{"Name":"Received signal strength"},"ReadFormula":"PARSEJSON(status, \u0022$.wifi_sta.rssi\u0022)"},{"AttributeDefinition":{"Name":"Calibrated"},"ReadFormula":"if(PARSEJSON(status, \u0022$.calibrated\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"},{"AttributeDefinition":{"Name":"Schedule"},"ReadFormula":" VAR response := SENDHTTPREQUEST(\u0022/thermostats/0\u0022);\r\nIF response.IsSuccess\r\n VAR content := response.Content;\r\n VAR responseHeaders := response.Headers;\r\n RETURN(SWITCH(PARSEJSON(content, \u0022$.schedule\u0022), true, \u0022On\u0022, \u0022Off\u0022));\r\nEND\r\n"},{"AttributeDefinition":{"Name":"Display brightness"},"ReadFormula":"PARSEJSON(settings, \u0022$.display.brightness\u0022)"},{"AttributeDefinition":{"Name":"Display flipped"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.display.flipped\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Disable schedule","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?schedule=false\u0022);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/reboot\u0022);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));\r\n"},{"ActionDefinition":{"Name":"Calibrate","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/calibrate\u0022);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Update firmware","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/ota?url=http://shelly-api-eu.shelly.cloud/firmware/SHTRV-01_build.gbl\u0022);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Set display brightness","NumericParameters":[{"FriendlyName":"Brightness (1-7)","Abbreviation":"Br","IsFloat":false,"MinValue":1,"MaxValue":7}],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings?display_brightness=\u0022 \u002B Br);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Flip display","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings?display_flipped=\u0022 \u002B if(PARSEJSON(settings, \u0022$.display.flipped\u0022), \u0022false\u0022, \u0022true\u0022));\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Battery</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value [%]"},"ReadFormula":"PARSEJSON(status, \u0022$.bat.value\u0022);"},{"AttributeDefinition":{"Name":"Voltage [V]"},"ReadFormula":"PARSEJSON(status, \u0022$.bat.voltage\u0022);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>Critical</Value0Name>
+            <Value1Name>Low</Value1Name>
+            <Value2Name>Normal</Value2Name>
+            <Value3Name>Full</Value3Name>
+            <Value4Name>Charging</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>232</Value0IconId>
+            <Value1IconId>229</Value1IconId>
+            <Value2IconId>228</Value2IconId>
+            <Value3IconId>230</Value3IconId>
+            <Value4IconId>231</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>if PARSEJSON(status, "$.charger")
+    return(4);
+end
+
+var bat := PARSEJSON(status, "$.bat.value");
+if bat &gt; 75
+    return(3);
+elseif bat &gt; 50
+    return(2);
+elseif bat &gt; 25
+    return(1);
+else
+    return(0);
+end</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser></WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${adddevice_thermostat}</Name>
+          <Model>PacketParserThermostat</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>if(! PARSEJSON(status, "$.thermostats[0].tmp.is_valid"), adderror("Temperature sensor error"));
+</ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Temperature offset [\u00B0C]"},"ReadFormula":"PARSEJSON(settings, \u0022$.thermostats[0].temperature_offset\u0022)"},{"AttributeDefinition":{"Name":"${device_variable_valvestate} [%]"},"ReadFormula":"PARSEJSON(status, \u0022$.thermostats[0].pos\u0022)"},{"AttributeDefinition":{"Name":"Force close"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].force_close\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"},{"AttributeDefinition":{"Name":"Extra pressure"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].extra_pressure\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"},{"AttributeDefinition":{"Name":"Automatic calibration correction"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].calibration_correction\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set temperature offset","NumericParameters":[{"FriendlyName":"Offset","Abbreviation":"C","IsFloat":false,"MinValue":-20,"MaxValue":20}],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?temperature_offset=\u0022 \u002B C);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Toggle force close","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?force_close=\u0022 \u002B if(PARSEJSON(settings, \u0022$.thermostats[0].force_close\u0022), \u0022false\u0022, \u0022true\u0022));\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Toggle extra pressure","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?extra_pressure=\u0022 \u002B if(PARSEJSON(settings, \u0022$.thermostats[0].extra_pressure\u0022), \u0022false\u0022, \u0022true\u0022));\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <MinTemperature>4</MinTemperature>
+            <MaxTemperature>31</MaxTemperature>
+            <ReadCurrentTemperatureScriptPacketParser>PARSEJSON(status, "$.thermostats[0].tmp.value")</ReadCurrentTemperatureScriptPacketParser>
+            <ReadTemperatureSetPointScriptPacketParser>PARSEJSON(status, "$.thermostats[0].target_t.value")</ReadTemperatureSetPointScriptPacketParser>
+            <ReadHumidityScriptPacketParser></ReadHumidityScriptPacketParser>
+            <WriteTemperatureSetPointScriptPacketParser>if(status = "0", return(Se));
+
+if !PARSEJSON(status, "$.calibrated")
+    ADDERROR("Device is not calibrated");
+    return(NaN);
+end
+
+VAR response := SENDHTTPREQUEST("/settings/thermostats/0?target_t=" + Se);
+IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+END</WriteTemperatureSetPointScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>

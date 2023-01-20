@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "cf015601-d383-4b60-9f92-23673221d490">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus 1</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Shelly Plus 1</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"status","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Power switch</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>var x := SENDHTTPREQUEST("/relay/0/ison");
+return(parsejson(x.Content, "ison"));</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "relay/0?turn=" + SWITCH(St, 0, "off", 1, "on","off");
+SENDHTTPREQUEST(path);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
