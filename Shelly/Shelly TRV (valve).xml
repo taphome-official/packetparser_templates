@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="74">
-  <Template revision="1.0" id="1e1821a2-5db6-4dc3-96be-93458f2101c2">
+  <Template revision="1.0" id="02865249-6fcf-4262-ba1e-f429960afc23">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
@@ -9,7 +9,7 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer>Shelly</Producer>
     <Model>Shelly TRV</Model>
-    <Description>Thermostatic radiator valve</Description>
+    <Description>Thermostatic radiator valve with separate valve device for Smart Rule controll and default controll disabled</Description>
     <ImportParameters>
         <Parameter>
             <Name>${ipAddress}</Name>	
@@ -55,9 +55,9 @@ end</ReadScriptPacketParser>
           <Model>PacketParserMultiValueSwitch</Model>
           <Id>-2</Id>
           <DeviceProperties>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <ReadScriptPacketParser />
             <InternalPollInterval>2500</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Value [%]"},"ReadFormula":"PARSEJSON(status, \u0022$.bat.value\u0022);"},{"AttributeDefinition":{"Name":"Voltage [V]"},"ReadFormula":"PARSEJSON(status, \u0022$.bat.voltage\u0022);"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -110,16 +110,50 @@ end</ReadSwitchStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>${adddevice_thermostat}</Name>
-          <Model>PacketParserThermostat</Model>
+          <Name>${device_variable_valvestate}</Name>
+          <Model>PacketParserDimmer</Model>
           <Id>-3</Id>
           <DeviceProperties>
+            <ReadScriptPacketParser>if(PARSEJSON(status, "$.thermostats[0].target_t.enabled"), addwarning("Automatic valve control is on. It may conflict with smart rule opration."));</ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Force close"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].force_close\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"},{"AttributeDefinition":{"Name":"Extra pressure"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].extra_pressure\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"},{"AttributeDefinition":{"Name":"Automatic calibration correction"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].calibration_correction\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Toggle force close","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?force_close=\u0022 \u002B if(PARSEJSON(settings, \u0022$.thermostats[0].force_close\u0022), \u0022false\u0022, \u0022true\u0022));\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Toggle extra pressure","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?extra_pressure=\u0022 \u002B if(PARSEJSON(settings, \u0022$.thermostats[0].extra_pressure\u0022), \u0022false\u0022, \u0022true\u0022));\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>var pos := PARSEJSON(status, "$.thermostats[0].pos");
+if pos &gt;= 0
+    return(pos / 100);
+else
+    adderror("Device is not calibrated");
+    return(NaN);
+end
+</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>if(status = "0", return(Le));
+
+if !PARSEJSON(status, "$.calibrated")
+    ADDERROR("Device is not calibrated");
+    return(NaN);
+end
+ 
+ VAR response := SENDHTTPREQUEST("/thermostats/0?pos=" + Le*100);
+ IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+ END
+</WriteLevelScriptPacketParser>
+            <IconId>3010</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${adddevice_thermostat}</Name>
+          <Model>PacketParserThermostat</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
             <ReadScriptPacketParser>if(! PARSEJSON(status, "$.thermostats[0].tmp.is_valid"), adderror("Temperature sensor error"));
-</ReadScriptPacketParser>
+if(PARSEJSON(status, "$.thermostats[0].target_t.enabled"), addwarning("Automatic valve control is on. It may conflict with smart rule opration."));</ReadScriptPacketParser>
             <InternalPollInterval>3000</InternalPollInterval>
             <CustomVariables>[]</CustomVariables>
-            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Temperature offset [\u00B0C]"},"ReadFormula":"PARSEJSON(settings, \u0022$.thermostats[0].temperature_offset\u0022)"},{"AttributeDefinition":{"Name":"${device_variable_valvestate} [%]"},"ReadFormula":"PARSEJSON(status, \u0022$.thermostats[0].pos\u0022)"},{"AttributeDefinition":{"Name":"Force close"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].force_close\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"},{"AttributeDefinition":{"Name":"Extra pressure"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].extra_pressure\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"},{"AttributeDefinition":{"Name":"Automatic calibration correction"},"ReadFormula":"if(PARSEJSON(settings, \u0022$.thermostats[0].calibration_correction\u0022), \u0022${detail_deviceSettings_true}\u0022, \u0022${detail_deviceSettings_false}\u0022)"}]</ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set temperature offset","NumericParameters":[{"FriendlyName":"Offset","Abbreviation":"C","IsFloat":false,"MinValue":-20,"MaxValue":20}],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?temperature_offset=\u0022 \u002B C);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Toggle force close","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?force_close=\u0022 \u002B if(PARSEJSON(settings, \u0022$.thermostats[0].force_close\u0022), \u0022false\u0022, \u0022true\u0022));\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"},{"ActionDefinition":{"Name":"Toggle extra pressure","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"var response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?extra_pressure=\u0022 \u002B if(PARSEJSON(settings, \u0022$.thermostats[0].extra_pressure\u0022), \u0022false\u0022, \u0022true\u0022));\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"}]</ServiceActionsScriptsPacketParser>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Temperature offset [\u00B0C]"},"ReadFormula":"PARSEJSON(settings, \u0022$.thermostats[0].temperature_offset\u0022)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set temperature offset","NumericParameters":[{"FriendlyName":"Offset","Abbreviation":"C","IsFloat":false,"MinValue":-20,"MaxValue":20}],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/settings/thermostats/0?temperature_offset=\u0022 \u002B C);\r\nif(response.IsSuccess, return(\u0022OK\u0022), return(response.Content));"}]</ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <MinTemperature>4</MinTemperature>
             <MaxTemperature>31</MaxTemperature>
@@ -133,7 +167,7 @@ if !PARSEJSON(status, "$.calibrated")
     return(NaN);
 end
 
-VAR response := SENDHTTPREQUEST("/settings/thermostats/0?target_t=" + Se);
+VAR response := SENDHTTPREQUEST("/settings/thermostats/0?target_t=" + Se + "&amp;target_t_enabled=false");
 IF response.IsSuccess = false
   ADDERROR(response.StatusCode);
 END</WriteTemperatureSetPointScriptPacketParser>
