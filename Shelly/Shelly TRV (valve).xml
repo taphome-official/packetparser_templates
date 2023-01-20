@@ -5,7 +5,7 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Shelly TRV</Name>
+    <Name>Shelly TRV (valve)</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer>Shelly</Producer>
     <Model>Shelly TRV</Model>
