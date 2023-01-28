@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+  <Template revision="1.0" id = "0973541b-0806-4d0a-8798-c8afeffd56f2">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus H&amp;T MQTT</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+	<ImportParameters>
+	<Parameter>
+		<Name>Mqtt Broker ${ipAddress}</Name>	
+		<Value>192.168.0.1</Value>
+		<Id>IpAddress</Id>
+	</Parameter>
+	<Parameter>
+		<Name>Mqtt Broker port</Name>	
+		<Value>1883</Value>
+		<Id>Port</Id>
+	</Parameter>
+  <Parameter>
+	<Name>Device ID</Name>	
+	<Value>shellyplusht-yourDeviceId</Value>
+	<Id>deviceId</Id>
+  </Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>Shelly Plus H&amp;T MQTT</Name>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>15000</InternalPollInterval>
+        <CustomVariables>[{"Name":"deviceId","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+		<Port>$[Port]</Port>
+        <RootTopic>$[deviceId]/#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Shelly Plus H&amp;T</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables>[{"Name":"listenHum","ValueTypeId":1,"NumericValue":"NaN"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR command := tostring(RECEIVEDBYTES);
+VAR topic := parsejson(command, "Topic");
+
+IF (INDEXOF(topic, deviceid +"/status/temperature:0") &gt;= 0)
+    VAR payloadTemp := PARSEJSON(command, "Payload");
+    Te := PARSEJSON(payloadTemp,"tC");
+END
+
+IF (INDEXOF(topic, deviceid +"/status/humidity:0") &gt;= 0)
+    VAR payloadHum := PARSEJSON(command, "Payload");
+    listenHum := PARSEJSON(payloadHum,"rh");
+END
+</ListenerScriptPacketParser>
+            <TemperatureCalibration>0</TemperatureCalibration>
+            <ReadTemperatureScriptPacketParser></ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser>Hu := listenHum / 100.0;</ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
