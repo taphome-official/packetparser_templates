@@ -237,7 +237,7 @@ end
             <ReadSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
     adderror("Device profile is set to cover");
 else
-    PARSEJSON(SwitchStatus, "$.output", true);
+    RETURN(PARSEJSON(SwitchStatus, "$.output", true));
 end</ReadSwitchStateScriptPacketParser>
             <WriteSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
     VAR response := SENDHTTPREQUEST("rpc/Switch.Set?id=" + Id + "&amp;on=" + if(St,"true","false"));
@@ -281,7 +281,7 @@ end
             <ReadSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "cover"
     adderror("Device profile is set to cover");
 else
-    PARSEJSON(SwitchStatus, "$.output", true);
+    RETURN(PARSEJSON(SwitchStatus, "$.output", true));
 end</ReadSwitchStateScriptPacketParser>
             <WriteSwitchStateScriptPacketParser>if PARSEJSON(SysConfig, "$.device.profile") = "switch"
     VAR response := SENDHTTPREQUEST("rpc/Switch.Set?id=" + Id + "&amp;on=" + if(St,"true","false"));
