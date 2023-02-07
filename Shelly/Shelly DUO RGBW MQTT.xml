@@ -21,6 +21,11 @@
 			<Value>1883</Value>
 			<Id>Port</Id>
 		</Parameter>
+		<Parameter>
+			<Name>Transition time (ms)</Name>
+			<Value>300</Value>
+			<Id>TransitionTime</Id>
+		</Parameter>
 	</ImportParameters>
     <Module>
       <Name>Shelly DUO RGBW MQTT Module</Name>
@@ -68,7 +73,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -138,7 +143,7 @@ END
 VAR topic := "shellies/" + bulb1topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
-VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
 
 MQTTPUBLISH(topic, data);</WriteHueScriptPacketParser>
             <WriteSaturationScriptPacketParser />
@@ -146,9 +151,9 @@ MQTTPUBLISH(topic, data);</WriteHueScriptPacketParser>
     VAR topic := "shellies/" + bulb1topic + "/color/0/set";
     
 	IF ISNAN(Ct)
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"gain\": " + ROUND(Hb*100.0) + "}");
     ELSE
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
         
     END
 ELSE
@@ -160,7 +165,7 @@ END
 
 VAR topic := "shellies/" + bulb1topic + "/color/0/set";
 
-MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
@@ -200,7 +205,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -270,7 +275,7 @@ END
 VAR topic := "shellies/" + bulb2topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
-VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
@@ -279,9 +284,9 @@ MQTTPUBLISH(topic, data);
     VAR topic := "shellies/" + bulb2topic + "/color/0/set";
     
 	IF ISNAN(Ct)
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"gain\": " + ROUND(Hb*100.0) + "}");
     ELSE
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
         
     END
 ELSE
@@ -293,7 +298,7 @@ END
 
 VAR topic := "shellies/" + bulb2topic + "/color/0/set";
 
-MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
@@ -333,7 +338,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -403,7 +408,7 @@ END
 VAR topic := "shellies/" + bulb3topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
-VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
@@ -412,9 +417,9 @@ MQTTPUBLISH(topic, data);
     VAR topic := "shellies/" + bulb3topic + "/color/0/set";
     
 	IF ISNAN(Ct)
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"gain\": " + ROUND(Hb*100.0) + "}");
     ELSE
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
         
     END
 ELSE
@@ -426,7 +431,7 @@ END
 
 VAR topic := "shellies/" + bulb3topic + "/color/0/set";
 
-MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
@@ -466,7 +471,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -536,7 +541,7 @@ END
 VAR topic := "shellies/" + bulb4topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
-VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
@@ -545,9 +550,9 @@ MQTTPUBLISH(topic, data);
     VAR topic := "shellies/" + bulb4topic + "/color/0/set";
     
 	IF ISNAN(Ct)
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"gain\": " + ROUND(Hb*100.0) + "}");
     ELSE
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
         
     END
 ELSE
@@ -559,7 +564,7 @@ END
 
 VAR topic := "shellies/" + bulb4topic + "/color/0/set";
 
-MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
@@ -599,7 +604,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -669,7 +674,7 @@ END
 VAR topic := "shellies/" + bulb5topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
-VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":300,\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
@@ -678,9 +683,9 @@ MQTTPUBLISH(topic, data);
     VAR topic := "shellies/" + bulb5topic + "/color/0/set";
     
 	IF ISNAN(Ct)
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"gain\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"gain\": " + ROUND(Hb*100.0) + "}");
     ELSE
-        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+        MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
         
     END
 ELSE
@@ -692,7 +697,7 @@ END
 
 VAR topic := "shellies/" + bulb5topic + "/color/0/set";
 
-MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"mode\": \"white\", \"brightness\": " + ROUND(Hb*100.0) + ", \"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
