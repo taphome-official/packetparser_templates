@@ -21,6 +21,11 @@
 			<Value>1883</Value>
 			<Id>Port</Id>
 		</Parameter>
+		<Parameter>
+			<Name>Transition time (ms)</Name>
+			<Value>300</Value>
+			<Id>TransitionTime</Id>
+		</Parameter>
 	</ImportParameters>
     <Module>
       <Name>Shelly DUO MQTT Module</Name>
@@ -68,7 +73,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables>[{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb1topic, "ShellyBulbDuo-deviceid") = 0)
@@ -110,7 +115,7 @@ END</ListenerScriptPacketParser>
             <ReadCCTScriptPacketParser></ReadCCTScriptPacketParser>
             <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
     VAR topic := "shellies/" + bulb1topic + "/light/0/set";    
-    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
 ELSE
     MQTTPUBLISH("shellies/" + bulb1topic + "/light/0/command", "off");
 END</WriteBrightnessScriptPacketParser>
@@ -119,7 +124,7 @@ END</WriteBrightnessScriptPacketParser>
 END
 
 VAR topic := "shellies/" + bulb1topic + "/light/0/set";
-MQTTPUBLISH(topic, "{\"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
             <MinColorTemperature>3000</MinColorTemperature>
@@ -161,7 +166,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables>[{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb2topic, "ShellyBulbDuo-deviceid") = 0)
@@ -203,7 +208,7 @@ END</ListenerScriptPacketParser>
             <ReadCCTScriptPacketParser></ReadCCTScriptPacketParser>
             <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
     VAR topic := "shellies/" + bulb2topic + "/light/0/set";    
-    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
 ELSE
     MQTTPUBLISH("shellies/" + bulb2topic + "/light/0/command", "off");
 END</WriteBrightnessScriptPacketParser>
@@ -212,7 +217,7 @@ END</WriteBrightnessScriptPacketParser>
 END
 
 VAR topic := "shellies/" + bulb2topic + "/light/0/set";
-MQTTPUBLISH(topic, "{\"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
             <MinColorTemperature>3000</MinColorTemperature>
@@ -254,7 +259,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables>[{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb3topic, "ShellyBulbDuo-deviceid") = 0)
@@ -296,7 +301,7 @@ END</ListenerScriptPacketParser>
             <ReadCCTScriptPacketParser></ReadCCTScriptPacketParser>
             <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
     VAR topic := "shellies/" + bulb3topic + "/light/0/set";    
-    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
 ELSE
     MQTTPUBLISH("shellies/" + bulb3topic + "/light/0/command", "off");
 END</WriteBrightnessScriptPacketParser>
@@ -305,7 +310,7 @@ END</WriteBrightnessScriptPacketParser>
 END
 
 VAR topic := "shellies/" + bulb3topic + "/light/0/set";
-MQTTPUBLISH(topic, "{\"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
             <MinColorTemperature>3000</MinColorTemperature>
@@ -347,7 +352,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables>[{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb4topic, "ShellyBulbDuo-deviceid") = 0)
@@ -389,7 +394,7 @@ END</ListenerScriptPacketParser>
             <ReadCCTScriptPacketParser></ReadCCTScriptPacketParser>
             <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
     VAR topic := "shellies/" + bulb4topic + "/light/0/set";    
-    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
 ELSE
     MQTTPUBLISH("shellies/" + bulb4topic + "/light/0/command", "off");
 END</WriteBrightnessScriptPacketParser>
@@ -398,7 +403,7 @@ END</WriteBrightnessScriptPacketParser>
 END
 
 VAR topic := "shellies/" + bulb4topic + "/light/0/set";
-MQTTPUBLISH(topic, "{\"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
             <MinColorTemperature>3000</MinColorTemperature>
@@ -440,7 +445,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables>[{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb5topic, "ShellyBulbDuo-deviceid") = 0)
@@ -482,7 +487,7 @@ END</ListenerScriptPacketParser>
             <ReadCCTScriptPacketParser></ReadCCTScriptPacketParser>
             <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
     VAR topic := "shellies/" + bulb5topic + "/light/0/set";    
-    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": 300, \"brightness\": " + ROUND(Hb*100.0) + "}");
+    MQTTPUBLISH(topic, "{\"turn\": \"on\", \"transition\": " + transitionTime + ", \"brightness\": " + ROUND(Hb*100.0) + "}");
 ELSE
     MQTTPUBLISH("shellies/" + bulb5topic + "/light/0/command", "off");
 END</WriteBrightnessScriptPacketParser>
@@ -491,7 +496,7 @@ END</WriteBrightnessScriptPacketParser>
 END
 
 VAR topic := "shellies/" + bulb5topic + "/light/0/set";
-MQTTPUBLISH(topic, "{\"transition\": 300, \"temp\":" + Ct + "}");
+MQTTPUBLISH(topic, "{\"transition\": " + transitionTime + ", \"temp\":" + Ct + "}");
 </WriteCCTScriptPacketParser>
             <IconId>0</IconId>
             <MinColorTemperature>3000</MinColorTemperature>
