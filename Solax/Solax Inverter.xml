@@ -42,7 +42,7 @@ if statusCode = "110"
  addwarning("Inverter in standby mode");
 end</ReadScriptPacketParser>
         <InternalPollInterval>20000</InternalPollInterval>
-        <CustomVariables>[{"Name":"ans","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"tokenID","ValueTypeId":2,"NumericValue":0,"StringValue":$[tokenID]},{"Name":"sn","ValueTypeId":2,"NumericValue":0,"StringValue":$[sn]}]</CustomVariables>
+        <CustomVariables>[{"Name":"ans","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"tokenID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[tokenID]"},{"Name":"sn","ValueTypeId":2,"NumericValue":0,"StringValue":"$[sn]"}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Inverter status code"},"ReadFormula":"var statusCode := (parsejson(parsejson(ans,\u0022result\u0022),\u0022inverterStatus\u0022));\r\n\r\nreturn(statusCode)"},{"AttributeDefinition":{"Name":"Inverter type"},"ReadFormula":"return(parsejson(parsejson(ans,\u0022result\u0022),\u0022inverterType\u0022))"}]</ServiceAttributesScriptsPacketParser>
         <IpAddress>www.solaxcloud.com</IpAddress>
         <Port>80</Port>
