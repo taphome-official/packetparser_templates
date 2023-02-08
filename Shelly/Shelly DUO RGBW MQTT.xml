@@ -73,7 +73,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]},{"Name":"debounceTimestamp","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -81,6 +81,11 @@ END</ListenerScriptPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb1topic, "shellycolorbulb-deviceid") = 0)
     ADDERROR("Set correct 'bulb1topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
     RETURN(-1);
+END
+
+VAR now := NOW();
+IF now.Ticks &lt; debounceTimestamp
+    RETURN(0);
 END
 
 VAR data := TOSTRING(RECEIVEDBYTES);
@@ -114,8 +119,8 @@ IF mode = "color"
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
-    Hd := hsvColor.Hue;
-    Sa := hsvColor.Saturation;
+    Hd := ROUND(hsvColor.Hue);
+    Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
     Ct := PARSEJSON(jsonStatus, "$.temp");
@@ -140,14 +145,21 @@ END
     RETURN(0);
 END
 
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
 VAR topic := "shellies/" + bulb1topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
 VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
 
-MQTTPUBLISH(topic, data);</WriteHueScriptPacketParser>
+MQTTPUBLISH(topic, data);
+</WriteHueScriptPacketParser>
             <WriteSaturationScriptPacketParser />
-            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+            <WriteBrightnessScriptPacketParser>VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+IF St &gt; 0.5
     VAR topic := "shellies/" + bulb1topic + "/color/0/set";
     
 	IF ISNAN(Ct)
@@ -162,6 +174,9 @@ END</WriteBrightnessScriptPacketParser>
             <WriteCCTScriptPacketParser>IF ISNAN(Ct)
     RETURN(0);
 END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
 
 VAR topic := "shellies/" + bulb1topic + "/color/0/set";
 
@@ -205,7 +220,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]},{"Name":"debounceTimestamp","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -213,6 +228,11 @@ END</ListenerScriptPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
     ADDERROR("Set correct 'bulb2topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
     RETURN(-1);
+END
+
+VAR now := NOW();
+IF now.Ticks &lt; debounceTimestamp
+    RETURN(0);
 END
 
 VAR data := TOSTRING(RECEIVEDBYTES);
@@ -246,8 +266,8 @@ IF mode = "color"
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
-    Hd := hsvColor.Hue;
-    Sa := hsvColor.Saturation;
+    Hd := ROUND(hsvColor.Hue);
+    Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
     Ct := PARSEJSON(jsonStatus, "$.temp");
@@ -272,6 +292,9 @@ END
     RETURN(0);
 END
 
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
 VAR topic := "shellies/" + bulb2topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
@@ -280,7 +303,10 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
             <WriteSaturationScriptPacketParser />
-            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+            <WriteBrightnessScriptPacketParser>VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+IF St &gt; 0.5
     VAR topic := "shellies/" + bulb2topic + "/color/0/set";
     
 	IF ISNAN(Ct)
@@ -295,6 +321,9 @@ END</WriteBrightnessScriptPacketParser>
             <WriteCCTScriptPacketParser>IF ISNAN(Ct)
     RETURN(0);
 END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
 
 VAR topic := "shellies/" + bulb2topic + "/color/0/set";
 
@@ -338,7 +367,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]},{"Name":"debounceTimestamp","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -346,6 +375,11 @@ END</ListenerScriptPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb3topic, "shellycolorbulb-deviceid") = 0)
     ADDERROR("Set correct 'bulb3topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
     RETURN(-1);
+END
+
+VAR now := NOW();
+IF now.Ticks &lt; debounceTimestamp
+    RETURN(0);
 END
 
 VAR data := TOSTRING(RECEIVEDBYTES);
@@ -379,8 +413,8 @@ IF mode = "color"
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
-    Hd := hsvColor.Hue;
-    Sa := hsvColor.Saturation;
+    Hd := ROUND(hsvColor.Hue);
+    Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
     Ct := PARSEJSON(jsonStatus, "$.temp");
@@ -405,6 +439,9 @@ END
     RETURN(0);
 END
 
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
 VAR topic := "shellies/" + bulb3topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
@@ -413,7 +450,10 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
             <WriteSaturationScriptPacketParser />
-            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+            <WriteBrightnessScriptPacketParser>VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+IF St &gt; 0.5
     VAR topic := "shellies/" + bulb3topic + "/color/0/set";
     
 	IF ISNAN(Ct)
@@ -428,6 +468,9 @@ END</WriteBrightnessScriptPacketParser>
             <WriteCCTScriptPacketParser>IF ISNAN(Ct)
     RETURN(0);
 END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
 
 VAR topic := "shellies/" + bulb3topic + "/color/0/set";
 
@@ -471,7 +514,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]},{"Name":"debounceTimestamp","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -479,6 +522,11 @@ END</ListenerScriptPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb4topic, "shellycolorbulb-deviceid") = 0)
     ADDERROR("Set correct 'bulb4topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
     RETURN(-1);
+END
+
+VAR now := NOW();
+IF now.Ticks &lt; debounceTimestamp
+    RETURN(0);
 END
 
 VAR data := TOSTRING(RECEIVEDBYTES);
@@ -512,8 +560,8 @@ IF mode = "color"
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
-    Hd := hsvColor.Hue;
-    Sa := hsvColor.Saturation;
+    Hd := ROUND(hsvColor.Hue);
+    Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
     Ct := PARSEJSON(jsonStatus, "$.temp");
@@ -538,6 +586,9 @@ END
     RETURN(0);
 END
 
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
 VAR topic := "shellies/" + bulb4topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
@@ -546,7 +597,10 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
             <WriteSaturationScriptPacketParser />
-            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+            <WriteBrightnessScriptPacketParser>VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+IF St &gt; 0.5
     VAR topic := "shellies/" + bulb4topic + "/color/0/set";
     
 	IF ISNAN(Ct)
@@ -561,6 +615,9 @@ END</WriteBrightnessScriptPacketParser>
             <WriteCCTScriptPacketParser>IF ISNAN(Ct)
     RETURN(0);
 END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
 
 VAR topic := "shellies/" + bulb4topic + "/color/0/set";
 
@@ -604,7 +661,7 @@ END</ListenerScriptPacketParser>
           <DeviceProperties>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
+            <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]},{"Name":"debounceTimestamp","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
 			<MinColorTemperature>3000</MinColorTemperature>
@@ -612,6 +669,11 @@ END</ListenerScriptPacketParser>
             <ListenerScriptPacketParser>IF(INDEXOF(bulb5topic, "shellycolorbulb-deviceid") = 0)
     ADDERROR("Set correct 'bulb5topic' value in module variables. Topic format is 'shellycolorbulb-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; Device info.");
     RETURN(-1);
+END
+
+VAR now := NOW();
+IF now.Ticks &lt; debounceTimestamp
+    RETURN(0);
 END
 
 VAR data := TOSTRING(RECEIVEDBYTES);
@@ -644,9 +706,9 @@ IF mode = "color"
     bright := PARSEJSON(jsonStatus, "$.gain");
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
-    
-    Hd := hsvColor.Hue;
-    Sa := hsvColor.Saturation;
+
+    Hd := ROUND(hsvColor.Hue);
+    Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
     Ct := PARSEJSON(jsonStatus, "$.temp");
@@ -671,6 +733,9 @@ END
     RETURN(0);
 END
 
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
 VAR topic := "shellies/" + bulb5topic + "/color/0/set";
 VAR rgbColor := HSVTORGB(Hd, Sa, 1);
 
@@ -679,7 +744,10 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
             <WriteSaturationScriptPacketParser />
-            <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
+            <WriteBrightnessScriptPacketParser>VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+IF St &gt; 0.5
     VAR topic := "shellies/" + bulb5topic + "/color/0/set";
     
 	IF ISNAN(Ct)
@@ -694,6 +762,9 @@ END</WriteBrightnessScriptPacketParser>
             <WriteCCTScriptPacketParser>IF ISNAN(Ct)
     RETURN(0);
 END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
 
 VAR topic := "shellies/" + bulb5topic + "/color/0/set";
 
