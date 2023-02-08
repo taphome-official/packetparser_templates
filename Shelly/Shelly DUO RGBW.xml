@@ -71,7 +71,7 @@ INT g := PARSEJSON(jsonStatus, "$.lights[0].green", 1);
 INT b := PARSEJSON(jsonStatus, "$.lights[0].blue", 1);
  
 VAR HSVColor := RGBTOHSV(r, g, b);
-HSVColor.Hue;</ReadHueScriptPacketParser>
+ROUND(HSVColor.Hue);</ReadHueScriptPacketParser>
             <ReadSaturationScriptPacketParser>VAR now := NOW();
 
 IF now.Ticks &lt; debounceTimestamp
@@ -83,7 +83,7 @@ INT g := PARSEJSON(jsonStatus, "$.lights[0].green", 1);
 INT b := PARSEJSON(jsonStatus, "$.lights[0].blue", 1);
  
 VAR HSVColor := RGBTOHSV(r, g, b);
-HSVColor.Saturation;</ReadSaturationScriptPacketParser>
+ROUND(HSVColor.Saturation * 100.0) / 100.0;</ReadSaturationScriptPacketParser>
             <ReadBrightnessScriptPacketParser>VAR now := NOW();
 
 IF now.Ticks &lt; debounceTimestamp
