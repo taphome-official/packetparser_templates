@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Templates format="1" protocolVersion="72">
 	<Template id="4aa81532-7100-4322-a4d8-4f3955c803dd" revision="1.0">
-		<Name>Satel</Name>
+		<Name>Satel ETHM 1 Plus</Name>
 		<CcuModel>PacketParserCCU</CcuModel>
+        <Producer>Satel</Producer>
+        <Model>ETHM 1 Plus</Model>        
 		<Description></Description>
 		<RevisionHistory>
 			<Revision id="1.0">Initial version</Revision>
