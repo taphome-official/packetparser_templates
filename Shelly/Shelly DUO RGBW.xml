@@ -135,7 +135,17 @@ SENDHTTPREQUEST("light/0?mode=color&amp;transition=" + transitionTime + "&amp;ga
 
 VAR now := NOW();
 debounceTimestamp := now.Ticks + transitionTime + 500;</WriteHueScriptPacketParser>
-            <WriteSaturationScriptPacketParser></WriteSaturationScriptPacketParser>
+            <WriteSaturationScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR color := HSVTORGB(Hd, Sa, 1);
+
+SENDHTTPREQUEST("light/0?mode=color&amp;transition=" + transitionTime + "&amp;gain=" + ROUND(Hb*100) + "&amp;red=" + color.RED + "&amp;green=" + color.GREEN + "&amp;blue=" + color.BLUE);
+
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 500;</WriteSaturationScriptPacketParser>
             <WriteBrightnessScriptPacketParser>IF St &gt; 0.5
     VAR mode := PARSEJSON(jsonStatus, "$.lights[0].mode", 1);
     
