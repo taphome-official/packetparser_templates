@@ -155,7 +155,20 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
-            <WriteSaturationScriptPacketParser />
+            <WriteSaturationScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+VAR topic := "shellies/" + bulb1topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteSaturationScriptPacketParser>
             <WriteBrightnessScriptPacketParser>VAR now := NOW();
 debounceTimestamp := now.Ticks + transitionTime + 3000;
 
@@ -302,7 +315,20 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
-            <WriteSaturationScriptPacketParser />
+            <WriteSaturationScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+VAR topic := "shellies/" + bulb2topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteSaturationScriptPacketParser>
             <WriteBrightnessScriptPacketParser>VAR now := NOW();
 debounceTimestamp := now.Ticks + transitionTime + 3000;
 
@@ -449,7 +475,20 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
-            <WriteSaturationScriptPacketParser />
+            <WriteSaturationScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+VAR topic := "shellies/" + bulb3topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteSaturationScriptPacketParser>
             <WriteBrightnessScriptPacketParser>VAR now := NOW();
 debounceTimestamp := now.Ticks + transitionTime + 3000;
 
@@ -596,7 +635,20 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
-            <WriteSaturationScriptPacketParser />
+            <WriteSaturationScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+VAR topic := "shellies/" + bulb4topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteSaturationScriptPacketParser>
             <WriteBrightnessScriptPacketParser>VAR now := NOW();
 debounceTimestamp := now.Ticks + transitionTime + 3000;
 
@@ -743,7 +795,20 @@ VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transiti
 
 MQTTPUBLISH(topic, data);
 </WriteHueScriptPacketParser>
-            <WriteSaturationScriptPacketParser />
+            <WriteSaturationScriptPacketParser>IF !ISNAN(Ct)
+    RETURN(0);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 3000;
+
+VAR topic := "shellies/" + bulb5topic + "/color/0/set";
+VAR rgbColor := HSVTORGB(Hd, Sa, 1);
+
+VAR data := "{\"mode\": \"color\", \"gain\": " + ROUND(Hb*100.0) + ", \"transition\":" + transitionTime + ",\"red\":" + rgbColor.red + ",\"green\":" + rgbColor.green + ",\"blue\":" + rgbColor.blue + "}";
+
+MQTTPUBLISH(topic, data);
+</WriteSaturationScriptPacketParser>
             <WriteBrightnessScriptPacketParser>VAR now := NOW();
 debounceTimestamp := now.Ticks + transitionTime + 3000;
 
