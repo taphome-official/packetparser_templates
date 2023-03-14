@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "e639ad69-0fdb-4835-8ac4-d48e4462b60f">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Button1</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description>To enable MQTT in browser interface go to Internet and Security / Advanced - Developer Settings, tick "Enable action execution via MQTT" and fill out "Server" input by formula {MQTT broker IP address}:{port}" and press SAVE.
+
+To find Device ID in browser interface go to Settings / Device Info / Device ID. It is the first string of characters (not in the brackets!)
+</Description>
+    <ImportParameters>
+      <Parameter>
+        <Name>Mqtt Broker ${ipAddress}</Name>	
+        <Value>192.168.0.1</Value>
+        <Id>IpAddress</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Mqtt Broker port</Name>	
+        <Value>1883</Value>
+        <Id>Port</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Device ID</Name>	
+        <Value></Value>
+        <Id>dID</Id>
+      </Parameter>
+		</ImportParameters>
+    <Module>
+      <Name>Shelly Button1</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"deviceid","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
+        <RootTopic>shellies/#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Battery [%]</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>var response := tostring(RECEIVEDBYTES);
+if parsejson(response,"Topic") = "shellies/shellybutton1-"+deviceid+"/sensor/battery"
+    Va := todouble(parsejson(response,"Payload"));
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Double short push</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables>[{"Name":"state","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>var response := tostring(RECEIVEDBYTES);
+if parsejson(response,"Topic") = "shellies/shellybutton1-"+deviceid+"/input_event/0"
+    var event := parsejson(parsejson(response,"Payload"),"event");
+    if event = "SS"
+        state := 1;
+    else
+        state := 0;
+    end
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <WriteButtonPressedStateScriptPacketParser>Bp := state
+</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Long push</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables>[{"Name":"state","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>var response := tostring(RECEIVEDBYTES);
+if parsejson(response,"Topic") = "shellies/shellybutton1-"+deviceid+"/input_event/0"
+    var event := parsejson(parsejson(response,"Payload"),"event");
+    if event = "S"
+        state := 1;
+    else
+        state := 0;
+    end
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <WriteButtonPressedStateScriptPacketParser>Bp := state;</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Short push</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables>[{"Name":"state","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>var response := tostring(RECEIVEDBYTES);
+if parsejson(response,"Topic") = "shellies/shellybutton1-"+deviceid+"/input_event/0"
+    var event := parsejson(parsejson(response,"Payload"),"event");
+    if event = "S"
+        state := 1;
+    else
+        state := 0;
+    end
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <WriteButtonPressedStateScriptPacketParser>Bp := state;</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Triple short push</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables>[{"Name":"state","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>var response := tostring(RECEIVEDBYTES);
+if parsejson(response,"Topic") = "shellies/shellybutton1-"+deviceid+"/input_event/0"
+    var event := parsejson(parsejson(response,"Payload"),"event");
+    if event = "SSS"
+        state := 1;
+    else
+        state := 0;
+    end
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <WriteButtonPressedStateScriptPacketParser>Bp := state;</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
