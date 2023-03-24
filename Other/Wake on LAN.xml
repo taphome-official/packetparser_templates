@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+  <Template id="d9f29daf-854e-4ca0-ad68-de7415fce619" revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Wake on LAN</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+        <Parameter>
+            <Name>MAC</Name>
+            <Value>12 34 56 78 9a bc</Value>
+            <Id>MAC</Id>
+        </Parameter>
+    </ImportParameters>      
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Wake on LAN</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleUdp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"MAC","ValueTypeId":2,"NumericValue":0,"StringValue":"$[MAC]"}]</CustomVariables>
+        <ListenerScriptPacketParser></ListenerScriptPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>9999</Port>
+        <StayConnected>False</StayConnected>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Wake on LAN</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser></ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <WriteButtonPressedStateScriptPacketParser>VAR magicPacket := BYTECOLLECTION("FF FF FF FF FF FF " + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC + MAC);
+SENDDATA(magicPacket);</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
