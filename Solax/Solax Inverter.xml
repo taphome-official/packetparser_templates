@@ -4,6 +4,7 @@
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="1.1">Fix Battery power reporting</Revision>
     </RevisionHistory>
     <Name>Solax Inverter</Name>
     <CcuModel>PacketParserCCU</CcuModel>
@@ -50,25 +51,25 @@ end</ReadScriptPacketParser>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Battery power [W]</Name>
+          <Name>Battery power</Name>
           <Model>PacketParserVariable</Model>
           <Id>-2</Id>
           <DeviceProperties>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"batPower", true);
+            <SerializedValueLogTypeConversions>{"60":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1000,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:60}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var x := parsejson(parsejson(ans,"result"),"batPower", true);
 
 if x = null
  addwarning("No battery");
 end
 
-return(x)</ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser />
+return(x)</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
 # IF response.IsSuccess = false
