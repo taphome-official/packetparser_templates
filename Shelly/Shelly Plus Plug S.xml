@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+  <Template revision="1.0" id="4a3d5067-365d-4447-89bb-49bc065ae9a7">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus Plug S</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Shelly Plus Plug S</Model>
+    <Description>Smart plug with multicolor LED indication</Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>  
+    <Module>
+      <Name>Shelly Plus Plug S</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Sys.GetStatus");
+IF response.IsSuccess
+    Sys.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Sys.GetConfig");
+IF response.IsSuccess
+    Sys.GetConfig := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/WiFi.GetStatus");
+IF response.IsSuccess
+    WiFi.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(Sys.GetStatus, "available_updates.stable", true))
+    addwarning("New firmware update is available");
+end
+
+if parsejson(Sys.GetStatus, "restart_required", true)
+    addwarning("Restart required");
+end
+</ReadScriptPacketParser>
+        <InternalPollInterval>3000</InternalPollInterval>
+        <CustomVariables>[{"Name":"Sys.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"Sys.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"WiFi.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"PLUGS_UI.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022ssid\u0022)"},{"AttributeDefinition":{"Name":"${ipAddress}"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022sta_ip\u0022)"},{"AttributeDefinition":{"Name":"${xml_signal_strength} [dB]"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022rssi\u0022)"},{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(Sys.GetStatus, \u0022mac\u0022)"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${xml_update_fw}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Update?stage=\\\u0022stable\\\u0022\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n\r\n"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Reboot\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>ShellyPlusPlugS-3CE90E2FB57C.local</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${digital_output}</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>var x := SENDHTTPREQUEST("/relay/0/ison");
+return(parsejson(x.Content, "ison"));
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "relay/0?turn=" + SWITCH(St, 0, "off", 1, "on","off");
+SENDHTTPREQUEST(path);
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceElectricityMeter}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=0");
+IF response.IsSuccess
+    Switch.GetStatus := response.Content;
+END</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Switch.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${electric_current} [A]"},"ReadFormula":"return(parsejson(Switch.GetStatus,\u0022current\u0022));\r\n"},{"AttributeDefinition":{"Name":"${electric_voltage} [V]"},"ReadFormula":"return(parsejson(Switch.GetStatus,\u0022voltage\u0022));"},{"AttributeDefinition":{"Name":"${temperature} [\u00B0C]"},"ReadFormula":"return(parsejson(parsejson(Switch.GetStatus,\u0022temperature\u0022), \u0022tC\u0022));"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(Switch.GetStatus,"aenergy"), "total")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(Switch.GetStatus,"apower")/1000);
+</ReadDemandScriptPacketParser>
+            <Calibration>0</Calibration>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${xml_led_indication_mode}</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>6000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>67</Value3Index>
+            <Value4Index>68</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>${xml_off}</Value0Name>
+            <Value1Name>${switch}</Value1Name>
+            <Value2Name>${xml_power}</Value2Name>
+            <Value3Name>3</Value3Name>
+            <Value4Name>4</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>304</Value0IconId>
+            <Value1IconId>60</Value1IconId>
+            <Value2IconId>346</Value2IconId>
+            <Value3IconId>8</Value3IconId>
+            <Value4IconId>9</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>switch(parsejson(PLUGS_UI.GetConfig, "leds.mode"), "power", 2, "switch", 1, 0)
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"mode\":\"" + switch(Mu, 2, "power", 1, "switch", "off") + "\"}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${xml_led_off_color}</Name>
+          <Model>PacketParserHSBLight</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>6000</InternalPollInterval>
+            <CustomVariables>[{"Name":"basePath","ValueTypeId":2,"NumericValue":0,"StringValue":"leds.colors.switch:0.off"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser>VAR HSVColor := RGBTOHSV(parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[0]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[1]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[2]") *2.55);
+
+HSVColor.Hue</ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser>VAR HSVColor := RGBTOHSV(parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[0]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[1]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[2]") *2.55);
+
+HSVColor.Saturation</ReadSaturationScriptPacketParser>
+            <ReadBrightnessScriptPacketParser>parsejson(PLUGS_UI.GetConfig, basePath + ".brightness") / 100</ReadBrightnessScriptPacketParser>
+            <ReadCCTScriptPacketParser />
+            <WriteHueScriptPacketParser>VAR rgb := HSVTORGB( Hd, Sa, Hb);
+
+VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"colors\":{\"switch:0\":{\"off\":{\"rgb\":[" + rgb.red/2.55 + "," + rgb.green/2.55 + "," + rgb.blue/2.55 + "],\"brightness\":" + Hb*100 + "}}}}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser>VAR rgb := HSVTORGB( Hd, Sa, Hb);
+
+VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"colors\":{\"switch:0\":{\"off\":{\"rgb\":[" + rgb.red/2.55 + "," + rgb.green/2.55 + "," + rgb.blue/2.55 + "],\"brightness\":" + Hb*100 + "}}}}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteSaturationScriptPacketParser>
+            <WriteBrightnessScriptPacketParser>VAR rgb := HSVTORGB( Hd, Sa, Hb);
+
+VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"colors\":{\"switch:0\":{\"off\":{\"brightness\":" + Hb*100 + "}}}}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser />
+            <IconId>0</IconId>
+            <MinColorTemperature>1700</MinColorTemperature>
+            <MaxColorTemperature>6500</MaxColorTemperature>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${xml_led_on_color}</Name>
+          <Model>PacketParserHSBLight</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>6000</InternalPollInterval>
+            <CustomVariables>[{"Name":"basePath","ValueTypeId":2,"NumericValue":0,"StringValue":"leds.colors.switch:0.on"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser>VAR HSVColor := RGBTOHSV(parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[0]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[1]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[2]") *2.55);
+
+HSVColor.Hue</ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser>VAR HSVColor := RGBTOHSV(parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[0]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[1]") *2.55, parsejson(PLUGS_UI.GetConfig, basePath + ".rgb[2]") *2.55);
+
+HSVColor.Saturation</ReadSaturationScriptPacketParser>
+            <ReadBrightnessScriptPacketParser>parsejson(PLUGS_UI.GetConfig, basePath + ".brightness") / 100</ReadBrightnessScriptPacketParser>
+            <ReadCCTScriptPacketParser />
+            <WriteHueScriptPacketParser>VAR rgb := HSVTORGB( Hd, Sa, Hb);
+
+VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"colors\":{\"switch:0\":{\"on\":{\"rgb\":[" + rgb.red/2.55 + "," + rgb.green/2.55 + "," + rgb.blue/2.55 + "],\"brightness\":" + Hb*100 + "}}}}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser>VAR rgb := HSVTORGB( Hd, Sa, Hb);
+
+VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"colors\":{\"switch:0\":{\"on\":{\"rgb\":[" + rgb.red/2.55 + "," + rgb.green/2.55 + "," + rgb.blue/2.55 + "],\"brightness\":" + Hb*100 + "}}}}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteSaturationScriptPacketParser>
+            <WriteBrightnessScriptPacketParser>VAR rgb := HSVTORGB( Hd, Sa, Hb);
+
+VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"colors\":{\"switch:0\":{\"on\":{\"brightness\":" + Hb*100 + "}}}}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser />
+            <IconId>0</IconId>
+            <MinColorTemperature>1700</MinColorTemperature>
+            <MaxColorTemperature>6500</MaxColorTemperature>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${xml_led_brightness_power_mode}</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>6000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>parsejson(PLUGS_UI.GetConfig, "leds.colors.power.brightness") / 100</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>VAR response := SENDHTTPREQUEST("rpc/PLUGS_UI.SetConfig?config={\"leds\":{\"colors\":{\"power\":{\"brightness\":" + Le*100 + "}}}}");
+
+response := SENDHTTPREQUEST("/rpc/PLUGS_UI.GetConfig");
+IF response.IsSuccess
+    PLUGS_UI.GetConfig := response.Content;
+END</WriteLevelScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
