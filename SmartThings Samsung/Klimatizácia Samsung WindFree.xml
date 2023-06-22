@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="76" locationId="15d0063d-4071-4d29-b284-ebf7bebe6a9b">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>SmartThings - Klimatizácia Samsung WindFree</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>SmartThings - Klimatizácia Samsung WindFree</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"Token","ValueTypeId":2,"NumericValue":0,"StringValue":"Tu prida\u0165 Token!"},{"Name":"DeviceId","ValueTypeId":2,"NumericValue":0,"StringValue":"Tu prida\u0165 DeviceId!"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+        <IpAddress>api.smartthings.com</IpAddress>
+        <Port>443</Port>
+        <UseHttps>True</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Klimatizácia - Fan Mode</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>AUTO</Value0Name>
+            <Value1Name>LOW</Value1Name>
+            <Value2Name>MEDIUM</Value2Name>
+            <Value3Name>HIGH</Value3Name>
+            <Value4Name>TURBO</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>113</Value0IconId>
+            <Value1IconId>25</Value1IconId>
+            <Value2IconId>26</Value2IconId>
+            <Value3IconId>27</Value3IconId>
+            <Value4IconId>28</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.airConditionerFanMode.fanMode.value");
+    if state = "auto"
+    return(0);
+        elseif state = "low"
+        return(1);
+        elseif state = "medium"
+        return(2);
+        elseif state = "high"
+        return(3);
+        elseif state = "turbo"
+        return(4);
+        end    
+END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localfan := SWITCH(Mu, 0, "auto", 1, "low", 2, "medium", 3, "high", 4, "turbo", "");
+
+SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/commands", "POST", "{\"commands\":[{\"component\": \"main\", \"capability\": \"airConditionerFanMode\", \"command\": \"setFanMode\", \"arguments\": [\""+localfan+"\"]}]}", "Authorization:Bearer " + Token);
+
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Klimatizácia - Hvac Mode</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>64</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>OFF</Value0Name>
+            <Value1Name>HEAT</Value1Name>
+            <Value2Name>COOL</Value2Name>
+            <Value3Name>COOL + HEAT</Value3Name>
+            <Value4Name>DRY</Value4Name>
+            <Value5Name>FAN ONLY</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>61</Value0IconId>
+            <Value1IconId>32</Value1IconId>
+            <Value2IconId>2</Value2IconId>
+            <Value3IconId>3</Value3IconId>
+            <Value4IconId>123</Value4IconId>
+            <Value5IconId>28</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.airConditionerMode.airConditionerMode.value");        
+        if state = "heat"
+        return(1);
+        elseif state = "cool"
+        return(2);
+        elseif state = "auto"
+        return(3);
+        elseif state = "dry"
+        return(4);
+        elseif state = "wind"
+        return(5);             
+        end    
+END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localhvac := SWITCH(Mu, 1, "heat", 2, "cool", 3, "auto", 4, "dry", 5, "wind", "");
+
+SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/commands", "POST", "{\"commands\":[{\"component\": \"main\", \"capability\": \"airConditionerMode\", \"command\": \"setAirConditionerMode\", \"arguments\": [\""+localhvac+"\"]}]}", "Authorization:Bearer " + Token);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Klimatizácia - Power</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.switch.switch.value");
+    if state = "off"
+    return(0);
+    elseif state = "on"
+        return(1);
+        end    
+END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localpower := SWITCH(St, 0, "off", 1, "on", "");
+
+SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/commands", "POST", "{\"commands\":[{\"component\": \"main\", \"capability\": \"switch\", \"command\": \""+localpower+"\"}]}", "Authorization:Bearer " + Token);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Klimatizácia - Preset Mode</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>OFF</Value0Name>
+            <Value1Name>SLEEP</Value1Name>
+            <Value2Name>QUIET</Value2Name>
+            <Value3Name>SMART</Value3Name>
+            <Value4Name>SPEED</Value4Name>
+            <Value5Name>WindFree</Value5Name>
+            <Value6Name>WindFreeSleep</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>61</Value0IconId>
+            <Value1IconId>184</Value1IconId>
+            <Value2IconId>183</Value2IconId>
+            <Value3IconId>64</Value3IconId>
+            <Value4IconId>212</Value4IconId>
+            <Value5IconId>181</Value5IconId>
+            <Value6IconId>181</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/components/main/capabilities/custom.airConditionerOptionalMode/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "acOptionalMode.value");
+    if state = "sleep"
+        return(1);
+        elseif state = "off"
+        return(0);
+        elseif state = "quiet"
+        return(2);
+        elseif state = "smart"
+        return(3);
+        elseif state = "speed"
+        return(4);
+        elseif state = "windFree"
+        return(5);         
+        elseif state = "windFreeSleep"
+        return(6);        
+        end
+end</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localpreset := SWITCH(Mu, 0, "off", 1, "sleep", 2, "quiet", 3, "smart", 4, "speed", 5, "windFree", 6, "windFreeSleep", "");
+
+SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/commands", "POST", "{\"commands\":[{\"component\": \"main\", \"capability\": \"custom.airConditionerOptionalMode\", \"command\": \"setAcOptionalMode\", \"arguments\": [\""+localpreset+"\"]}]}", "Authorization:Bearer " + Token);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Klimatizácia - Swing Mode</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"swing","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>68</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>FIXED</Value0Name>
+            <Value1Name>ALL</Value1Name>
+            <Value2Name>VERTICAL</Value2Name>
+            <Value3Name>HORIZONTAL</Value3Name>
+            <Value4Name>4</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>134</Value0IconId>
+            <Value1IconId>140</Value1IconId>
+            <Value2IconId>140</Value2IconId>
+            <Value3IconId>138</Value3IconId>
+            <Value4IconId>9</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.fanOscillationMode.fanOscillationMode.value");
+    if state = "fixed"
+    return(0);
+    elseif state = "all"
+        return(1);
+        elseif state = "vertical"
+        return(2);
+        elseif state = "horizontal"
+        return(3);
+        end    
+END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localswing := SWITCH(Mu, 0, "fixed", 1, "all", 2, "vertical", 3, "horizontal", "");
+
+SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/commands", "POST", "{\"commands\":[{\"component\": \"main\", \"capability\": \"fanOscillationMode\", \"command\": \"setFanOscillationMode\", \"arguments\": [\""+localswing+"\"]}]}", "Authorization:Bearer " + Token);
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Klimatizácia - Teplota + Vhlkosť</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <TemperatureCalibration>0</TemperatureCalibration>
+            <ReadTemperatureScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.temperatureMeasurement.temperature.value");
+    return(ToDouble(state));
+END</ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.relativeHumidityMeasurement.humidity.value");
+    return(ToDouble(state / 100));
+END</ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Klimatizácia - Teplota nastavené</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <TemperatureCalibration>0</TemperatureCalibration>
+            <ReadTemperatureScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.thermostatCoolingSetpoint.coolingSetpoint.value");
+    return(ToDouble(state));
+END</ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser></ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Klimatizácia - Termostat</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>7</Value7Index>
+            <Value8Index>8</Value8Index>
+            <Value9Index>9</Value9Index>
+            <Value0Name>18°C</Value0Name>
+            <Value1Name>19°C</Value1Name>
+            <Value2Name>20°C</Value2Name>
+            <Value3Name>21°C</Value3Name>
+            <Value4Name>22°C</Value4Name>
+            <Value5Name>23°C</Value5Name>
+            <Value6Name>24°C</Value6Name>
+            <Value7Name>25°C</Value7Name>
+            <Value8Name>26°C</Value8Name>
+            <Value9Name>27°C</Value9Name>
+            <Value0IconId>2</Value0IconId>
+            <Value1IconId>349</Value1IconId>
+            <Value2IconId>348</Value2IconId>
+            <Value3IconId>347</Value3IconId>
+            <Value4IconId>3</Value4IconId>
+            <Value5IconId>29</Value5IconId>
+            <Value6IconId>30</Value6IconId>
+            <Value7IconId>31</Value7IconId>
+            <Value8IconId>32</Value8IconId>
+            <Value9IconId>32</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization:Bearer " + Token);
+IF(response.IsSuccess = 1)
+    VAR state := PARSEJSON(response.Content, "components.main.thermostatCoolingSetpoint.coolingSetpoint.value");        
+    if state = 18
+    return(0);
+        elseif state = 19
+        return(1);
+        elseif state = 20
+        return(2);
+        elseif state = 21
+        return(3);
+        elseif state = 22
+        return(4);
+        elseif state = 23
+        return(5);
+        elseif state = 24
+        return(6);
+        elseif state = 25
+        return(7);
+        elseif state = 26
+        return(8);
+        elseif state = 27
+        return(9);            
+        end    
+END</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR localtemperature := SWITCH(Mu, 0, "18", 1, "19", 2, "20", 3, "21", 4, "22", 5, "23", 6, "24", 7, "25", 8, "26", 9, "27", "");
+
+SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/commands", "POST", "{\"commands\":[{\"component\": \"main\", \"capability\": \"thermostatCoolingSetpoint\", \"command\": \"setCoolingSetpoint\", \"arguments\": ["+localtemperature+"]}]}", "Authorization:Bearer " + Token);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
