@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="76" locationId="15d0063d-4071-4d29-b284-ebf7bebe6a9b">
-  <Template revision="1.0">
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id = "2e25fee6-deed-4a0a-bfb5-1c9e4344da7a">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
@@ -9,14 +9,26 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
-    <Description></Description>
+    <Description>Na samsung SmartThings treba vytvorit Token a zistit ake ma zariadenie DeviceId</Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>Token</Name>
+            <Value></Value>
+            <Id>token</Id>
+        </Parameter>
+        <Parameter>
+            <Name>DeviceId</Name>
+            <Value></Value>
+            <Id>DeviceId</Id>
+        </Parameter>
+	</ImportParameters>
     <Module>
       <Name>SmartThings - Klimatizácia Samsung WindFree</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleHttp</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"Token","ValueTypeId":2,"NumericValue":0,"StringValue":"Tu prida\u0165 Token!"},{"Name":"DeviceId","ValueTypeId":2,"NumericValue":0,"StringValue":"Tu prida\u0165 DeviceId!"}]</CustomVariables>
+        <CustomVariables>[{"Name":"Token","ValueTypeId":2,"NumericValue":0,"StringValue":"$[token]"},{"Name":"DeviceId","ValueTypeId":2,"NumericValue":0,"StringValue":"$[DeviceId]"}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
         <IpAddress>api.smartthings.com</IpAddress>
         <Port>443</Port>
