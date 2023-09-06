@@ -9,7 +9,8 @@ How to add a PowerView Hub device to the TapHome application
 7. Find out an ID of your roller/blinds by entering the URL http://(IP_address)/api/shades in any browser, where (IP_address) is the IP address of your PowerView Hub. Attribute “shadeIds” contains an ID.
 
 Example:
-"shadeIds":[7348]
+> "shadeIds":[7348]
+
 Warning: there can be more than one ID in the “shadeIds” field if you have more than one roller/blinds.
 
 8. Open Service Settings of the created device in the TapHome app.
