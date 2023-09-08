@@ -54,7 +54,7 @@ END</ReadScriptPacketParser>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Shelly DUO RGBW Electric meter</Name>
+          <Name>Shelly RGBW2 Color Electric meter</Name>
           <Model>PacketParserElectricityMeter</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -92,7 +92,7 @@ power / 1000.0</ReadDemandScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Shelly DUO RGBW ${deviceType_Light}</Name>
+          <Name>Shelly RGBW2 Color ${deviceType_Light}</Name>
           <Model>PacketParserHSBLight</Model>
           <Id>-3</Id>
           <DeviceProperties>

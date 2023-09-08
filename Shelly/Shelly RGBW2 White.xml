@@ -1,0 +1,371 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id="37040b04-b58e-4e3b-81d2-7e3476b1aafd">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+	<ImportParameters>
+		<Parameter>
+			<Name>${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Transition time (ms)</Name>	
+			<Value>300</Value>
+			<Id>TransitionTime</Id>
+		</Parameter>
+	</ImportParameters>       
+    <Name>Shelly RGBW2 White</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>RGBW2 White</Model>
+    <Description></Description>
+    <Module>
+      <Name>Shelly RGBW2 White</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR now := NOW();
+
+IF now.Ticks &lt; debounceTimestamp
+    RETURN(0);
+END
+
+VAR response := SENDHTTPREQUEST("/status");
+
+IF response.IsSuccess
+    jsonStatus := response.Content;
+    
+    if PARSEJSON(jsonStatus, "$.mode", 1) = "color"
+    adderror("Mode Color is not supported");
+    end
+ELSE
+    jsonStatus := NULL;
+END</ReadScriptPacketParser>
+        <InternalPollInterval>2500</InternalPollInterval>
+        <CustomVariables>[{"Name":"jsonStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"debounceTimestamp","ValueTypeId":1,"NumericValue":0},{"Name":"transitionTime","ValueTypeId":1,"NumericValue":$[TransitionTime]}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IP Address"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/status\u0022);\r\n\r\nIF response.IsSuccess\r\n    jsonStatus := response.Content;\r\nELSE\r\n    jsonStatus := NULL;\r\nEND\r\n\r\nVAR address := PARSEJSON(jsonStatus, \u0022$.wifi_sta.ip\u0022, 1);\r\nIF (ISNULL(address), \u0022-\u0022, address)"},{"AttributeDefinition":{"Name":"MAC Address"},"ReadFormula":"VAR value := PARSEJSON(jsonStatus, \u0022$.mac\u0022, 1);\r\nIF ISNULL(value)\r\n    RETURN(\u0022-\u0022);\r\nEND;\r\n\r\nSTRING mac;\r\nINT i := 0;\r\nINT len := LENGTH(value);\r\n\r\nWHILE i \u003C len\r\n    mac \u002B= GETAT(value, i);\r\n    i \u002B= 1;\r\n    \r\n    IF MOD(i, 2) = 0 AND i \u003C len\r\n        mac \u002B= \u0022:\u0022;\r\n    END\r\nLOOP\r\n\r\nmac"},{"AttributeDefinition":{"Name":"WIFI signal"},"ReadFormula":"VAR signal := PARSEJSON(jsonStatus, \u0022$.wifi_sta.rssi\u0022, 1);\r\nIF (ISNULL(signal), \u0022-\u0022, signal \u002B \u0022db\u0022);"},{"AttributeDefinition":{"Name":"Cloud enabled"},"ReadFormula":"VAR value := PARSEJSON(jsonStatus, \u0022$.cloud.enabled\u0022, 1);\r\nIF (ISNULL(value), \u0022-\u0022, value)"},{"AttributeDefinition":{"Name":"Cloud connected"},"ReadFormula":"VAR value := PARSEJSON(jsonStatus, \u0022$.cloud.connected\u0022, 1);\r\nIF (ISNULL(value), \u0022-\u0022, value)"},{"AttributeDefinition":{"Name":"MQTT connected"},"ReadFormula":"VAR value := PARSEJSON(jsonStatus, \u0022$.mqtt.connected\u0022, 1);\r\nIF (ISNULL(value), \u0022-\u0022, value)"},{"AttributeDefinition":{"Name":"Device time"},"ReadFormula":"VAR value := PARSEJSON(jsonStatus, \u0022$.time\u0022, 1);\r\nIF (ISNULL(value), \u0022-\u0022, value)"},{"AttributeDefinition":{"Name":"FW update available"},"ReadFormula":"VAR value := PARSEJSON(jsonStatus, \u0022$.has_update\u0022);\r\nIF (ISNULL(value), \u0022-\u0022, value)"},{"AttributeDefinition":{"Name":"Uptime"},"ReadFormula":"VAR value := PARSEJSON(jsonStatus, \u0022$.uptime\u0022, 1);\r\nIF ISNULL(value)\r\n    RETURN(\u0022-\u0022);\r\nEND\r\n\r\nVAR days := FLOOR(value/86400, 1);\r\nvalue := MOD(value, 86400);\r\nVAR hours := FLOOR(value/3600, 1);\r\nvalue := MOD(value, 3600);\r\nVAR minutes := FLOOR(value/60, 1);\r\n\r\ndays \u002B \u0022day(s) \u0022 \u002B hours \u002B \u0022h \u0022 \u002B minutes \u002B \u0022m\u0022"},{"AttributeDefinition":{"Name":"RAM"},"ReadFormula":"VAR ramFree := PARSEJSON(jsonStatus, \u0022$.ram_free\u0022, 1);\r\nVAR ramTotal := PARSEJSON(jsonStatus, \u0022$.ram_total\u0022, 1);\r\n\r\nIF ISNULL(ramFree) OR ISNULL(ramTotal)\r\n    RETURN(\u0022-\u0022);\r\nEND\r\n\r\nramFree \u002B \u0022 bytes free of \u0022 \u002B ramTotal"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Enable cloud","NumericParameters":[],"BoolParameters":[{"FriendlyName":"Enable","Abbreviation":"enable","OffValueName":"Disable","OnValueName":"Enable"}],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/settings/cloud?enabled=\u0022 \u002B enable);\r\nVAR contentJson := response.Content;\r\nVAR wasEnabled := PARSEJSON(contentJson, \u0022enabled\u0022);\r\n\r\nIF(wasEnabled, \u0022Cloud enabled\u0022, \u0022Cloud disabled\u0022);"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/reboot\u0022);\r\nVAR contentJson := response.Content;\r\nVAR wasRebooted := PARSEJSON(contentJson, \u0022ok\u0022);\r\n\r\nIF(wasRebooted, \u0022Reboot successful\u0022, \u0022Error\u0022);"},{"ActionDefinition":{"Name":"Set mode White","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/settings?mode=white\u0022);\r\nIF(response.isSuccess, \u0022White mode is set\u0022, \u0022Error\u0022);"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 1</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[0].power");
+VAR total := PARSEJSON(jsonStatus, "$.meters[0].total");
+BOOL isOn := PARSEJSON(jsonStatus, "$.lights[0].ison");
+
+IF ISNULL(power) OR ISNULL(total) OR (ison AND power=0)
+    ADDWARNING("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+    
+    RETURN(NaN);
+END
+
+total / 60000.0</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[0].power", 1);
+
+IF ISNULL(power)
+    RETURN(NaN);
+END
+
+power / 1000.0</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 1 (R)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR now := NOW();
+var tmp := now.Ticks - debounceTimestamp;
+if now.Ticks &gt; debounceTimestamp
+    BOOL isOn := PARSEJSON(jsonStatus, "$.lights[0].ison");
+    var brightness := PARSEJSON(jsonStatus, "$.lights[0].brightness");
+
+    if isOn
+        return(brightness / 100);
+    else
+        return(0);
+    end
+else
+    return(le);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>IF St &gt; 0.5
+    SENDHTTPREQUEST("light/0?turn=on&amp;transition=" + transitionTime + "&amp;brightness=" + ROUND(Le*100.0));
+ELSE
+    SENDHTTPREQUEST("light/0?turn=off&amp;transition=" + transitionTime);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 500;</WriteLevelScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 2</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[1].power");
+VAR total := PARSEJSON(jsonStatus, "$.meters[1].total");
+BOOL isOn := PARSEJSON(jsonStatus, "$.lights[1].ison");
+
+IF ISNULL(power) OR ISNULL(total) OR (ison AND power=0)
+    ADDWARNING("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+    
+    RETURN(NaN);
+END
+
+total / 60000.0</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[1].power", 1);
+
+IF ISNULL(power)
+    RETURN(NaN);
+END
+
+power / 1000.0</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 2 (G)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR now := NOW();
+var tmp := now.Ticks - debounceTimestamp;
+if now.Ticks &gt; debounceTimestamp
+    BOOL isOn := PARSEJSON(jsonStatus, "$.lights[1].ison");
+    var brightness := PARSEJSON(jsonStatus, "$.lights[1].brightness");
+
+    if isOn
+        return(brightness / 100);
+    else
+        return(0);
+    end
+else
+    return(le);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>IF St &gt; 0.5
+    SENDHTTPREQUEST("light/1?turn=on&amp;transition=" + transitionTime + "&amp;brightness=" + ROUND(Le*100.0));
+ELSE
+    SENDHTTPREQUEST("light/1?turn=off&amp;transition=" + transitionTime);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 500;</WriteLevelScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 3</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[2].power");
+VAR total := PARSEJSON(jsonStatus, "$.meters[2].total");
+BOOL isOn := PARSEJSON(jsonStatus, "$.lights[2].ison");
+
+IF ISNULL(power) OR ISNULL(total) OR (ison AND power=0)
+    ADDWARNING("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+    
+    RETURN(NaN);
+END
+
+total / 60000.0</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[2].power", 1);
+
+IF ISNULL(power)
+    RETURN(NaN);
+END
+
+power / 1000.0</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 3 (B)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR now := NOW();
+var tmp := now.Ticks - debounceTimestamp;
+if now.Ticks &gt; debounceTimestamp
+    BOOL isOn := PARSEJSON(jsonStatus, "$.lights[2].ison");
+    var brightness := PARSEJSON(jsonStatus, "$.lights[2].brightness");
+
+    if isOn
+        return(brightness / 100);
+    else
+        return(0);
+    end
+else
+    return(le);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>IF St &gt; 0.5
+    SENDHTTPREQUEST("light/2?turn=on&amp;transition=" + transitionTime + "&amp;brightness=" + ROUND(Le*100.0));
+ELSE
+    SENDHTTPREQUEST("light/2?turn=off&amp;transition=" + transitionTime);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 500;</WriteLevelScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 4</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[3].power");
+VAR total := PARSEJSON(jsonStatus, "$.meters[3].total");
+BOOL isOn := PARSEJSON(jsonStatus, "$.lights[3].ison");
+
+IF ISNULL(power) OR ISNULL(total) OR (ison AND power=0)
+    ADDWARNING("To enable power monitoring, open device settings in Shelly app or web browser and configure device model in Settings-&gt;Device Model");
+    
+    RETURN(NaN);
+END
+
+total / 60000.0</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR power := PARSEJSON(jsonStatus, "$.meters[3].power", 1);
+
+IF ISNULL(power)
+    RETURN(NaN);
+END
+
+power / 1000.0</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly RGBW2 White ${deviceType_Light} 4 (W)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>IF LENGTH(jsonStatus) = 0
+    RETURN(NaN);
+END
+
+VAR now := NOW();
+var tmp := now.Ticks - debounceTimestamp;
+if now.Ticks &gt; debounceTimestamp
+    BOOL isOn := PARSEJSON(jsonStatus, "$.lights[3].ison");
+    var brightness := PARSEJSON(jsonStatus, "$.lights[3].brightness");
+
+    if isOn
+        return(brightness / 100);
+    else
+        return(0);
+    end
+else
+    return(le);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>IF St &gt; 0.5
+    SENDHTTPREQUEST("light/3?turn=on&amp;transition=" + transitionTime + "&amp;brightness=" + ROUND(Le*100.0));
+ELSE
+    SENDHTTPREQUEST("light/3?turn=off&amp;transition=" + transitionTime);
+END
+
+VAR now := NOW();
+debounceTimestamp := now.Ticks + transitionTime + 500;</WriteLevelScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
