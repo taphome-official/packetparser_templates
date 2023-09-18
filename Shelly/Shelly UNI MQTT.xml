@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id="55377529-063e-4b5a-9d48-7d76c0c602a8">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly UNI</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>UNI</Model>
+    <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Device ID</Name>
+			<Value>XXXXXXXXX</Value>
+			<Id>DeviceID</Id>
+		</Parameter>
+	</ImportParameters>    
+    <Module>
+      <Name>Shelly UNI</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"MQTTprefix","ValueTypeId":2,"NumericValue":0,"StringValue":"shellyuni-$[DeviceID]"}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
+        <RootTopic>shellies/#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${AnalogInput}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions>{"87":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:87}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+
+if topic = "shellies/" + MQTTprefix + "/adc/0"
+    Va := TODOUBLE(payload);
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceSwitch} 1</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+
+if topic = "shellies/" + MQTTprefix + "/relay/0"
+    if(payload = "on", St := 1, St := 0);
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>MQTTPUBLISH("shellies/" + MQTTprefix + "/relay/0/command", if(St, "on", "off"))</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceSwitch} 2</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+
+if topic = "shellies/" + MQTTprefix + "/relay/1"
+    if(payload = "on", St := 1, St := 0);
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>MQTTPUBLISH("shellies/" + MQTTprefix + "/relay/1/command", if(St, "on", "off"))</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${bus_module_reed_contact} 1</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+
+if topic = "shellies/" + MQTTprefix + "/input/0"
+    Rc := if(payload = "0", 1, 0);
+end</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${bus_module_reed_contact} 2</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+
+if topic = "shellies/" + MQTTprefix + "/input/1"
+    Rc := if(payload = "0", 1, 0);
+end</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
