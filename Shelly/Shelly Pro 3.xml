@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="79">
+  <Template revision="1.0" id="ad43d2c2-a375-4a25-b139-98a9c6fe07c6">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+	<ImportParameters>
+		<Parameter>
+			<Name>${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+	</ImportParameters>        
+    <Name>Shelly Pro 3</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Pro 3</Model>
+    <Description></Description>
+    <Module>
+      <Name>Shelly Pro 3</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Sys.GetStatus");
+IF response.IsSuccess
+    Sys.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Sys.GetConfig");
+IF response.IsSuccess
+    Sys.GetConfig := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/WiFi.GetStatus");
+IF response.IsSuccess
+    WiFi.GetStatus := response.Content;
+END
+
+if ! ISNULL(parsejson(Sys.GetStatus, "available_updates.stable", true))
+    addwarning("New firmware update is available");
+end
+
+if parsejson(Sys.GetStatus, "restart_required", true)
+    addwarning("Restart required");
+end
+</ReadScriptPacketParser>
+        <InternalPollInterval>3000</InternalPollInterval>
+        <CustomVariables>[{"Name":"Sys.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"Sys.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"WiFi.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022ssid\u0022)"},{"AttributeDefinition":{"Name":"${ipAddress}"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022sta_ip\u0022)"},{"AttributeDefinition":{"Name":"${xml_signal_strength} [dB]"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022rssi\u0022)"},{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(Sys.GetStatus, \u0022mac\u0022)"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${xml_update_fw}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Update?stage=\\\u0022stable\\\u0022\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n\r\n"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Reboot\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Zona 1</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"id","ValueTypeId":1,"NumericValue":0},{"Name":"Switch.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>82</OnStateIconId>
+            <OffStateIconId>83</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=" + id);
+IF response.IsSuccess
+    Switch.GetStatus := response.Content;
+END
+return(parsejson(Switch.GetStatus, "output"));
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "/rpc/Switch.Set?id=" + id + "&amp;on=" + SWITCH(St, 1, "true", "false");
+SENDHTTPREQUEST(path);
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Zona 2</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"id","ValueTypeId":1,"NumericValue":1},{"Name":"Switch.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>82</OnStateIconId>
+            <OffStateIconId>83</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=" + id);
+IF response.IsSuccess
+    Switch.GetStatus := response.Content;
+END
+return(parsejson(Switch.GetStatus, "output"));
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "/rpc/Switch.Set?id=" + id + "&amp;on=" + SWITCH(St, 1, "true", "false");
+SENDHTTPREQUEST(path);
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Zona 3</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"id","ValueTypeId":1,"NumericValue":2},{"Name":"Switch.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>82</OnStateIconId>
+            <OffStateIconId>83</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=" + id);
+IF response.IsSuccess
+    Switch.GetStatus := response.Content;
+END
+return(parsejson(Switch.GetStatus, "output"));
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "/rpc/Switch.Set?id=" + id + "&amp;on=" + SWITCH(St, 1, "true", "false");
+SENDHTTPREQUEST(path);
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
