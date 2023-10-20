@@ -55,7 +55,7 @@ end
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Zona 1</Name>
+          <Name>${dashboard_deviceSwitch} 1</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -82,7 +82,7 @@ SENDHTTPREQUEST(path);
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Zona 2</Name>
+          <Name>${dashboard_deviceSwitch} 2</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-3</Id>
           <DeviceProperties>
@@ -109,7 +109,7 @@ SENDHTTPREQUEST(path);
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Zona 3</Name>
+          <Name>${dashboard_deviceSwitch} 3</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-4</Id>
           <DeviceProperties>
