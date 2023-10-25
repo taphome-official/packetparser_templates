@@ -1,0 +1,700 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="80" >
+  <Template revision="1.0" id="953b9b4c-eda7-41c1-9aec-2a080efbdf74">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus i4</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>i4 PLus</Model>
+    <Description></Description>
+    <Module>
+      <Name>Shelly Plus i4</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"shellyplusi4-0cdc7ef6c104"}]</CustomVariables>
+        <IpAddress>192.168.1.14</IpAddress>
+        <Port>1883</Port>
+        <RootTopic>#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Button 1</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Button","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    VAR event := PARSEJSON(zero, "event");
+    
+    if component = "input:0"
+    Bp = SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+        RETURN(Bp);
+        END
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:0") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Bp);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Bp, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Bp + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Bp + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Bp, "write"); # use "append" mode to append data to existing file</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Button 2</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    VAR event := PARSEJSON(zero, "event");
+    
+    if component = "input:1"
+    Bp = SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+        RETURN(Bp);
+        END
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:1") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Bp);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Bp, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Bp + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Bp + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Bp, "write"); # use "append" mode to append data to existing file</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Button 3</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    VAR event := PARSEJSON(zero, "event");
+    
+    if component = "input:2"
+    Bp = SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+        RETURN(Bp);
+        END
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:2") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Bp);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Bp, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Bp + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Bp + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Bp, "write"); # use "append" mode to append data to existing file</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Button 4</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    VAR event := PARSEJSON(zero, "event");
+    
+    if component = "input:3"
+    Bp = SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+        RETURN(Bp);
+        END
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:3") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/set/value=" + Bp);
+# IF response.IsSuccess = false
+#  ADDERROR(response.StatusCode);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/setValue", "GET", "value=" + Bp, "header1:value1", "header2:value2", ...);\r
+# Or VAR request := HTTPREQUEST("/example/setValue");
+# request.Method := "PUT";
+# VAR response := SENDHTTPREQUEST(request);
+#r
+#
+# Send TCP, UDP data:
+# VAR data1 := "{\"name\":\"John\", \"age\":" + Bp + "}";
+# SENDDATA(data1);
+# VAR data2 := TOBYTES("{\"name\":\"John\", \"age\":" + Bp + "}", "iso-8859-1");
+# SENDDATA(data2);
+# You can process received TCP or UDP data in the Listener script
+#
+#
+# Upload data to FTP:
+# FTPUPLOAD("filePath", "somedata=" + Bp, "write"); # use "append" mode to append data to existing file</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 1</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:0"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:0") &gt; -1)
+        VAR input := PARSEJSON(params, "input:0");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 2</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:1"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:1") &gt; -1)
+    VAR input := PARSEJSON(params, "input:1");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 3</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:2"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:2") &gt; -1)
+    VAR input := PARSEJSON(params, "input:2");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 4</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:3"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:3") &gt; -1)
+    VAR input := PARSEJSON(params, "input:3");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
