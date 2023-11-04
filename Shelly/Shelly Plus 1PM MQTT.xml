@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="72">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus 1PM MQTT Module</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description>"The 'Shelly MQTT Client ID' can be found by opening url 'http://shellyIpAddress', in Settings -&gt; MQTT Settings -&gt; Client ID."</Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Shelly MQTT Client ID</Name>	
+			<Value>shellyplus1pm-deviceId</Value>
+			<Id>MQTTClientId</Id>
+		</Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>Shelly Plus 1PM MQTT Module</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+		<IpAddress>$[IpAddress]</IpAddress>
+		<Port>$[Port]</Port>
+        <RootTopic>$[MQTTClientId]/#</RootTopic>
+        <InternalPollInterval>15000</InternalPollInterval>
+        <CustomVariables>[{"Name":"plug1topic","ValueTypeId":2,"NumericValue":0,"StringValue":"$[MQTTClientId]"},{"Name":"internalTemp","ValueTypeId":1,"NumericValue":"NaN"},{"Name":"voltage","ValueTypeId":1,"NumericValue":"NaN"},{"Name":"current","ValueTypeId":1,"NumericValue":"NaN","StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Internal temperature"},"ReadFormula":"IF(ISNAN(internalTemp), \u0022Unknown\u0022, internalTemp \u002B \u0022\u00B0C\u0022);"},{"AttributeDefinition":{"Name":"Voltage"},"ReadFormula":"IF(ISNAN(voltage), \u0022Unknown\u0022, voltage \u002B \u0022V\u0022);"},{"AttributeDefinition":{"Name":"Current"},"ReadFormula":"IF(ISNAN(current), \u0022Unknown\u0022, current \u002B \u0022A\u0022);"}]</ServiceAttributesScriptsPacketParser>
+        <ListenerScriptPacketParser>IF(INDEXOF(plug1topic, "shellyplus1pm-deviceid") = 0)
+    ADDERROR("Set correct 'plug1topic' value in module variables. Topic format is 'shellyplus1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; MQTT Settings -&gt; Client ID.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+    
+IF(topic = plug1topic + "/status/switch:0")
+    VAR payload := PARSEJSON(json, "Payload");
+    internalTemp := PARSEJSON(payload, "temperature.tC");
+    voltage := PARSEJSON(payload, "voltage");
+    current := PARSEJSON(payload, "current");
+    VAR errors := PARSEJSON(payload, "errors", TRUE);
+    
+    IF (!ISNULL(errors))
+        VAR errCount := LENGTH(errors);
+        VAR i := 0;
+        VAR errorText := "";
+        
+        WHILE i &lt; errCount
+            IF LENGTH(errorText)
+                errorText += ", ";
+            END
+            errorText := errorText + GETAT(errors, i);
+            ++i;
+        LOOP
+        
+        IF LENGTH(errorText)
+            ADDERROR(errorText);
+        END
+    END
+END
+</ListenerScriptPacketParser>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Shelly Plus 1PM MQTT Power</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF(INDEXOF(plug1topic, "shellyplus1pm-deviceid") = 0)
+    ADDERROR("Set correct 'plug1topic' value in module variables. Topic format is 'shellyplus1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; MQTT Settings -&gt; Client ID.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+    
+IF(topic = plug1topic + "/status/switch:0")
+    VAR payload := PARSEJSON(json, "Payload");
+    Ed := PARSEJSON(payload, "apower") / 1000.0;
+    To := PARSEJSON(payload, "aenergy.total") / 1000.0;
+END</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Shelly Plus 1PM MQTT Switch</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>IF(INDEXOF(plug1topic, "shellyplus1pm-deviceid") = 0)
+    ADDERROR("Set correct 'plug1topic' value in module variables. Topic format is 'shellyplus1pm-&lt;deviceid&gt;'. The Device ID can be found by opening url 'http://shellyIpAddress', in Settings -&gt; MQTT Settings -&gt; Client ID.");
+    RETURN(-1);
+END
+
+VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+
+    
+IF(topic = plug1topic + "/status/switch:0")
+    VAR payload := PARSEJSON(json, "Payload");
+    St := PARSEJSON(payload, "output");
+END
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR value := IF(St = 1, "on", "off");
+MQTTPUBLISH(plug1topic + "/command/switch:0", value);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
