@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="78" locationId="44af806f-28fe-4ed4-aaf8-6d5574cd7756">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>SmartThings Switch/Plug with Power Metering</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Csongor Varga</Producer>
+    <Model>BlitzWolf BW-SHP15</Model>
+    <Description>Integrate a single gang smart switch or smart plug with power metering to TapHome. For the full process see https://github.com/nygma2004/km/wiki/TapHome-Examples#integrating-smartthings-switch-or-plug-with-power-metering</Description>
+    <Module>
+      <Name>SmartThings Switch/Plug with Power Metering</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization: Bearer "+Token);
+IF response.IsSuccess
+ StatusJson := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END
+</ReadScriptPacketParser>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"Token","ValueTypeId":2,"NumericValue":0,"StringValue":"0ead2552-e331-4355-b483-81d3898eb5ba"},{"Name":"DeviceId","ValueTypeId":2,"NumericValue":0,"StringValue":"47eff6bf-83c9-4374-a367-b254759b486d"},{"Name":"StatusJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>api.smartthings.com</IpAddress>
+        <Port>443</Port>
+        <UseHttps>True</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>SmartThings Plug Power Consumption</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"DeviceId","ValueTypeId":2,"NumericValue":0,"StringValue":"47eff6bf-83c9-4374-a367-b254759b486d"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>VAR value := PARSEJSON(StatusJson, "components.main.energyMeter.energy.value", 1);
+IF(ISNULL(value), NaN, value);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>VAR value := PARSEJSON(StatusJson, "components.main.powerMeter.power.value", 1);
+IF(ISNULL(value), NaN, value / 1000);</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>SmartThings Switch/Plug</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>107</OnStateIconId>
+            <OffStateIconId>108</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>VAR value := PARSEJSON(StatusJson, "components.main.switch.switch.value", 1);
+IF(ISNULL(value), NaN, if(value="on", 1, 0));</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser># Set Http request method, body and headers
+VAR response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/commands", 
+"POST", 
+"{\"commands\": [ { \"component\": \"main\", \"capability\": \"switch\", \"command\": \""+IF(St=1, "on", "off")+"\", \"arguments\": [] } ] }",
+"Authorization: Bearer "+Token);
+
+
+# Wait a little an read the state again to prevent state shuffle
+SLEEP(500);
+response := SENDHTTPREQUEST("/v1/devices/"+DeviceId+"/status", "GET", "", "Authorization: Bearer "+Token);
+IF response.IsSuccess
+ StatusJson := response.Content;
+ # ADDINFO("StatusJson refreshed");
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
