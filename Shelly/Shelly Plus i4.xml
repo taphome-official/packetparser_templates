@@ -10,6 +10,23 @@
     <Producer>Shelly</Producer>
     <Model>i4 PLus</Model>
     <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Shelly ID</Name>	
+			<Value>shellyplusi4-xxxxxxxxxxxx</Value>
+			<Id>ID</Id>
+		</Parameter>
+	</ImportParameters>
     <Module>
       <Name>Shelly Plus i4</Name>
       <Id>-1</Id>
