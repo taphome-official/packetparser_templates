@@ -33,9 +33,9 @@
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"shellyplusi4-0cdc7ef6c104"}]</CustomVariables>
-        <IpAddress>192.168.1.14</IpAddress>
-        <Port>1883</Port>
+        <CustomVariables>[{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[ID]"}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
         <RootTopic>#</RootTopic>
       </DeviceProperties>
       <Devices>
