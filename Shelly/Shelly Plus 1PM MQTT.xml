@@ -63,7 +63,7 @@ IF(topic = plug1topic + "/status/switch:0")
                 errorText += ", ";
             END
             errorText := errorText + GETAT(errors, i);
-            ++i;
+            i += 1;
         LOOP
         
         IF LENGTH(errorText)
