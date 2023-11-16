@@ -26,8 +26,8 @@
         <CustomVariables>[{"Name":"API_token","ValueTypeId":2,"NumericValue":0,"StringValue":"$[token]"}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Devices"},"ReadFormula":"VAR response := SENDHTTPREQUEST(\u0022/api/taphomeapi/v1/discovery\u0022, \u0022GET\u0022, \u0022\u0022, \u0022Authorization: TapHome \u0022 \u002B API_token);\r\nIF response.IsSuccess\r\n    var max := PARSEJSON(response.content, \u0022$.devices[-1:].deviceId\u0022);\r\n    var ret := \u0022\u0022;\r\n    var i := 0;\r\n    do\r\n        ret := ret \u002B \u0022(\u0022 \u002B PARSEJSON(response.content, \u0022$.devices[\u0022 \u002B tostring(i) \u002B \u0022].deviceId\u0022, true) \u002B \u0022) \u0022;\r\n        ret := ret \u002B PARSEJSON(response.content, \u0022$.devices[\u0022 \u002B tostring(i) \u002B \u0022].name\u0022, true);\r\n        ret := ret \u002B \u0022 - \u0022 \u002B PARSEJSON(response.content, \u0022$.devices[\u0022 \u002B tostring(i) \u002B \u0022].type\u0022, true);\r\n        ret := ret \u002B \u0022\\n\u0022;\r\n        i := i \u002B 1;\r\n    loop while i \u003C max\r\n    \r\n    RETURN(ret);\r\nEND"}]</ServiceAttributesScriptsPacketParser>
         <IpAddress>api.taphome.com</IpAddress>
-        <Port>80</Port>
-        <UseHttps>False</UseHttps>
+        <Port>443</Port>
+        <UseHttps>True</UseHttps>
       </DeviceProperties>
       <Devices>
         <Device>
