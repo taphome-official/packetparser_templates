@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="82">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Nanoleaf RGB light</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Rastislav Patak</Producer>
+    <Model></Model>
+    <Description>Nanoleaf Open API</Description>
+    <Module>
+      <Name>Nanoleaf</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>#Generate an authorization token
+# 1. On the Nanoleaf controller, hold the on-off button for 5-7 seconds until the LED starts flashing in a pattern.
+
+# 2. Send a POST request to the authorization endpoint within 30 seconds of activating pairing, like this (substituting the IP address and port for your central controller):
+#http://x.x.x.x:16021/api/v1/new
+
+
+VAR response := SENDHTTPREQUEST("/api/v1/"+authToken+"/", "GET");
+IF response.IsSuccess
+ StatusJson := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END
+</ReadScriptPacketParser>
+        <InternalPollInterval>500</InternalPollInterval>
+        <CustomVariables>[{"Name":"authToken","ValueTypeId":2,"NumericValue":0,"StringValue":"xxxKJISJCjY2hfAyilpyIOfGixxxx"},{"Name":"StatusJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+        <IpAddress>x.x.x.x</IpAddress>
+        <Port>16021</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Nanoleaf RGB light</Name>
+          <Model>PacketParserHSBLight</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>var value := PARSEJSON(StatusJson, "state.on.value");
+IF(ISNULL(value), NaN, IF(value, 1, 0));</ReadScriptPacketParser>
+            <InternalPollInterval>500</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser>var colorMode := PARSEJSON(StatusJson, "state.colorMode",1);
+IF colorMode = "hs"
+  var value := PARSEJSON(StatusJson, "state.hue.value",1);
+  RETURN(IF(ISNULL(value), NaN, value));
+ELSE
+  RETURN(NULL);
+END
+
+</ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser>var colorMode := PARSEJSON(StatusJson, "state.colorMode",1);
+IF colorMode = "hs"
+  var value := PARSEJSON(StatusJson, "state.sat.value",1);
+  RETURN(IF(ISNULL(value), NaN, value/100));
+ELSE
+  RETURN(NULL);
+END
+</ReadSaturationScriptPacketParser>
+            <ReadBrightnessScriptPacketParser>var value := PARSEJSON(StatusJson, "state.brightness.value")/100;
+IF(ISNULL(value), NaN, value);</ReadBrightnessScriptPacketParser>
+            <ReadCCTScriptPacketParser>var colorMode := PARSEJSON(StatusJson, "state.colorMode",1);
+IF colorMode = "ct"
+  var value := PARSEJSON(StatusJson, "state.ct.value",1);
+  RETURN(IF(ISNULL(value), NaN, value));
+ELSE
+  RETURN(NaN);
+END</ReadCCTScriptPacketParser>
+            <WriteHueScriptPacketParser>var content:="{\"hue\" : {\"value\":"+ROUND(Hd)+"}}";
+var response := SENDHTTPREQUEST("/api/v1/"+authToken+"/state", "PUT", content);
+
+</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser>var content:="{\"sat\" : {\"value\":"+ROUND(Sa*100)+"}}";
+var response := SENDHTTPREQUEST("/api/v1/"+authToken+"/state", "PUT", content);</WriteSaturationScriptPacketParser>
+            <WriteBrightnessScriptPacketParser>var content:="{\"brightness\" : {\"value\":"+ROUND(Hb*100)+"}}";
+var response := SENDHTTPREQUEST("/api/v1/"+authToken+"/state", "PUT", content);</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser>var content:="{\"ct\" : {\"value\":"+ROUND(Ct)+"}}";
+var response := SENDHTTPREQUEST("/api/v1/"+authToken+"/state", "PUT", content);</WriteCCTScriptPacketParser>
+            <IconId>43</IconId>
+            <MinColorTemperature>1800</MinColorTemperature>
+            <MaxColorTemperature>6500</MaxColorTemperature>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
