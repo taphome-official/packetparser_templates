@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="80" >
+  <Template revision="1.0" id="953b9b4c-eda7-41c1-9aec-2a080efbdf74">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus i4</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>i4 PLus</Model>
+    <Description></Description>
+	<ImportParameters>
+		<Parameter>
+			<Name>Mqtt Broker ${ipAddress}</Name>	
+			<Value>192.168.0.1</Value>
+			<Id>IpAddress</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Mqtt Broker port</Name>	
+			<Value>1883</Value>
+			<Id>Port</Id>
+		</Parameter>
+		<Parameter>
+			<Name>Shelly ID</Name>	
+			<Value>shellyplusi4-xxxxxxxxxxxx</Value>
+			<Id>ID</Id>
+		</Parameter>
+	</ImportParameters>
+    <Module>
+      <Name>Shelly Plus i4</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[ID]"}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
+        <RootTopic>#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Button 1</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Button","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>Bp := 0;
+VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+    VAR payload := PARSEJSON(jsonResponse, "Payload");
+    VAR method := PARSEJSON(payload, "method");
+    VAR params := PARSEJSON(payload, "params");
+
+    IF method = "NotifyEvent"
+        VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+        VAR component := PARSEJSON(zero, "component");
+        VAR event := PARSEJSON(zero, "event");
+    
+        if component = "input:0"
+            var tmp := payload;
+            Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+            #RETURN(Bp);
+        END
+    elseif method = "NotifyStatus"
+        IF( INDEXOF(params, "input:0") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser></WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Button 2</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>Bp := 0;
+VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+    VAR payload := PARSEJSON(jsonResponse, "Payload");
+    VAR method := PARSEJSON(payload, "method");
+    VAR params := PARSEJSON(payload, "params");
+
+    IF method = "NotifyEvent"
+        VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+        VAR component := PARSEJSON(zero, "component");
+        VAR event := PARSEJSON(zero, "event");
+    
+        if component = "input:1"
+            var tmp := payload;
+            Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+            #RETURN(Bp);
+        END
+    elseif method = "NotifyStatus"
+        IF( INDEXOF(params, "input:0") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser></WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Button 3</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>Bp := 0;
+VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+    VAR payload := PARSEJSON(jsonResponse, "Payload");
+    VAR method := PARSEJSON(payload, "method");
+    VAR params := PARSEJSON(payload, "params");
+
+    IF method = "NotifyEvent"
+        VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+        VAR component := PARSEJSON(zero, "component");
+        VAR event := PARSEJSON(zero, "event");
+    
+        if component = "input:2"
+            var tmp := payload;
+            Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+            #RETURN(Bp);
+        END
+    elseif method = "NotifyStatus"
+        IF( INDEXOF(params, "input:0") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser></WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Button 4</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>Bp := 0;
+VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+    VAR payload := PARSEJSON(jsonResponse, "Payload");
+    VAR method := PARSEJSON(payload, "method");
+    VAR params := PARSEJSON(payload, "params");
+
+    IF method = "NotifyEvent"
+        VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+        VAR component := PARSEJSON(zero, "component");
+        VAR event := PARSEJSON(zero, "event");
+    
+        if component = "input:3"
+            var tmp := payload;
+            Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
+            #RETURN(Bp);
+        END
+    elseif method = "NotifyStatus"
+        IF( INDEXOF(params, "input:0") &gt; -1, ADDERROR("Device is set as switch"));
+    END
+END
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser></WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 1</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:0"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:0") &gt; -1)
+        VAR input := PARSEJSON(params, "input:0");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 2</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:1"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:1") &gt; -1)
+    VAR input := PARSEJSON(params, "input:1");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 3</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:2"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:2") &gt; -1)
+    VAR input := PARSEJSON(params, "input:2");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Switch 4</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+#index of shelly
+VAR topic := PARSEJSON(jsonResponse, "Topic");
+if INDEXOF(topic, ID) = 0
+
+VAR payload := PARSEJSON(jsonResponse, "Payload");
+VAR method := PARSEJSON(payload, "method");
+VAR params := PARSEJSON(payload, "params");
+
+    IF(method ="NotifyEvent")
+    VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
+    VAR component := PARSEJSON(zero, "component");
+    
+    if component = "input:3"
+    ADDERROR("Device is set as button");
+    END
+    
+    IF(method = "NotifyStatus")
+    IF( INDEXOF(params, "input:3") &gt; -1)
+    VAR input := PARSEJSON(params, "input:3");
+        SWITCH(PARSEJSON(input, "state"), true, Rc := 1, Rc := 0);
+    END  
+    END
+END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>87</OnStateIconId>
+            <OffStateIconId>88</OffStateIconId>
+            <OnStateName>${general_open}</OnStateName>
+            <OffStateName>${general_closed}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
