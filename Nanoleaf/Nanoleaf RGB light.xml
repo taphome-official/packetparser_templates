@@ -1,15 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="82">
-  <Template revision="1.0">
+  <Template revision="1.0" id="f5f036c5-bdd3-49f8-9514-40bdf7d64d43">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
     <Name>Nanoleaf RGB light</Name>
     <CcuModel>PacketParserCCU</CcuModel>
-    <Producer>Rastislav Patak</Producer>
+    <Producer>Nanoleaf</Producer>
     <Model></Model>
-    <Description>Nanoleaf Open API</Description>
+    <Description>Nanoleaf Open API
+Generate an authorization token
+ 1. On the Nanoleaf controller, hold the on-off button for 5-7 seconds until the LED starts flashing in a pattern.
+ 2. Send a POST request to the authorization endpoint within 30 seconds of activating pairing, like this (substituting the IP address and port for your central controller):
+http://x.x.x.x:16021/api/v1/new    
+    </Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>      
     <Module>
       <Name>Nanoleaf</Name>
       <Id>-1</Id>
@@ -19,7 +31,7 @@
 # 1. On the Nanoleaf controller, hold the on-off button for 5-7 seconds until the LED starts flashing in a pattern.
 
 # 2. Send a POST request to the authorization endpoint within 30 seconds of activating pairing, like this (substituting the IP address and port for your central controller):
-#http://x.x.x.x:16021/api/v1/new
+#http://$[IpAddress]:16021/api/v1/new
 
 
 VAR response := SENDHTTPREQUEST("/api/v1/"+authToken+"/", "GET");
@@ -33,7 +45,7 @@ END
         <CustomVariables>[{"Name":"authToken","ValueTypeId":2,"NumericValue":0,"StringValue":"xxxKJISJCjY2hfAyilpyIOfGixxxx"},{"Name":"StatusJson","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
         <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
-        <IpAddress>x.x.x.x</IpAddress>
+        <IpAddress>$[IpAddress]</IpAddress>
         <Port>16021</Port>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
