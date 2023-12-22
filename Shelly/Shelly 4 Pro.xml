@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="76">
+  <Template revision="1.0" id="8a0b2ff2-0baf-4572-9cea-9a47dfe08325">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly 4 Pro</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Shelly 4 Pro</Model>
+    <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>    
+    <Module>
+      <Name>Shelly 4 Pro</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/status", "GET");
+StatusJson := response.Content;</ReadScriptPacketParser>
+        <InternalPollInterval>2500</InternalPollInterval>
+        <CustomVariables>[{"Name":"StatusJson","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"SettingsJson","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"status","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Set power protection","NumericParameters":[{"FriendlyName":"Maximum power","Abbreviation":"Watts","IsFloat":false,"MinValue":1.0,"MaxValue":3500.0}],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\"settings?max_power=\" + Watts);\r\nVAR contentJson := response.Content;\r\nVAR limitSet := PARSEJSON(contentJson, \"max_power\");\r\n\r\n\"Power limit set to \" + limitSet + \"W\"\r\n"},{"ActionDefinition":{"Name":"Enable cloud","NumericParameters":[],"BoolParameters":[{"FriendlyName":"Enable","Abbreviation":"enable","OffValueName":"Disable","OnValueName":"Enable"}],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\"/settings/cloud?enabled=\" + enable);\r\nVAR contentJson := response.Content;\r\nVAR wasEnabled := PARSEJSON(contentJson, \"enabled\");\r\n\r\nIF(wasEnabled, \"Cloud enabled\", \"Cloud disabled\");"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\"/reboot\");\r\nVAR contentJson := response.Content;\r\nVAR wasRebooted := PARSEJSON(contentJson, \"ok\");\r\n\r\nIF(wasRebooted, \"Reboot successful\", \"Error\");"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Odber-Output1</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
+status := x.Content;</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(status,"aenergy"), "total")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(status,"apower")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Odber-Output2</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=1"));
+status := x.Content;</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(status,"aenergy"), "total")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(status,"apower")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Odber-Output3</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=2"));
+status := x.Content;</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(status,"aenergy"), "total")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(status,"apower")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Odber-Output4</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=3"));
+status := x.Content;</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(status,"aenergy"), "total")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(status,"apower")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Output-Relay4</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "relay/1?turn=" + SWITCH(St, 0, "off", 1, "on","off");
+SENDHTTPREQUEST(path);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Relay-Output1</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "relay/0?turn=" + SWITCH(St, 0, "off", 1, "on","off");
+SENDHTTPREQUEST(path);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Relay-Output1-Status</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
+status := x.Content;</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>return(parsejson(status,"apower"));
+</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Relay-Output3</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "relay/2?turn=" + SWITCH(St, 0, "off", 1, "on","off");
+SENDHTTPREQUEST(path);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Relay-Output4</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR path := "relay/3?turn=" + SWITCH(St, 0, "off", 1, "on","off");
+SENDHTTPREQUEST(path);</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
