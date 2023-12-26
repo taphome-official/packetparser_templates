@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="82" locationId="44af806f-28fe-4ed4-aaf8-6d5574cd7756">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Blitzwolf dugalj</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Blitzwolf dugalj</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"basetopic","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>192.168.0.15</IpAddress>
+        <Port>1883</Port>
+        <RootTopic>zigbee2mqtt/Dugalj_1</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Zigbee Dugalj 1</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>30</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+basetopic := topic;
+
+VAR state := PARSEJSON(payload,"state");
+IF !ISNULL(state)
+    IF (state="ON")
+    St := 1;
+    ELSE
+    St := 0;
+    END
+END</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>107</OnStateIconId>
+            <OffStateIconId>108</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>IF (St=0)
+    MQTTPUBLISH(basetopic+"/set", "{ \"state\": \"OFF\" }");
+ELSE
+    MQTTPUBLISH(basetopic+"/set", "{ \"state\": \"ON\" }");
+END</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Zigbee Dugalj 1 Áramfelvétel</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>9003</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+basetopic := topic;
+
+VAR power := PARSEJSON(payload,"power");
+VAR energy := PARSEJSON(payload,"energy");
+
+To := energy;
+Ed := power;</ListenerScriptPacketParser>
+            <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser># Simple HTTP Request:
+# VAR response := SENDHTTPREQUEST("/example/getValue");
+# IF response.IsSuccess
+#  VAR content := response.Content;
+#  VAR responseHeaders := response.Headers;
+#  RETURN(PARSEXML(content, "//element1/value1"));
+# ELSE
+#  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+#  RETURN(NaN);
+# END
+#
+# Set Http request method, body and headers
+# VAR response := SENDHTTPREQUEST("/example/getValue", "GET", "some data", "header1:value1", "header2:value2", ...);
+# OR
+# VAR request := HTTPREQUEST("/example/getValue", "POST", "some data");
+# request.headers := { "header1:value1", "header2:value2", ...};
+# request.method := "GET";
+# request.data := null;
+# VAR response := SENDHTTPREQUEST(request);
+#
+#
+# Send TCP, UDP data:
+# VAR data1 := BYTECOLLECTION("0a bb ea df 01");
+# SENDDATA(data1);
+# VAR data2 := "{\"name\":\"John\", \"age\":32}";
+# SENDDATA(data2);
+# VAR data3 := TOBYTES("{\"name\":\"John\", \"age\":32}", "iso-8859-1");
+# SENDDATA(data3);
+# Process received TCP or UDP data and set device values in the Listener script
+#
+#
+# Download data from FTP:
+# FTPDOWNLOAD("filePath");</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>

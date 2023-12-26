@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="82" locationId="799e6d0a-8cf9-463c-b38f-67076dfdeb60">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Temperature and Humidity Sensor</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Temperature and Humidity Sensor</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <IpAddress>192.168.1.176</IpAddress>
+        <Port>1883</Port>
+        <RootTopic>zigbee2mqtt/Temp and Humidity Sensor</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${deviceType_BatterySOC}</Name>
+          <Model>PacketParserAnalogInput</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>11001</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+VAR batt := PARSEJSON(payload,"battery");
+An := IF(ISNULL(batt), NaN, batt/100);
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadInputLevelScriptPacketParser></ReadInputLevelScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor}</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+VAR temp := PARSEJSON(payload,"temperature");
+Te := IF(ISNULL(temp), NaN, temp);
+
+VAR hum := PARSEJSON(payload,"humidity");
+Hu := IF(ISNULL(hum), NaN, hum / 100);
+</ListenerScriptPacketParser>
+            <ReadTemperatureScriptPacketParser></ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser></ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>

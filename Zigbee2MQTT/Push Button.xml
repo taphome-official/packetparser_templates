@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="82" locationId="799e6d0a-8cf9-463c-b38f-67076dfdeb60">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Push Button</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Push Button</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <IpAddress>192.168.1.176</IpAddress>
+        <Port>1883</Port>
+        <RootTopic>zigbee2mqtt/Push button</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${deviceType_BatterySOC} (2)</Name>
+          <Model>PacketParserAnalogInput</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>11001</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+VAR batt := PARSEJSON(payload,"battery");
+An := IF(ISNULL(batt), NaN, batt/100);
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadInputLevelScriptPacketParser></ReadInputLevelScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_devicePushButton} (1)</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+VAR action := PARSEJSON(payload,"action",1);
+IF !ISNULL(action)
+    IF(action="single")
+        Bp := 1;
+    END
+    IF(action="double")
+        Bp := 3;
+    END
+    IF(action="long")
+        Bp := 2;
+    END
+END
+
+</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser></WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
