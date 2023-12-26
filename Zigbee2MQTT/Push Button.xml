@@ -9,7 +9,7 @@
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
-    <Description></Description>
+    <Description>Integrate Zigbee devices via Zigbee2MQTT package and an MQTT broker. This allows local control between Zigbee network and TapHome: more about this here: https://github.com/nygma2004/km/wiki/TapHome-Examples#zigbee2mqtt-integration</Description>
     <Module>
       <Name>Push Button</Name>
       <Id>-1</Id>

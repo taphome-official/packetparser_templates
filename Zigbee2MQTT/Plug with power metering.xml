@@ -5,13 +5,13 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Blitzwolf dugalj</Name>
+    <Name>Blitzwolf plug</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
-    <Description></Description>
+    <Description>Integrate Zigbee devices via Zigbee2MQTT package and an MQTT broker. This allows local control between Zigbee network and TapHome: more about this here: https://github.com/nygma2004/km/wiki/TapHome-Examples#zigbee2mqtt-integration</Description>
     <Module>
-      <Name>Blitzwolf dugalj</Name>
+      <Name>Blitzwolf plug</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
@@ -23,7 +23,7 @@
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Zigbee Dugalj 1</Name>
+          <Name>Zigbee Plug</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -62,7 +62,7 @@ END</WriteSwitchStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Zigbee Dugalj 1 Áramfelvétel</Name>
+          <Name>Zigbee Plug Metering</Name>
           <Model>PacketParserElectricityMeter</Model>
           <Id>-3</Id>
           <DeviceProperties>
