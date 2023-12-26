@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="72">
-  <Template revision="1.0" id="4a3d5067-365d-4447-89bb-49bc065ae9a7">
+  <Template revision="1.1" id="4a3d5067-365d-4447-89bb-49bc065ae9a7">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="1.1">Updatet switch API</Revision>
     </RevisionHistory>
     <Name>Shelly Plus Plug S</Name>
     <CcuModel>PacketParserCCU</CcuModel>
@@ -54,7 +55,7 @@ end
         <CustomVariables>[{"Name":"Sys.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"Sys.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"WiFi.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"PLUGS_UI.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022ssid\u0022)"},{"AttributeDefinition":{"Name":"${ipAddress}"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022sta_ip\u0022)"},{"AttributeDefinition":{"Name":"${xml_signal_strength} [dB]"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022rssi\u0022)"},{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(Sys.GetStatus, \u0022mac\u0022)"}]</ServiceAttributesScriptsPacketParser>
         <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${xml_update_fw}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Update?stage=\\\u0022stable\\\u0022\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n\r\n"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Reboot\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND"}]</ServiceActionsScriptsPacketParser>
-        <IpAddress>ShellyPlusPlugS-3CE90E2FB57C.local</IpAddress>
+        <IpAddress>$[IpAddress]</IpAddress>
         <Port>80</Port>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
@@ -75,11 +76,14 @@ end
             <OffStateIconId>61</OffStateIconId>
             <OnStateName>${general_on}</OnStateName>
             <OffStateName>${general_off}</OffStateName>
-            <ReadSwitchStateScriptPacketParser>var x := SENDHTTPREQUEST("/relay/0/ison");
-return(parsejson(x.Content, "ison"));
+            <ReadSwitchStateScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
+var status := x.Content;
+return(PARSEJSON(status, "$.output", true));
 </ReadSwitchStateScriptPacketParser>
-            <WriteSwitchStateScriptPacketParser>VAR path := "relay/0?turn=" + SWITCH(St, 0, "off", 1, "on","off");
-SENDHTTPREQUEST(path);
+            <WriteSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("rpc/Switch.Set?id=0&amp;on=" + if(St,"true","false"));
+IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+END
 </WriteSwitchStateScriptPacketParser>
           </DeviceProperties>
         </Device>

@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="73">
+  <Template revision="1.0" id="42f7d1ab-387a-416a-9ca3-aab7cd06a43a">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Pro 3 EM</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Shelly Pro 3 EM</Model>
+    <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>      
+    <Module>
+      <Name>Shelly Pro 3 EM</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/EM.GetStatus?id=0");
+IF response.IsSuccess
+    EMStatus := response.Content;
+END;
+
+response := SENDHTTPREQUEST("/rpc/EMData.GetStatus?id=0");
+IF response.IsSuccess
+    EMDataStatus := response.Content;
+END
+</ReadScriptPacketParser>
+        <InternalPollInterval>3000</InternalPollInterval>
+        <CustomVariables>[{"Name":"EMStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"EMDataStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>L1 ${electric_current}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"88":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:88}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>todouble(PARSEjson(EMStatus, "a_current"))</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L1 ${deviceType_PVFromGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>9004</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"power factor"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022a_pf\u0022)));\r\n"},{"AttributeDefinition":{"Name":"Current [A]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022a_current\u0022)));\r\n"},{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022a_voltage\u0022)));\r\n"},{"AttributeDefinition":{"Name":"Total returned energy [kWh]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMDataStatus, \u0022a_total_act_ret_energy\u0022))/1000);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "a_total_act_energy"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "a_act_power"))/1000
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L1 ${deviceType_PVToGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>9005</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "a_total_act_ret_energy"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "a_act_power"))/-1000
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L2 ${electric_current}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"88":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:88}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>todouble(PARSEjson(EMStatus, "b_current"))</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L2 ${deviceType_PVFromGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>9004</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"power factor"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022b_pf\u0022)));\r\n"},{"AttributeDefinition":{"Name":"current [A["},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022b_current\u0022)));\r\n"},{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022b_voltage\u0022)));\r\n"},{"AttributeDefinition":{"Name":"total returned energy [kWh]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMDataStatus, \u0022b_total_act_ret_energy\u0022))/1000);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "b_total_act_energy"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "b_act_power"))/1000</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L2 ${deviceType_PVToGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>9005</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "b_total_act_ret_energy"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "b_act_power"))/-1000
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L3 ${electric_current}</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"88":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:88}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>todouble(PARSEjson(EMStatus, "c_current"))</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L3 ${deviceType_PVFromGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <DeviceType>9004</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"power factor"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022c_pf\u0022)));\r\n"},{"AttributeDefinition":{"Name":"current [A]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022c_current\u0022)));\r\n"},{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMStatus, \u0022c_voltage\u0022)));\r\n"},{"AttributeDefinition":{"Name":"Total returned energy [kWh]"},"ReadFormula":"RETURN(todouble(PARSEjson(EMDataStatus, \u0022c_total_act_ret_energy\u0022))/1000);"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "c_total_act_energy"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "c_act_power"))/1000
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>L3 ${deviceType_PVToGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <DeviceType>9005</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "c_total_act_ret_energy"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "c_act_power"))/-1000</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${total_energy} ${deviceType_PVFromGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-11</Id>
+          <DeviceProperties>
+            <DeviceType>9004</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "total_act"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "total_act_power"))/1000</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${total_energy} ${deviceType_PVToGrid}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <DeviceType>9005</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>3000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>todouble(PARSEjson(EMDataStatus, "total_act_ret"))/1000</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>todouble(PARSEjson(EMStatus, "total_act_power"))/-1000</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
