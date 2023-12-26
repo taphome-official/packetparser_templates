@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="82" locationId="799e6d0a-8cf9-463c-b38f-67076dfdeb60">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>1 Gang Switch of Plug</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description>Integrate Zigbee devices via Zigbee2MQTT package and an MQTT broker. This allows local control between Zigbee network and TapHome: more about this here: https://github.com/nygma2004/km/wiki/TapHome-Examples#zigbee2mqtt-integration</Description>
+    <Module>
+      <Name>1 Gang Switch of Plug</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"basetopic","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>192.168.1.176</IpAddress>
+        <Port>1883</Port>
+        <RootTopic>zigbee2mqtt/1 Gang Switch</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${dashboard_deviceSwitch}</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+basetopic := topic;
+
+VAR state := PARSEJSON(payload,"state");
+IF !ISNULL(state)
+    IF (state="ON")
+    St := 1;
+    ELSE
+    St := 0;
+    END
+END</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>IF (St=0)
+    MQTTPUBLISH(basetopic+"/set", "{ \"state\": \"OFF\" }");
+ELSE
+    MQTTPUBLISH(basetopic+"/set", "{ \"state\": \"ON\" }");
+END</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
