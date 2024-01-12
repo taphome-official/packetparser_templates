@@ -23,7 +23,7 @@
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Power switch</Name>
+          <Name>${digital_output}</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -38,10 +38,13 @@
             <OffStateIconId>61</OffStateIconId>
             <OnStateName>${general_on}</OnStateName>
             <OffStateName>${general_off}</OffStateName>
-            <ReadSwitchStateScriptPacketParser>var x := SENDHTTPREQUEST("/relay/0/ison");
-return(parsejson(x.Content, "ison"));</ReadSwitchStateScriptPacketParser>
-            <WriteSwitchStateScriptPacketParser>VAR path := "relay/0?turn=" + SWITCH(St, 0, "off", 1, "on","off");
-SENDHTTPREQUEST(path);</WriteSwitchStateScriptPacketParser>
+            <ReadSwitchStateScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
+status := x.Content;
+return(PARSEJSON(status, "$.output", true));</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("rpc/Switch.Set?id=0&amp;on=" + if(St,"true","false"));
+IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+END</WriteSwitchStateScriptPacketParser>
           </DeviceProperties>
         </Device>
       </Devices>
