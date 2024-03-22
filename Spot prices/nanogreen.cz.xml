@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="76">
+  <Template revision="1.0" id="8d0172f1-c5ca-4afe-abe2-bebf0be39397">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Spotové ceny</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Spotové ceny</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <IpAddress>moje.nanogreen.cz</IpAddress>
+        <Port>443</Port>
+        <UseHttps>True</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Dnešní druhá nejlevnější hodina mimo energetickou špičku</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN (PARSEJSON(Content, "todayOffpeakSecondCheapestHour"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Dnešní druhá nejlevnější hodina v energetické špičce</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN (PARSEJSON(Content, "todayPeakSecondCheapestHour"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Dnešní druhá nejlevnější hodina za celý den</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN (PARSEJSON(Content, "todayBaseSecondCheapestHour"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Dnešní nejlevnější hodina mimo energetickou špičku</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN (PARSEJSON(Content, "todayOffpeakCheapestHour"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Dnešní nejlevnější hodina v energetické špičce</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>600</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN (PARSEJSON(Content, "todayPeakCheapestHour"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Dnešní nejlevnější hodina za celý den</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN (PARSEJSON(Content, "todayBaseCheapestHour"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Je čtvrtá nejlevnější hodina elektřiny z celého dne?</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <OnStateIconId>39</OnStateIconId>
+            <OffStateIconId>256</OffStateIconId>
+            <OnStateName>Ano</OnStateName>
+            <OffStateName>Ne</OffStateName>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+
+  VAR content := response.Content;
+  VAR state := (PARSEJSON(Content, "isCurrentlyFourthCheapestHour"));
+  If state = false
+  RETURN(0);
+  ELSEif state = true
+  RETURN(1);
+  else 
+ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Je druhá nejlevnější hodina elektřiny z celého dne?</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <OnStateIconId>39</OnStateIconId>
+            <OffStateIconId>256</OffStateIconId>
+            <OnStateName>Ano</OnStateName>
+            <OffStateName>Ne</OffStateName>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+
+  VAR content := response.Content;
+  VAR state := (PARSEJSON(Content, "isCurrentlySecondCheapestHour"));
+  If state = false
+  RETURN(0);
+  ELSEif state = true
+  RETURN(1);
+  else 
+ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Je nejlevnější hodina elektřiny z celého dne?</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <OnStateIconId>39</OnStateIconId>
+            <OffStateIconId>256</OffStateIconId>
+            <OnStateName>Ano</OnStateName>
+            <OffStateName>Ne</OffStateName>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+
+  VAR content := response.Content;
+  VAR state := (PARSEJSON(Content, "isCurrentlyCheapestHour"));
+  If state = false
+  RETURN(0);
+  ELSEif state = true
+  RETURN(1);
+  else 
+ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Je pátá nejlevnější hodina elektřiny z celého dne?</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-11</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <OnStateIconId>39</OnStateIconId>
+            <OffStateIconId>256</OffStateIconId>
+            <OnStateName>Ano</OnStateName>
+            <OffStateName>Ne</OffStateName>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+
+  VAR content := response.Content;
+  VAR state := (PARSEJSON(Content, "isCurrentlyFifthCheapestHour"));
+  If state = false
+  RETURN(0);
+  ELSEif state = true
+  RETURN(1);
+  else 
+ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Je šestá nejlevnější hodina elektřiny z celého dne?</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <OnStateIconId>39</OnStateIconId>
+            <OffStateIconId>256</OffStateIconId>
+            <OnStateName>Ano</OnStateName>
+            <OffStateName>Ne</OffStateName>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+
+  VAR content := response.Content;
+  VAR state := (PARSEJSON(Content, "isCurrentlySixthCheapestHour"));
+  If state = false
+  RETURN(0);
+  ELSEif state = true
+  RETURN(1);
+  else 
+ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Je třetí nejlevnější hodina elektřiny z celého dne?</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-13</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <OnStateIconId>39</OnStateIconId>
+            <OffStateIconId>256</OffStateIconId>
+            <OnStateName>Ano</OnStateName>
+            <OffStateName>Ne</OffStateName>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+
+  VAR content := response.Content;
+  VAR state := (PARSEJSON(Content, "isCurrentlyThirdCheapestHour"));
+  If state = false
+  RETURN(0);
+  ELSEif state = true
+  RETURN(1);
+  else 
+ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Současná tržní cena elektřiny (ote, kurz čnb) Kč/kWh</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-14</Id>
+          <DeviceProperties>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
+ IF response.IsSuccess
+  VAR content := response.Content;
+  RETURN (PARSEJSON(Content, "currentPrice"));
+ ELSE
+  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+  RETURN(NaN);
+ END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Špička/Mimo špičku</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-15</Id>
+          <DeviceProperties>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>66</Value2Index>
+            <Value3Index>67</Value3Index>
+            <Value4Index>68</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>Špička</Value0Name>
+            <Value1Name>Mimo špičku</Value1Name>
+            <Value2Name>2</Value2Name>
+            <Value3Name>3</Value3Name>
+            <Value4Name>4</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>252</Value0IconId>
+            <Value1IconId>253</Value1IconId>
+            <Value2IconId>7</Value2IconId>
+            <Value3IconId>8</Value3IconId>
+            <Value4IconId>9</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser></WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
