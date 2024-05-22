@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="76">
-  <Template revision="1.0" id="8d0172f1-c5ca-4afe-abe2-bebf0be39397">
+<Templates format="2" protocolVersion="82" locationId="0e56ebb5-dd29-4eff-a4f8-dab4c7386feb">
+  <Template revision="1.0">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
@@ -15,17 +15,463 @@
       <Id>-1</Id>
       <Model>PacketParserModuleHttp</Model>
       <DeviceProperties>
-        <InternalPollInterval>5000</InternalPollInterval>
+        <ReadScriptPacketParser>responseJson := "error";
+VAR response := SENDHTTPREQUEST("/api/prices/daily");
+
+  VAR content := response.Content;
+  
+IF response.IsSuccess
+    responseJson := response.Content;
+ELSE
+    VAR contentJson := response.Content;
+END
+
+</ReadScriptPacketParser>
+        <InternalPollInterval>300000</InternalPollInterval>
+        <CustomVariables>[{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
         <IpAddress>moje.nanogreen.cz</IpAddress>
         <Port>443</Port>
         <UseHttps>True</UseHttps>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Dnešní druhá nejlevnější hodina mimo energetickou špičku</Name>
+          <Name>Cena 0-1h</Name>
           <Model>PacketParserVariable</Model>
           <Id>-2</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[0]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 1-2h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[1]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 2-3h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[2]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 3-4h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[3]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 4-5h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[4]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 5-6h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[5]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 6-7h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[6]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 7-8h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[7]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 8-9h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[8]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 9-10h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-11</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[9]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 10-11h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[10]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 11-12h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-13</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[11]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 12-13h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-14</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[12]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 13-14h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-15</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[13]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 14-15h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-16</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[14]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 15-16h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-17</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[15]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 16-17h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-18</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[16]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 17-18h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-19</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[17]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 18-19h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-20</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[18]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 19-20h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-21</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[19]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 20-21h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-22</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[20]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 21-22h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-23</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[21]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 22-23h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-24</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[22]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Cena 23-00h</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-25</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responseJson,"$.todayHourlyPrices.[23]");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Dnešní druhá nejlevnější hodina mimo energetickou špičku</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-26</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
@@ -34,22 +480,17 @@
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
- IF response.IsSuccess
-  VAR content := response.Content;
-  RETURN (PARSEJSON(Content, "todayOffpeakSecondCheapestHour"));
- ELSE
-  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-  RETURN(NaN);
- END</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>(PARSEJSON(responseJson, "todayOffpeakSecondCheapestHour"));
+ </ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Dnešní druhá nejlevnější hodina v energetické špičce</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-3</Id>
+          <Id>-27</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
@@ -58,22 +499,16 @@
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
- IF response.IsSuccess
-  VAR content := response.Content;
-  RETURN (PARSEJSON(Content, "todayPeakSecondCheapestHour"));
- ELSE
-  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-  RETURN(NaN);
- END</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>(PARSEJSON(responseJson, "todayPeakSecondCheapestHour"));</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Dnešní druhá nejlevnější hodina za celý den</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-4</Id>
+          <Id>-28</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
@@ -82,22 +517,17 @@
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
- IF response.IsSuccess
-  VAR content := response.Content;
-  RETURN (PARSEJSON(Content, "todayBaseSecondCheapestHour"));
- ELSE
-  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-  RETURN(NaN);
- END</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>(PARSEJSON(responseJson, "todayBaseSecondCheapestHour"));
+</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Dnešní nejlevnější hodina mimo energetickou špičku</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-5</Id>
+          <Id>-29</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
@@ -106,22 +536,16 @@
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
- IF response.IsSuccess
-  VAR content := response.Content;
-  RETURN (PARSEJSON(Content, "todayOffpeakCheapestHour"));
- ELSE
-  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-  RETURN(NaN);
- END</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>(PARSEJSON(responseJson, "todayOffpeakCheapestHour"));</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Dnešní nejlevnější hodina v energetické špičce</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-6</Id>
+          <Id>-30</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>600</InternalPollInterval>
@@ -130,22 +554,16 @@
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
- IF response.IsSuccess
-  VAR content := response.Content;
-  RETURN (PARSEJSON(Content, "todayPeakCheapestHour"));
- ELSE
-  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-  RETURN(NaN);
- END</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>(PARSEJSON(responseJson, "todayPeakCheapestHour"));</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Dnešní nejlevnější hodina za celý den</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-7</Id>
+          <Id>-31</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
@@ -154,22 +572,16 @@
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
- IF response.IsSuccess
-  VAR content := response.Content;
-  RETURN (PARSEJSON(Content, "todayBaseCheapestHour"));
- ELSE
-  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-  RETURN(NaN);
- END</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>(PARSEJSON(responseJson, "todayBaseCheapestHour"));</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Je čtvrtá nejlevnější hodina elektřiny z celého dne?</Name>
           <Model>PacketParserReedContact</Model>
-          <Id>-8</Id>
+          <Id>-32</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -179,25 +591,22 @@
             <OffStateIconId>256</OffStateIconId>
             <OnStateName>Ano</OnStateName>
             <OffStateName>Ne</OffStateName>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
-
-  VAR content := response.Content;
-  VAR state := (PARSEJSON(Content, "isCurrentlyFourthCheapestHour"));
-  If state = false
+            <ReadStateScriptPacketParser>VAR state := (PARSEJSON(responseJson, "isCurrentlyFourthCheapestHour"));
+If state = false
   RETURN(0);
-  ELSEif state = true
+ELSEif state = true
   RETURN(1);
-  else 
-ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+else 
   RETURN(NaN);
- END</ReadStateScriptPacketParser>
+END</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Je druhá nejlevnější hodina elektřiny z celého dne?</Name>
           <Model>PacketParserReedContact</Model>
-          <Id>-9</Id>
+          <Id>-33</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -207,25 +616,22 @@ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
             <OffStateIconId>256</OffStateIconId>
             <OnStateName>Ano</OnStateName>
             <OffStateName>Ne</OffStateName>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
-
-  VAR content := response.Content;
-  VAR state := (PARSEJSON(Content, "isCurrentlySecondCheapestHour"));
-  If state = false
+            <ReadStateScriptPacketParser>VAR state := (PARSEJSON(responseJson, "isCurrentlySecondCheapestHour"));
+If state = false
   RETURN(0);
-  ELSEif state = true
+ELSEif state = true
   RETURN(1);
-  else 
-ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+else 
   RETURN(NaN);
- END</ReadStateScriptPacketParser>
+END</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Je nejlevnější hodina elektřiny z celého dne?</Name>
           <Model>PacketParserReedContact</Model>
-          <Id>-10</Id>
+          <Id>-34</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -235,25 +641,22 @@ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
             <OffStateIconId>256</OffStateIconId>
             <OnStateName>Ano</OnStateName>
             <OffStateName>Ne</OffStateName>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
-
-  VAR content := response.Content;
-  VAR state := (PARSEJSON(Content, "isCurrentlyCheapestHour"));
-  If state = false
+            <ReadStateScriptPacketParser>VAR state := (PARSEJSON(responseJson, "isCurrentlyCheapestHour"));
+If state = false
   RETURN(0);
-  ELSEif state = true
+ELSEif state = true
   RETURN(1);
-  else 
-ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+else 
   RETURN(NaN);
- END</ReadStateScriptPacketParser>
+END</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Je pátá nejlevnější hodina elektřiny z celého dne?</Name>
           <Model>PacketParserReedContact</Model>
-          <Id>-11</Id>
+          <Id>-35</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -263,25 +666,22 @@ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
             <OffStateIconId>256</OffStateIconId>
             <OnStateName>Ano</OnStateName>
             <OffStateName>Ne</OffStateName>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
-
-  VAR content := response.Content;
-  VAR state := (PARSEJSON(Content, "isCurrentlyFifthCheapestHour"));
-  If state = false
+            <ReadStateScriptPacketParser>VAR state := (PARSEJSON(responseJson, "isCurrentlyFifthCheapestHour"));
+If state = false
   RETURN(0);
-  ELSEif state = true
+ELSEif state = true
   RETURN(1);
-  else 
-ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+else 
   RETURN(NaN);
- END</ReadStateScriptPacketParser>
+END</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Je šestá nejlevnější hodina elektřiny z celého dne?</Name>
           <Model>PacketParserReedContact</Model>
-          <Id>-12</Id>
+          <Id>-36</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -291,25 +691,22 @@ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
             <OffStateIconId>256</OffStateIconId>
             <OnStateName>Ano</OnStateName>
             <OffStateName>Ne</OffStateName>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
-
-  VAR content := response.Content;
-  VAR state := (PARSEJSON(Content, "isCurrentlySixthCheapestHour"));
-  If state = false
+            <ReadStateScriptPacketParser>VAR state := (PARSEJSON(responseJson, "isCurrentlySixthCheapestHour"));
+If state = false
   RETURN(0);
-  ELSEif state = true
+ELSEif state = true
   RETURN(1);
-  else 
-ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+else 
   RETURN(NaN);
- END</ReadStateScriptPacketParser>
+END</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Je třetí nejlevnější hodina elektřiny z celého dne?</Name>
           <Model>PacketParserReedContact</Model>
-          <Id>-13</Id>
+          <Id>-37</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -319,25 +716,22 @@ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
             <OffStateIconId>256</OffStateIconId>
             <OnStateName>Ano</OnStateName>
             <OffStateName>Ne</OffStateName>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
-
-  VAR content := response.Content;
-  VAR state := (PARSEJSON(Content, "isCurrentlyThirdCheapestHour"));
-  If state = false
+            <ReadStateScriptPacketParser>VAR state := (PARSEJSON(responseJson, "isCurrentlyThirdCheapestHour"));
+If state = false
   RETURN(0);
-  ELSEif state = true
+ELSEif state = true
   RETURN(1);
-  else 
-ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+else 
   RETURN(NaN);
- END</ReadStateScriptPacketParser>
+END</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
           <Name>Současná tržní cena elektřiny (ote, kurz čnb) Kč/kWh</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-14</Id>
+          <Id>-38</Id>
           <DeviceProperties>
+            <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
@@ -346,61 +740,9 @@ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/prices/daily");
- IF response.IsSuccess
-  VAR content := response.Content;
-  RETURN (PARSEJSON(Content, "currentPrice"));
- ELSE
-  ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
-  RETURN(NaN);
- END</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>(PARSEJSON(responseJson, "currentPrice"));
+</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>Špička/Mimo špičku</Name>
-          <Model>PacketParserMultiValueSwitch</Model>
-          <Id>-15</Id>
-          <DeviceProperties>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>2500</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <Value0Index>0</Value0Index>
-            <Value1Index>1</Value1Index>
-            <Value2Index>66</Value2Index>
-            <Value3Index>67</Value3Index>
-            <Value4Index>68</Value4Index>
-            <Value5Index>69</Value5Index>
-            <Value6Index>70</Value6Index>
-            <Value7Index>71</Value7Index>
-            <Value8Index>72</Value8Index>
-            <Value9Index>73</Value9Index>
-            <Value0Name>Špička</Value0Name>
-            <Value1Name>Mimo špičku</Value1Name>
-            <Value2Name>2</Value2Name>
-            <Value3Name>3</Value3Name>
-            <Value4Name>4</Value4Name>
-            <Value5Name>5</Value5Name>
-            <Value6Name>6</Value6Name>
-            <Value7Name>7</Value7Name>
-            <Value8Name>8</Value8Name>
-            <Value9Name>9</Value9Name>
-            <Value0IconId>252</Value0IconId>
-            <Value1IconId>253</Value1IconId>
-            <Value2IconId>7</Value2IconId>
-            <Value3IconId>8</Value3IconId>
-            <Value4IconId>9</Value4IconId>
-            <Value5IconId>10</Value5IconId>
-            <Value6IconId>11</Value6IconId>
-            <Value7IconId>12</Value7IconId>
-            <Value8IconId>13</Value8IconId>
-            <Value9IconId>14</Value9IconId>
-            <OffStateValue>0</OffStateValue>
-            <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
-            <WriteSwitchStateScriptPacketParser></WriteSwitchStateScriptPacketParser>
           </DeviceProperties>
         </Device>
       </Devices>
