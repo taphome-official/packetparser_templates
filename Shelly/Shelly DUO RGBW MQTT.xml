@@ -101,7 +101,6 @@ IF ISNULL(mode)
     RETURN(0);
 END
 
-jsonStatus := json;
 INT bright;
 
 IF mode = "color"
@@ -253,7 +252,6 @@ IF ISNULL(mode)
     RETURN(0);
 END
 
-jsonStatus := json;
 INT bright;
 
 IF mode = "color"
@@ -405,7 +403,6 @@ IF ISNULL(mode)
     RETURN(0);
 END
 
-jsonStatus := json;
 INT bright;
 
 IF mode = "color"

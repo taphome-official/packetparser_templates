@@ -27,8 +27,8 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
       </Parameter>
       <Parameter>
         <Name>Device ID</Name>	
-        <Value></Value>
-        <Id>dID</Id>
+        <Value>yourDeviceId</Value>
+        <Id>deviceId</Id>
       </Parameter>
 		</ImportParameters>
     <Module>
@@ -37,7 +37,7 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"DeviceID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"]</CustomVariables>
+        <CustomVariables>[{"Name":"deviceId","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"}]</CustomVariables>
         <IpAddress>$[IpAddress]</IpAddress>
         <Port>$[Port]</Port>
         <RootTopic>shellies/#</RootTopic>
@@ -54,10 +54,10 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser># Parse received bytes:
-IF(RECEIVEDMSG.TOPIC = "shellies/shellyht-"+DeviceID+"/sensor/temperature")
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyht-"+ deviceId +"/sensor/temperature")
  listenTemp := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END
-IF(RECEIVEDMSG.TOPIC = "shellies/shellyht-"+DeviceID+"/sensor/humidity")
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyht-"+ deviceId +"/sensor/humidity")
  listenHum := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/100;
 END
 </ListenerScriptPacketParser>

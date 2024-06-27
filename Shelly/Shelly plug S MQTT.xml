@@ -65,7 +65,7 @@ IF (whatTo = RECEIVEDMSG.TOPIC)
  To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD))/60000;
 END
 VAR whatEd := "shellies/shellyplug-s-"+deviceID+"/relay/0/power";
-IF (whatEd = RECEIVEDMSG.TOPIC))
+IF (whatEd = RECEIVEDMSG.TOPIC)
  Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:

@@ -398,7 +398,7 @@ END
 IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb5topic + "/light/0/power") = 0
     Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 1000.0;
 ELSEIF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb5topic + "/light/0/energy") = 0
-    To := TODOUBLE(PTOSTRING(RECEIVEDMSG.PAYLOAD)) / 60000.0;
+    To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 60000.0;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
