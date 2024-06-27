@@ -50,14 +50,10 @@
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>Bp := 0;
-VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
 #index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
-
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF method = "NotifyEvent"
         VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
@@ -65,7 +61,6 @@ if INDEXOF(topic, ID) = 0
         VAR event := PARSEJSON(zero, "event");
     
         if component = "input:0"
-            var tmp := payload;
             Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
             #RETURN(Bp);
         END
@@ -91,14 +86,12 @@ END
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>Bp := 0;
-VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
 
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+#index of shelly
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
+
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF method = "NotifyEvent"
         VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
@@ -106,7 +99,6 @@ if INDEXOF(topic, ID) = 0
         VAR event := PARSEJSON(zero, "event");
     
         if component = "input:1"
-            var tmp := payload;
             Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
             #RETURN(Bp);
         END
@@ -132,14 +124,12 @@ END
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>Bp := 0;
-VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
 
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+#index of shelly
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
+
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF method = "NotifyEvent"
         VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
@@ -147,7 +137,6 @@ if INDEXOF(topic, ID) = 0
         VAR event := PARSEJSON(zero, "event");
     
         if component = "input:2"
-            var tmp := payload;
             Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
             #RETURN(Bp);
         END
@@ -173,14 +162,12 @@ END
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>Bp := 0;
-VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
 
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+#index of shelly
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
+
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF method = "NotifyEvent"
         VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
@@ -188,7 +175,6 @@ if INDEXOF(topic, ID) = 0
         VAR event := PARSEJSON(zero, "event");
     
         if component = "input:3"
-            var tmp := payload;
             Bp := SWITCH(event, "single_push", Bp := 1, "double_push", Bp :=3,  "long_push", Bp := 2, Bp := 0 );
             #RETURN(Bp);
         END
@@ -213,14 +199,12 @@ END
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 #index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
 
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF(method ="NotifyEvent")
     VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
@@ -255,14 +239,12 @@ END</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 #index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
 
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF(method ="NotifyEvent")
     VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
@@ -297,14 +279,12 @@ END</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 #index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
 
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF(method ="NotifyEvent")
     VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");
@@ -339,14 +319,12 @@ END</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 #index of shelly
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-if INDEXOF(topic, ID) = 0
+if INDEXOF(RECEIVEDMSG.TOPIC, ID) = 0
 
-    VAR payload := PARSEJSON(jsonResponse, "Payload");
-    VAR method := PARSEJSON(payload, "method", true);
-    VAR params := PARSEJSON(payload, "params", true);
+    VAR method := PARSEJSON(RECEIVEDMSG.PAYLOAD, "method", true);
+    VAR params := PARSEJSON(RECEIVEDMSG.PAYLOAD, "params", true);
 
     IF(method ="NotifyEvent")
     VAR zero := PARSEJSON(PARSEJSON(params, "events"),"[0]");

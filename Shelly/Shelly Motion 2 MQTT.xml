@@ -47,13 +47,10 @@
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
 VAR topicPrefix := "shellies/" + sensor1_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/info") = 0)
-    infoJson := PARSEJSON(json, "Payload");
-    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/info") = 0)
+    BOOL status := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.sensor.motion", 1);
     
     IF ISNULL(status)
         Rc := NaN;
@@ -61,7 +58,7 @@ IF (INDEXOF(topic, topicPrefix + "/info") = 0)
         Rc := status;
     END
     
-    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    VAR battery := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.bat.value");
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
@@ -87,13 +84,10 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
 VAR topicPrefix := "shellies/" + sensor2_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/info") = 0)
-    infoJson := PARSEJSON(json, "Payload");
-    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/info") = 0)
+    BOOL status := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.sensor.motion", 1);
     
     IF ISNULL(status)
         Rc := NaN;
@@ -101,7 +95,7 @@ IF (INDEXOF(topic, topicPrefix + "/info") = 0)
         Rc := status;
     END
     
-    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    VAR battery := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.bat.value");
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
@@ -127,13 +121,10 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
 VAR topicPrefix := "shellies/" + sensor3_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/info") = 0)
-    infoJson := PARSEJSON(json, "Payload");
-    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/info") = 0)
+    BOOL status := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.sensor.motion", 1);
     
     IF ISNULL(status)
         Rc := NaN;
@@ -141,7 +132,7 @@ IF (INDEXOF(topic, topicPrefix + "/info") = 0)
         Rc := status;
     END
     
-    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    VAR battery := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.bat.value");
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
@@ -167,13 +158,10 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
 VAR topicPrefix := "shellies/" + sensor4_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/info") = 0)
-    infoJson := PARSEJSON(json, "Payload");
-    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/info") = 0)
+    BOOL status := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.sensor.motion", 1);
     
     IF ISNULL(status)
         Rc := NaN;
@@ -181,7 +169,7 @@ IF (INDEXOF(topic, topicPrefix + "/info") = 0)
         Rc := status;
     END
     
-    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    VAR battery := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.bat.value");
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
@@ -207,13 +195,10 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
 VAR topicPrefix := "shellies/" + sensor5_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/info") = 0)
-    infoJson := PARSEJSON(json, "Payload");
-    BOOL status := PARSEJSON(infoJson, "$.sensor.motion", 1);
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/info") = 0)
+    BOOL status := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.sensor.motion", 1);
     
     IF ISNULL(status)
         Rc := NaN;
@@ -221,7 +206,7 @@ IF (INDEXOF(topic, topicPrefix + "/info") = 0)
         Rc := status;
     END
     
-    VAR battery := PARSEJSON(infoJson, "$.bat.value");
+    VAR battery := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.bat.value");
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END

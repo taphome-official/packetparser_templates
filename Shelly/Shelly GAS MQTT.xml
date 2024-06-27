@@ -54,25 +54,15 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser># Parse received bytes:
-VAR command := tostring(RECEIVEDBYTES);
-IF(parsejson(command,"Topic") = "shellies/shellygas-"+deviceID+"/sensor/gas")
- switch(parsejson(command,"Payload"),
+IF(RECEIVEDMSG.TOPIC = "shellies/shellygas-"+deviceID+"/sensor/gas")
+ switch(TOSTRING(RECEIVEDMSG.PAYLOAD),
  "none", Mu := 0,
  "mild",Mu := 1,
  "heavy",Mu := 2,
  "test", Mu := 3,
  Mu := 4);
 END
-#
-# Convert bytes to string:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#
-# Specify string encoding:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
-#
-# Complete service attribute or service action:
-# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
-# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <Value0Index>0</Value0Index>
             <Value1Index>1</Value1Index>
@@ -207,20 +197,10 @@ END
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser># Parse received bytes:
-VAR command := tostring(RECEIVEDBYTES);
-IF(parsejson(command,"Topic") = "shellies/shellygas-"+deviceID+"/sensor/concentration")
- Va := todouble(parsejson(command,"Payload"));
+IF(RECEIVEDMSG.TOPIC = "shellies/shellygas-"+deviceID+"/sensor/concentration")
+ Va := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END
-#
-# Convert bytes to string:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#
-# Specify string encoding:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
-#
-# Complete service attribute or service action:
-# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
-# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
             <ReadStateScriptPacketParser />
@@ -259,21 +239,7 @@ END
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser># Parse received bytes:
-# VAR commmand := GETBYTE(RECEIVEDBYTES, 0);
-# IF(commmand = 1)
-#  Bp := GETBYTE(RECEIVEDBYTES, 1) &amp; 0x01;
-# END
-#
-# Convert bytes to string:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#
-# Specify string encoding:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
-#
-# Complete service attribute or service action:
-# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
-# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+            <ListenerScriptPacketParser></ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <WriteButtonPressedStateScriptPacketParser>MQTTPUBLISH("shellies/shellygas-&lt;deviceid&gt;/sensor/mute","1");
 

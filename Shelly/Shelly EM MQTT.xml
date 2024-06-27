@@ -37,7 +37,7 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
         <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"},{"Name":"response","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
-        <ListenerScriptPacketParser>response := tostring(RECEIVEDBYTES);</ListenerScriptPacketParser>
+        <ListenerScriptPacketParser></ListenerScriptPacketParser>
         <IpAddress>$[IpAddress]</IpAddress>
         <Port>$[Port]</Port>
         <RootTopic>shellies/#</RootTopic>
@@ -53,37 +53,17 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Voltage [V]"},"ReadFormula":"if parsejson(response, \u0022Topic\u0022) = \u0022shellies/shellyem-\u0022\u002BdeviceID\u002B\u0022/emeter/0/voltage\u0022\r\n return(todouble(parsejson(response, \u0022Payload\u0022)));\r\nend"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 VAR whatEd := "shellies/shellyem-"+deviceID+"/emeter/0/energy";
 VAR whatTo := "shellies/shellyem-"+deviceID+"/emeter/0/total";
-var c := PARSEJSON(jsonResponse, "Topic");
-IF (whatEd = PARSEJSON(jsonResponse, "Topic"))
- Ed := todouble(parsejson(jsonResponse, "Payload"))/60000;
-END
-IF (whatTo = PARSEJSON(jsonResponse, "Topic"))
- To := todouble(parsejson(jsonResponse, "Payload"));
-END
-    
-# ELSE
-# St := 0;
-# END
-#END
 
-# Parse received bytes:
-# VAR commmand := GETBYTE(RECEIVEDBYTES, 0);
-# IF(commmand = 1)
-#  To := GETBYTE(RECEIVEDBYTES, 1) &amp; 0x01;
-# END
-#
-# Convert bytes to string:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#
-# Specify string encoding:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
-#
-# Complete service attribute or service action:
-# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
-# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+IF (whatEd = RECEIVEDMSG.TOPIC)
+ Ed := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/60000;
+END
+IF (whatTo = RECEIVEDMSG.TOPIC)
+ To := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD));
+END
+    </ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/getValue");
 # IF response.IsSuccess
@@ -163,15 +143,15 @@ END
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"if parsejson(response, \u0022Topic\u0022) = \u0022shellies/shellyem-\u0022\u002BdeviceID\u002B\u0022/emeter/1/voltage\u0022\r\n return(parsejson(response, \u0022Payload\u0022));\r\nend"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 VAR whatEd := "shellies/shellyem-"+deviceID+"/emeter/1/energy";
 VAR whatTo := "shellies/shellyem-"+deviceID+"/emeter/1/total";
-var c := PARSEJSON(jsonResponse, "Topic");
-IF (whatEd = PARSEJSON(jsonResponse, "Topic"))
- Ed := todouble(parsejson(jsonResponse, "Payload"))/60000;
+
+IF (whatEd = RECEIVEDMSG.TOPIC)
+ Ed := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/60000;
 END
-IF (whatTo = PARSEJSON(jsonResponse, "Topic"))
- To := todouble(parsejson(jsonResponse, "Payload"));
+IF (whatTo = RECEIVEDMSG.TOPIC)
+ To := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/getValue");
@@ -252,31 +232,17 @@ END</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 VAR whatSt := "shellies/shellyem-"+deviceID+"/relay/0";
-IF (whatSt = PARSEJSON(jsonResponse, "Topic"))
- IF (PARSEJSON(jsonResponse, "Payload") = "on")
+IF (whatSt = RECEIVEDMSG.TOPIC)
+ IF (TOSTRING(RECEIVEDMSG.PAYLOAD) = "on")
   St := 1;
  ELSE
   St := 0;
  END
 END
 
-# Parse received bytes:
-# VAR commmand := GETBYTE(RECEIVEDBYTES, 0);
-# IF(commmand = 1)
-#  St := GETBYTE(RECEIVEDBYTES, 1) &amp; 0x01;
-# END
-#
-# Convert bytes to string:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#
-# Specify string encoding:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
-#
-# Complete service attribute or service action:
-# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
-# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <NegateState>False</NegateState>
             <OnStateIconId>60</OnStateIconId>

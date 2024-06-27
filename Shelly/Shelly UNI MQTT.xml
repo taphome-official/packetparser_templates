@@ -50,12 +50,9 @@
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-VAR payload := PARSEJSON(jsonResponse, "Payload");
-
-if topic = "shellies/" + MQTTprefix + "/adc/0"
-    Va := TODOUBLE(payload);
+            <ListenerScriptPacketParser>
+if RECEIVEDMSG.TOPIC = "shellies/" + MQTTprefix + "/adc/0"
+    Va := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
@@ -73,11 +70,10 @@ end</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-VAR payload := PARSEJSON(jsonResponse, "Payload");
+            <ListenerScriptPacketParser>
+if RECEIVEDMSG.TOPIC = "shellies/" + MQTTprefix + "/relay/0"
+    VAR payload := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-if topic = "shellies/" + MQTTprefix + "/relay/0"
     if(payload = "on", St := 1, St := 0);
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -100,11 +96,10 @@ end</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-VAR payload := PARSEJSON(jsonResponse, "Payload");
+            <ListenerScriptPacketParser>
+if RECEIVEDMSG.TOPIC = "shellies/" + MQTTprefix + "/relay/1"
+    VAR payload := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-if topic = "shellies/" + MQTTprefix + "/relay/1"
     if(payload = "on", St := 1, St := 0);
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -127,11 +122,10 @@ end</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-VAR payload := PARSEJSON(jsonResponse, "Payload");
+            <ListenerScriptPacketParser>
+if RECEIVEDMSG.TOPIC = "shellies/" + MQTTprefix + "/input/0"
+    VAR payload := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-if topic = "shellies/" + MQTTprefix + "/input/0"
     Rc := if(payload = "0", 1, 0);
 end</ListenerScriptPacketParser>
             <OnStateIconId>87</OnStateIconId>
@@ -151,11 +145,10 @@ end</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(jsonResponse, "Topic");
-VAR payload := PARSEJSON(jsonResponse, "Payload");
+            <ListenerScriptPacketParser>
+if RECEIVEDMSG.TOPIC = "shellies/" + MQTTprefix + "/input/1"
+    VAR payload := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-if topic = "shellies/" + MQTTprefix + "/input/1"
     Rc := if(payload = "0", 1, 0);
 end</ListenerScriptPacketParser>
             <OnStateIconId>87</OnStateIconId>

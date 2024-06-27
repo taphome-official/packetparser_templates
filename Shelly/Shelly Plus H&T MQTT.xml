@@ -47,36 +47,26 @@
 			<CustomVariables>[{"Name":"listenHum","ValueTypeId":1,"NumericValue":"NaN"},{"Name":"batteryPerc","ValueTypeId":1,"NumericValue":"NaN"},{"Name":"batteryV","ValueTypeId":1,"NumericValue":"NaN"},{"Name":"externalPower","ValueTypeId":2,"NumericValue":"NaN","StringValue":""},{"Name":"macAddress","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"cloudConnected","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"mqttConnected","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"BLEenabled","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"wifi","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"ipaddress","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Battery"},"ReadFormula":"IF (ISNAN(batteryPerc), \u0022-\u0022, batteryPerc \u002B \u0022%\u0022);"},{"AttributeDefinition":{"Name":"Battery voltage"},"ReadFormula":"IF (ISNAN(batteryV), \u0022-\u0022, batteryV \u002B \u0022V\u0022);"},{"AttributeDefinition":{"Name":"External power"},"ReadFormula":"IF (LENGTH(externalPower) = 0, \u0022-\u0022, externalPower);"},{"AttributeDefinition":{"Name":"WiFi"},"ReadFormula":"IF (LENGTH(wifi) = 0, \u0022-\u0022, wifi);"},{"AttributeDefinition":{"Name":"IP Address"},"ReadFormula":"IF (LENGTH(ipaddress) = 0, \u0022-\u0022, ipaddress);"},{"AttributeDefinition":{"Name":"MAC Address"},"ReadFormula":"IF (LENGTH(macAddress) = 0, \u0022-\u0022, macAddress);"},{"AttributeDefinition":{"Name":"Cloud connected"},"ReadFormula":"IF (LENGTH(cloudConnected) = 0, \u0022-\u0022, cloudConnected);"},{"AttributeDefinition":{"Name":"MQTT connected"},"ReadFormula":"IF (LENGTH(mqttConnected) = 0, \u0022-\u0022, mqttConnected);"},{"AttributeDefinition":{"Name":"BLE enabled"},"ReadFormula":"IF (LENGTH(BLEenabled) = 0, \u0022-\u0022, BLEenabled);"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR command := tostring(RECEIVEDBYTES);
-VAR topic := parsejson(command, "Topic");
-
-IF (INDEXOF(topic, deviceid +"/status/temperature:0") &gt;= 0)
-    VAR payloadTemp := PARSEJSON(command, "Payload");
-    Te := PARSEJSON(payloadTemp,"tC", true);
-ELSEIF (INDEXOF(topic, deviceid +"/status/humidity:0") &gt;= 0)
-    VAR payloadHum := PARSEJSON(command, "Payload");
-    listenHum := PARSEJSON(payloadHum,"rh", true);
-ELSEIF (INDEXOF(topic, deviceid +"/status/devicepower:0") &gt;= 0)
-    VAR payloadPow := PARSEJSON(command, "Payload");
-    batteryPerc := PARSEJSON(payloadPow,"battery.percent", true);
-    batteryV := PARSEJSON(payloadPow,"battery.V", true);
-    externalPower := PARSEJSON(payloadPow,"external.present", true);
-ELSEIF (INDEXOF(topic, deviceid +"/status/sys") &gt;= 0)
-    VAR payloadSys := PARSEJSON(command, "Payload");
-    macAddress := PARSEJSON(payloadSys,"mac", true);
-ELSEIF (INDEXOF(topic, deviceid +"/status/wifi") &gt;= 0)
-    VAR payloadWifi := PARSEJSON(command, "Payload");
-    ipaddress := PARSEJSON(payloadWifi,"sta_ip", true);
-    wifi := PARSEJSON(payloadWifi,"ssid", true);
-ELSEIF (INDEXOF(topic, deviceid +"/status/cloud") &gt;= 0)
-    VAR payloadCloud := PARSEJSON(command, "Payload");
-    cloudConnected := PARSEJSON(payloadCloud,"connected", true);
-ELSEIF (INDEXOF(topic, deviceid +"/status/mqtt") &gt;= 0)
-    VAR payloadMqtt := PARSEJSON(command, "Payload");
-    mqttConnected := PARSEJSON(payloadMqtt,"connected", true);
-ELSEIF (INDEXOF(topic, deviceid +"/status/ble") &gt;= 0)
-    VAR payloadBLE := PARSEJSON(command, "Payload");
-    BLEenabled := PARSEJSON(payloadBLE,"enable", true);
+            <ListenerScriptPacketParser>
+IF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/temperature:0") &gt;= 0)
+    Te := PARSEJSON(RECEIVEDMSG.PAYLOAD,"tC", true);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/humidity:0") &gt;= 0)
+    listenHum := PARSEJSON(RECEIVEDMSG.PAYLOAD,"rh", true);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/devicepower:0") &gt;= 0)
+    batteryPerc := PARSEJSON(RECEIVEDMSG.PAYLOAD,"battery.percent", true);
+    batteryV := PARSEJSON(RECEIVEDMSG.PAYLOAD,"battery.V", true);
+    externalPower := PARSEJSON(RECEIVEDMSG.PAYLOAD,"external.present", true);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/sys") &gt;= 0)
+    macAddress := PARSEJSON(RECEIVEDMSG.PAYLOAD,"mac", true);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/wifi") &gt;= 0)
+    ipaddress := PARSEJSON(RECEIVEDMSG.PAYLOAD,"sta_ip", true);
+    wifi := PARSEJSON(RECEIVEDMSG.PAYLOAD,"ssid", true);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/cloud") &gt;= 0)
+    cloudConnected := PARSEJSON(RECEIVEDMSG.PAYLOAD,"connected", true);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/mqtt") &gt;= 0)
+    mqttConnected := PARSEJSON(RECEIVEDMSG.PAYLOAD,"connected", true);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, deviceid +"/status/ble") &gt;= 0)
+    BLEenabled := PARSEJSON(RECEIVEDMSG.PAYLOAD,"enable", true);
 END</ListenerScriptPacketParser>
             <TemperatureCalibration>0</TemperatureCalibration>
             <ReadTemperatureScriptPacketParser></ReadTemperatureScriptPacketParser>

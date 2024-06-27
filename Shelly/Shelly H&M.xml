@@ -53,23 +53,13 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser># Parse received bytes:
-VAR command := tostring(RECEIVEDBYTES);
-IF(parsejson(command, "Topic") = "shellies/shellyht-"+DeviceID+"/sensor/temperature")
- listenTemp := todouble(parsejson(command,"Payload"));
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyht-"+DeviceID+"/sensor/temperature")
+ listenTemp := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END
-IF(parsejson(command, "Topic") = "shellies/shellyht-"+DeviceID+"/sensor/humidity")
- listenHum := todouble(parsejson(command,"Payload"))/100;
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyht-"+DeviceID+"/sensor/humidity")
+ listenHum := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/100;
 END
-#
-# Convert bytes to string:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#
-# Specify string encoding:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
-#
-# Complete service attribute or service action:
-# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
-# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+</ListenerScriptPacketParser>
             <TemperatureCalibration>0</TemperatureCalibration>
             <ReadTemperatureScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/getValue");

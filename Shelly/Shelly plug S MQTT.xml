@@ -38,11 +38,10 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
         <InternalPollInterval>5000</InternalPollInterval>
         <CustomVariables>[{"Name":"deviceID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"},{"Name":"temperatureC","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Temperature [\u00B0C ]"},"ReadFormula":"temperatureC"}]</ServiceAttributesScriptsPacketParser>
-        <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-
+        <ListenerScriptPacketParser>
 VAR whatT := "shellies/shellyplug-s-"+deviceID+"/temperature";
-IF (whatT = PARSEJSON(jsonResponse, "Topic"))
- temperatureC := PARSEJSON(jsonResponse, "Payload");
+IF (whatT = RECEIVEDMSG.TOPIC)
+ temperatureC := TOSTRING(RECEIVEDMSG.PAYLOAD);
 END</ListenerScriptPacketParser>
         <IpAddress>$[IpAddress]</IpAddress>
         <Port>$[Port]</Port>
@@ -59,14 +58,14 @@ END</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
+            <ListenerScriptPacketParser>
 VAR whatTo := "shellies/shellyplug-s-"+deviceID+"/relay/0/energy";
-IF (whatTo = PARSEJSON(jsonResponse, "Topic"))
- To := TODOUBLE(PARSEJSON(jsonResponse, "Payload"))/60000;
+IF (whatTo = RECEIVEDMSG.TOPIC)
+ To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD))/60000;
 END
 VAR whatEd := "shellies/shellyplug-s-"+deviceID+"/relay/0/power";
-IF (whatEd = PARSEJSON(jsonResponse, "Topic"))
- Ed :=TODOUBLE(PARSEJSON(jsonResponse, "Payload"))/1000;
+IF (whatEd = RECEIVEDMSG.TOPIC))
+ Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/getValue");
@@ -148,10 +147,9 @@ END</ListenerScriptPacketParser>
             <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>
-VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
 VAR whatSt := "shellies/shellyplug-s-"+deviceID+"/relay/0";
-IF (whatSt = PARSEJSON(jsonResponse, "Topic"))
- IF (PARSEJSON(jsonResponse, "Payload") = "on")
+IF (whatSt = RECEIVEDMSG.TOPIC)
+ IF (TOSTRING(RECEIVEDMSG.PAYLOAD) = "on")
   St := 1;
  ELSE
   St := 0;

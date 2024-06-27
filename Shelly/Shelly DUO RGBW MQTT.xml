@@ -54,13 +54,10 @@ IF(INDEXOF(bulb1topic, "shellycolorbulb-deviceid") = 0)
     RETURN(-1);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb1topic + "/light/0/power") = 0
-    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
-ELSEIF INDEXOF(topic, "shellies/" + bulb1topic + "/light/0/energy") = 0
-    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb1topic + "/light/0/power") = 0
+    Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 1000.0;
+ELSEIF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb1topic + "/light/0/energy") = 0
+    To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 60000.0;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -88,21 +85,16 @@ IF now.Ticks &lt; debounceTimestamp
     RETURN(0);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb1topic + "/color/0/status") != 0
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb1topic + "/color/0/status") != 0
     RETURN(0);
 END
 
-VAR json := PARSEJSON(data, "Payload", 1);
-
-IF LENGTH(json) = 0
+IF RECEIVEDMSG.PAYLOAD.LENGTH = 0
     RETURN(0);
 END
 
-BOOL ison := PARSEJSON(json, "$.ison", 1);
-VAR mode := PARSEJSON(json, "$.mode", 1);
+BOOL ison := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.ison", 1);
+VAR mode := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.mode", 1);
 
 IF ISNULL(mode)
     RETURN(0);
@@ -112,10 +104,10 @@ jsonStatus := json;
 INT bright;
 
 IF mode = "color"
-    UINT8 red := PARSEJSON(jsonStatus, "$.red");
-    UINT8 green := PARSEJSON(jsonStatus, "$.green");
-    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
-    bright := PARSEJSON(jsonStatus, "$.gain");
+    UINT8 red := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.red");
+    UINT8 green := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.green");
+    UINT8 blue := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.blue");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.gain");
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
@@ -123,8 +115,8 @@ IF mode = "color"
     Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
-    Ct := PARSEJSON(jsonStatus, "$.temp");
-    bright := PARSEJSON(jsonStatus, "$.brightness");
+    Ct := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.temp");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.brightness");
 END
 
 IF ison
@@ -214,13 +206,10 @@ IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
     RETURN(-1);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb2topic + "/light/0/power") = 0
-    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
-ELSEIF INDEXOF(topic, "shellies/" + bulb2topic + "/light/0/energy") = 0
-    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb2topic + "/light/0/power") = 0
+    Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 1000.0;
+ELSEIF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb2topic + "/light/0/energy") = 0
+    To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 60000.0;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -248,21 +237,16 @@ IF now.Ticks &lt; debounceTimestamp
     RETURN(0);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb2topic + "/color/0/status") != 0
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb2topic + "/color/0/status") != 0
     RETURN(0);
 END
 
-VAR json := PARSEJSON(data, "Payload", 1);
-
-IF LENGTH(json) = 0
+IF RECEIVEDMSG.PAYLOAD.LENGTH = 0
     RETURN(0);
 END
 
-BOOL ison := PARSEJSON(json, "$.ison", 1);
-VAR mode := PARSEJSON(json, "$.mode", 1);
+BOOL ison := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.ison", 1);
+VAR mode := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.mode", 1);
 
 IF ISNULL(mode)
     RETURN(0);
@@ -272,10 +256,10 @@ jsonStatus := json;
 INT bright;
 
 IF mode = "color"
-    UINT8 red := PARSEJSON(jsonStatus, "$.red");
-    UINT8 green := PARSEJSON(jsonStatus, "$.green");
-    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
-    bright := PARSEJSON(jsonStatus, "$.gain");
+    UINT8 red := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.red");
+    UINT8 green := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.green");
+    UINT8 blue := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.blue");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.gain");
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
@@ -283,8 +267,8 @@ IF mode = "color"
     Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
-    Ct := PARSEJSON(jsonStatus, "$.temp");
-    bright := PARSEJSON(jsonStatus, "$.brightness");
+    Ct := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.temp");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.brightness");
 END
 
 IF ison
@@ -374,13 +358,10 @@ IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
     RETURN(-1);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb3topic + "/light/0/power") = 0
-    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
-ELSEIF INDEXOF(topic, "shellies/" + bulb3topic + "/light/0/energy") = 0
-    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb3topic + "/light/0/power") = 0
+    Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 1000.0;
+ELSEIF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb3topic + "/light/0/energy") = 0
+    To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 60000.0;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -408,21 +389,16 @@ IF now.Ticks &lt; debounceTimestamp
     RETURN(0);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb3topic + "/color/0/status") != 0
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb3topic + "/color/0/status") != 0
     RETURN(0);
 END
 
-VAR json := PARSEJSON(data, "Payload", 1);
-
-IF LENGTH(json) = 0
+IF RECEIVEDMSG.PAYLOAD.LENGTH = 0
     RETURN(0);
 END
 
-BOOL ison := PARSEJSON(json, "$.ison", 1);
-VAR mode := PARSEJSON(json, "$.mode", 1);
+BOOL ison := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.ison", 1);
+VAR mode := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.mode", 1);
 
 IF ISNULL(mode)
     RETURN(0);
@@ -432,10 +408,10 @@ jsonStatus := json;
 INT bright;
 
 IF mode = "color"
-    UINT8 red := PARSEJSON(jsonStatus, "$.red");
-    UINT8 green := PARSEJSON(jsonStatus, "$.green");
-    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
-    bright := PARSEJSON(jsonStatus, "$.gain");
+    UINT8 red := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.red");
+    UINT8 green := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.green");
+    UINT8 blue := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.blue");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.gain");
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
@@ -443,8 +419,8 @@ IF mode = "color"
     Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
-    Ct := PARSEJSON(jsonStatus, "$.temp");
-    bright := PARSEJSON(jsonStatus, "$.brightness");
+    Ct := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.temp");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOADStatus, "$.brightness");
 END
 
 IF ison
@@ -534,13 +510,10 @@ IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
     RETURN(-1);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb4topic + "/light/0/power") = 0
-    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
-ELSEIF INDEXOF(topic, "shellies/" + bulb4topic + "/light/0/energy") = 0
-    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb4topic + "/light/0/power") = 0
+    Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 1000.0;
+ELSEIF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb4topic + "/light/0/energy") = 0
+    To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 60000.0;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -568,34 +541,28 @@ IF now.Ticks &lt; debounceTimestamp
     RETURN(0);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb4topic + "/color/0/status") != 0
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb4topic + "/color/0/status") != 0
     RETURN(0);
 END
 
-VAR json := PARSEJSON(data, "Payload", 1);
-
-IF LENGTH(json) = 0
+IF RECEIVEDMSG.PAYLOAD.LENGTH = 0
     RETURN(0);
 END
 
-BOOL ison := PARSEJSON(json, "$.ison", 1);
-VAR mode := PARSEJSON(json, "$.mode", 1);
+BOOL ison := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.ison", 1);
+VAR mode := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.mode", 1);
 
 IF ISNULL(mode)
     RETURN(0);
 END
 
-jsonStatus := json;
 INT bright;
 
 IF mode = "color"
-    UINT8 red := PARSEJSON(jsonStatus, "$.red");
-    UINT8 green := PARSEJSON(jsonStatus, "$.green");
-    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
-    bright := PARSEJSON(jsonStatus, "$.gain");
+    UINT8 red := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.red");
+    UINT8 green := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.green");
+    UINT8 blue := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.blue");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.gain");
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
     
@@ -603,8 +570,8 @@ IF mode = "color"
     Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
-    Ct := PARSEJSON(jsonStatus, "$.temp");
-    bright := PARSEJSON(jsonStatus, "$.brightness");
+    Ct := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.temp");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.brightness");
 END
 
 IF ison
@@ -694,13 +661,10 @@ IF(INDEXOF(bulb2topic, "shellycolorbulb-deviceid") = 0)
     RETURN(-1);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb5topic + "/light/0/power") = 0
-    Ed := TODOUBLE(PARSEJSON(data, "Payload")) / 1000.0;
-ELSEIF INDEXOF(topic, "shellies/" + bulb5topic + "/light/0/energy") = 0
-    To := TODOUBLE(PARSEJSON(data, "Payload")) / 60000.0;
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb5topic + "/light/0/power") = 0
+    Ed := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 1000.0;
+ELSEIF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb5topic + "/light/0/energy") = 0
+    To := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 60000.0;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -728,34 +692,28 @@ IF now.Ticks &lt; debounceTimestamp
     RETURN(0);
 END
 
-VAR data := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(data, "Topic");
-
-IF INDEXOF(topic, "shellies/" + bulb5topic + "/color/0/status") != 0
+IF INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + bulb5topic + "/color/0/status") != 0
     RETURN(0);
 END
 
-VAR json := PARSEJSON(data, "Payload", 1);
-
-IF LENGTH(json) = 0
+IF RECEIVEDMSG.PAYLOAD.LENGTH = 0
     RETURN(0);
 END
 
-BOOL ison := PARSEJSON(json, "$.ison", 1);
-VAR mode := PARSEJSON(json, "$.mode", 1);
+BOOL ison := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.ison", 1);
+VAR mode := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.mode", 1);
 
 IF ISNULL(mode)
     RETURN(0);
 END
 
-jsonStatus := json;
 INT bright;
 
 IF mode = "color"
-    UINT8 red := PARSEJSON(jsonStatus, "$.red");
-    UINT8 green := PARSEJSON(jsonStatus, "$.green");
-    UINT8 blue := PARSEJSON(jsonStatus, "$.blue");
-    bright := PARSEJSON(jsonStatus, "$.gain");
+    UINT8 red := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.red");
+    UINT8 green := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.green");
+    UINT8 blue := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.blue");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.gain");
     
     VAR hsvColor := RGBTOHSV(red, green, blue);
 
@@ -763,8 +721,8 @@ IF mode = "color"
     Sa := ROUND(hsvColor.Saturation * 100.0) / 100.0;
     Ct := NaN;
 ELSE
-    Ct := PARSEJSON(jsonStatus, "$.temp");
-    bright := PARSEJSON(jsonStatus, "$.brightness");
+    Ct := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.temp");
+    bright := PARSEJSON(RECEIVEDMSG.PAYLOAD, "$.brightness");
 END
 
 IF ison

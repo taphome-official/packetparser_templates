@@ -48,12 +48,11 @@
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-VAR value := PARSEJSON(json, "Payload");
 VAR topicPrefix := "shellies/" + sensor1_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/state") = 0)
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
     IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
         Rc := 1;
     ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
@@ -61,15 +60,15 @@ IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
     ELSE
         Rc := NaN;
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
-    temp := TODOUBLE(value);
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
-    battery := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
-    luminance := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END</ListenerScriptPacketParser>
 						<OnStateIconId>91</OnStateIconId>
 						<OffStateIconId>92</OffStateIconId>
@@ -92,12 +91,11 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-VAR value := PARSEJSON(json, "Payload");
 VAR topicPrefix := "shellies/" + sensor2_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/state") = 0)
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
     IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
         Rc := 1;
     ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
@@ -105,15 +103,15 @@ IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
     ELSE
         Rc := NaN;
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
-    temp := TODOUBLE(value);
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
-    battery := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
-    luminance := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END</ListenerScriptPacketParser>
 						<OnStateIconId>91</OnStateIconId>
 						<OffStateIconId>92</OffStateIconId>
@@ -136,12 +134,11 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-VAR value := PARSEJSON(json, "Payload");
 VAR topicPrefix := "shellies/" + sensor3_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/state") = 0)
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
     IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
         Rc := 1;
     ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
@@ -149,15 +146,15 @@ IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
     ELSE
         Rc := NaN;
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
-    temp := TODOUBLE(value);
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
-    battery := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
-    luminance := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END</ListenerScriptPacketParser>
 						<OnStateIconId>91</OnStateIconId>
 						<OffStateIconId>92</OffStateIconId>
@@ -180,12 +177,11 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-VAR value := PARSEJSON(json, "Payload");
 VAR topicPrefix := "shellies/" + sensor4_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/state") = 0)
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
     IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
         Rc := 1;
     ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
@@ -193,15 +189,15 @@ IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
     ELSE
         Rc := NaN;
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
-    temp := TODOUBLE(value);
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
-    battery := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
-    luminance := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END</ListenerScriptPacketParser>
 						<OnStateIconId>91</OnStateIconId>
 						<OffStateIconId>92</OffStateIconId>
@@ -224,12 +220,11 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-VAR value := PARSEJSON(json, "Payload");
 VAR topicPrefix := "shellies/" + sensor5_topic;
 
-IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
+IF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/state") = 0)
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
     IF (COMPARE(value, "open", CompareOptions.IgnoreCase) = 0)
         Rc := 1;
     ELSEIF (COMPARE(value, "close", CompareOptions.IgnoreCase) = 0)
@@ -237,15 +232,15 @@ IF (INDEXOF(topic, topicPrefix + "/sensor/state") = 0)
     ELSE
         Rc := NaN;
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/temperature") = 0)
-    temp := TODOUBLE(value);
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/battery") = 0)
-    battery := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/temperature") = 0)
+    temp := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/battery") = 0)
+    battery := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
     IF battery &lt; 20
         ADDWARNING("Battery low (" + battery + "%)");
     END
-ELSEIF (INDEXOF(topic, topicPrefix + "/sensor/lux") = 0)
-    luminance := TODOUBLE(value);
+ELSEIF (INDEXOF(RECEIVEDMSG.TOPIC, topicPrefix + "/sensor/lux") = 0)
+    luminance := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
 END</ListenerScriptPacketParser>
 						<OnStateIconId>91</OnStateIconId>
 						<OffStateIconId>92</OffStateIconId>

@@ -44,19 +44,18 @@
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg1topic + "/relay/0/") != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg1topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg1topic + "/relay/0/power")
+    VAR valueP := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-IF(topic = "shellies/" + pulg1topic + "/relay/0/power")
-    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
-ELSEIF(topic = "shellies/" + pulg1topic + "/relay/0/energy")
-    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+    Ed := IF(ISNULL(valueP), NaN, TODOUBLE(valueP) / 1000.0);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg1topic + "/relay/0/energy")
+    VAR valueE := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
+    To := IF(ISNULL(valueE), NaN, TODOUBLE(valueE) / 60000.0);
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -76,16 +75,13 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg1topic) != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg1topic) != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg1topic + "/relay/0")
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
     
-IF(topic = "shellies/" + pulg1topic + "/relay/0")
     IF(value = "on")
         St := 1;
     ELSEIF(value = "off")
@@ -93,14 +89,14 @@ IF(topic = "shellies/" + pulg1topic + "/relay/0")
     ELSE
         ADDERROR("Unknown switch state");
     END
-ELSEIF(topic = "shellies/" + pulg1topic + "/temperature")
-    internalTemp := value;
-ELSEIF(topic = "shellies/" + pulg1topic + "/overtemperature")
-    overTemp := value;
-ELSEIF(topic = "shellies/" + pulg1topic + "/temperature_status")
-    tempStatus := value;
-ELSEIF(topic = "shellies/" + pulg1topic + "/overpower_value")
-    overPower := value;
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg1topic + "/temperature")
+    internalTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg1topic + "/overtemperature")
+    overTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg1topic + "/temperature_status")
+    tempStatus := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg1topic + "/overpower_value")
+    overPower := TOSTRING(RECEIVEDMSG.PAYLOAD);
 END
 </ListenerScriptPacketParser>
             <NegateState>False</NegateState>
@@ -124,19 +120,18 @@ MQTTPUBLISH("shellies/" + pulg1topic + "/relay/0/command", value);</WriteSwitchS
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg2topic + "/relay/0/") != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg2topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg2topic + "/relay/0/power")
+    VAR valueP := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-IF(topic = "shellies/" + pulg2topic + "/relay/0/power")
-    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
-ELSEIF(topic = "shellies/" + pulg2topic + "/relay/0/energy")
-    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+    Ed := IF(ISNULL(valueP), NaN, TODOUBLE(valueP) / 1000.0);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg2topic + "/relay/0/energy")
+    VAR valueE := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
+    To := IF(ISNULL(valueE), NaN, TODOUBLE(valueE) / 60000.0);
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -156,16 +151,13 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg2topic) != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg2topic) != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg2topic + "/relay/0")
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
     
-IF(topic = "shellies/" + pulg2topic + "/relay/0")
     IF(value = "on")
         St := 1;
     ELSEIF(value = "off")
@@ -173,14 +165,14 @@ IF(topic = "shellies/" + pulg2topic + "/relay/0")
     ELSE
         ADDERROR("Unknown switch state");
     END
-ELSEIF(topic = "shellies/" + pulg2topic + "/temperature")
-    internalTemp := value;
-ELSEIF(topic = "shellies/" + pulg2topic + "/overtemperature")
-    overTemp := value;
-ELSEIF(topic = "shellies/" + pulg2topic + "/temperature_status")
-    tempStatus := value;
-ELSEIF(topic = "shellies/" + pulg2topic + "/overpower_value")
-    overPower := value;
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg2topic + "/temperature")
+    internalTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg2topic + "/overtemperature")
+    overTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg2topic + "/temperature_status")
+    tempStatus := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg2topic + "/overpower_value")
+    overPower := TOSTRING(RECEIVEDMSG.PAYLOAD);
 END
 </ListenerScriptPacketParser>
             <NegateState>False</NegateState>
@@ -204,19 +196,18 @@ MQTTPUBLISH("shellies/" + pulg2topic + "/relay/0/command", value);</WriteSwitchS
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg3topic + "/relay/0/") != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg3topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg3topic + "/relay/0/power")
+    VAR valueP := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-IF(topic = "shellies/" + pulg3topic + "/relay/0/power")
-    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
-ELSEIF(topic = "shellies/" + pulg3topic + "/relay/0/energy")
-    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+    Ed := IF(ISNULL(valueP), NaN, TODOUBLE(valueP) / 1000.0);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg3topic + "/relay/0/energy")
+    VAR valueE := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
+    To := IF(ISNULL(valueE), NaN, TODOUBLE(valueE) / 60000.0);
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -236,16 +227,13 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg3topic) != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg3topic) != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg3topic + "/relay/0")
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
     
-IF(topic = "shellies/" + pulg3topic + "/relay/0")
     IF(value = "on")
         St := 1;
     ELSEIF(value = "off")
@@ -253,14 +241,14 @@ IF(topic = "shellies/" + pulg3topic + "/relay/0")
     ELSE
         ADDERROR("Unknown switch state");
     END
-ELSEIF(topic = "shellies/" + pulg3topic + "/temperature")
-    internalTemp := value;
-ELSEIF(topic = "shellies/" + pulg3topic + "/overtemperature")
-    overTemp := value;
-ELSEIF(topic = "shellies/" + pulg3topic + "/temperature_status")
-    tempStatus := value;
-ELSEIF(topic = "shellies/" + pulg3topic + "/overpower_value")
-    overPower := value;
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg3topic + "/temperature")
+    internalTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg3topic + "/overtemperature")
+    overTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg3topic + "/temperature_status")
+    tempStatus := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg3topic + "/overpower_value")
+    overPower := TOSTRING(RECEIVEDMSG.PAYLOAD);
 END
 </ListenerScriptPacketParser>
             <NegateState>False</NegateState>
@@ -284,19 +272,18 @@ MQTTPUBLISH("shellies/" + pulg3topic + "/relay/0/command", value);</WriteSwitchS
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg4topic + "/relay/0/") != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg4topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg4topic + "/relay/0/power")
+    VAR valueP := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-IF(topic = "shellies/" + pulg4topic + "/relay/0/power")
-    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
-ELSEIF(topic = "shellies/" + pulg4topic + "/relay/0/energy")
-    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+    Ed := IF(ISNULL(valueP), NaN, TODOUBLE(valueP) / 1000.0);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg4topic + "/relay/0/energy")
+    VAR valueE := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
+    To := IF(ISNULL(valueE), NaN, TODOUBLE(valueE) / 60000.0);
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -316,16 +303,13 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg4topic) != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg4topic) != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg4topic + "/relay/0")
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
     
-IF(topic = "shellies/" + pulg4topic + "/relay/0")
     IF(value = "on")
         St := 1;
     ELSEIF(value = "off")
@@ -333,14 +317,14 @@ IF(topic = "shellies/" + pulg4topic + "/relay/0")
     ELSE
         ADDERROR("Unknown switch state");
     END
-ELSEIF(topic = "shellies/" + pulg4topic + "/temperature")
-    internalTemp := value;
-ELSEIF(topic = "shellies/" + pulg4topic + "/overtemperature")
-    overTemp := value;
-ELSEIF(topic = "shellies/" + pulg4topic + "/temperature_status")
-    tempStatus := value;
-ELSEIF(topic = "shellies/" + pulg4topic + "/overpower_value")
-    overPower := value;
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg4topic + "/temperature")
+    internalTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg4topic + "/overtemperature")
+    overTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg4topic + "/temperature_status")
+    tempStatus := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg4topic + "/overpower_value")
+    overPower := TOSTRING(RECEIVEDMSG.PAYLOAD);
 END
 </ListenerScriptPacketParser>
             <NegateState>False</NegateState>
@@ -364,19 +348,18 @@ MQTTPUBLISH("shellies/" + pulg4topic + "/relay/0/command", value);</WriteSwitchS
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg5topic + "/relay/0/") != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg5topic + "/relay/0/") != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg5topic + "/relay/0/power")
+    VAR valueP := TOSTRING(RECEIVEDMSG.PAYLOAD);
 
-IF(topic = "shellies/" + pulg5topic + "/relay/0/power")
-    Ed := IF(ISNULL(value), NaN, TODOUBLE(value) / 1000.0);
-ELSEIF(topic = "shellies/" + pulg5topic + "/relay/0/energy")
-    To := IF(ISNULL(value), NaN, TODOUBLE(value) / 60000.0);
+    Ed := IF(ISNULL(valueP), NaN, TODOUBLE(valueP) / 1000.0);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg5topic + "/relay/0/energy")
+    VAR valueE := TOSTRING(RECEIVEDMSG.PAYLOAD);
+
+    To := IF(ISNULL(valueE), NaN, TODOUBLE(valueE) / 60000.0);
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -396,16 +379,13 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-IF(INDEXOF(topic, "shellies/" + pulg5topic) != 0)
+IF(INDEXOF(RECEIVEDMSG.TOPIC, "shellies/" + pulg5topic) != 0)
     RETURN(0);
 END
 
-VAR value := PARSEJSON(json, "Payload");
+IF(RECEIVEDMSG.TOPIC = "shellies/" + pulg5topic + "/relay/0")
+    VAR value := TOSTRING(RECEIVEDMSG.PAYLOAD);
     
-IF(topic = "shellies/" + pulg5topic + "/relay/0")
     IF(value = "on")
         St := 1;
     ELSEIF(value = "off")
@@ -413,14 +393,14 @@ IF(topic = "shellies/" + pulg5topic + "/relay/0")
     ELSE
         ADDERROR("Unknown switch state");
     END
-ELSEIF(topic = "shellies/" + pulg5topic + "/temperature")
-    internalTemp := value;
-ELSEIF(topic = "shellies/" + pulg5topic + "/overtemperature")
-    overTemp := value;
-ELSEIF(topic = "shellies/" + pulg5topic + "/temperature_status")
-    tempStatus := value;
-ELSEIF(topic = "shellies/" + pulg5topic + "/overpower_value")
-    overPower := value;
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg5topic + "/temperature")
+    internalTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg5topic + "/overtemperature")
+    overTemp := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg5topic + "/temperature_status")
+    tempStatus := TOSTRING(RECEIVEDMSG.PAYLOAD);
+ELSEIF(RECEIVEDMSG.TOPIC = "shellies/" + pulg5topic + "/overpower_value")
+    overPower := TOSTRING(RECEIVEDMSG.PAYLOAD);
 END
 </ListenerScriptPacketParser>
             <NegateState>False</NegateState>

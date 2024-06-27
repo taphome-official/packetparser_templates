@@ -43,15 +43,11 @@
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-    
-IF(topic = plug1topic + "/status/switch:0")
-    VAR payload := PARSEJSON(json, "Payload");
-    internalTemp := PARSEJSON(payload, "temperature.tC");
-    voltage := PARSEJSON(payload, "voltage");
-    current := PARSEJSON(payload, "current");
-    VAR errors := PARSEJSON(payload, "errors", TRUE);
+IF(RECEIVEDMSG.TOPIC = plug1topic + "/status/switch:0")
+    internalTemp := PARSEJSON(RECEIVEDMSG.PAYLOAD, "temperature.tC");
+    voltage := PARSEJSON(RECEIVEDMSG.PAYLOAD, "voltage");
+    current := PARSEJSON(RECEIVEDMSG.PAYLOAD, "current");
+    VAR errors := PARSEJSON(RECEIVEDMSG.PAYLOAD, "errors", TRUE);
     
     IF (!ISNULL(errors))
         VAR errCount := LENGTH(errors);
@@ -89,14 +85,9 @@ END
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-    
-IF(topic = plug1topic + "/status/switch:0")
-    VAR payload := PARSEJSON(json, "Payload");
-    Ed := PARSEJSON(payload, "apower") / 1000.0;
-    To := PARSEJSON(payload, "aenergy.total") / 1000.0;
+IF(RECEIVEDMSG.TOPIC = plug1topic + "/status/switch:0")
+    Ed := PARSEJSON(RECEIVEDMSG.PAYLOAD, "apower") / 1000.0;
+    To := PARSEJSON(RECEIVEDMSG.PAYLOAD, "aenergy.total") / 1000.0;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser></ReadTotalConsumptionScriptPacketParser>
             <ReadDemandScriptPacketParser></ReadDemandScriptPacketParser>
@@ -117,13 +108,8 @@ END</ListenerScriptPacketParser>
     RETURN(-1);
 END
 
-VAR json := TOSTRING(RECEIVEDBYTES);
-VAR topic := PARSEJSON(json, "Topic");
-
-    
-IF(topic = plug1topic + "/status/switch:0")
-    VAR payload := PARSEJSON(json, "Payload");
-    St := PARSEJSON(payload, "output");
+IF(RECEIVEDMSG.TOPIC = plug1topic + "/status/switch:0")
+    St := PARSEJSON(RECEIVEDMSG.PAYLOAD, "output");
 END
 </ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>

@@ -37,7 +37,7 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
         <CustomVariables>[{"Name":"dID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[dID]"},{"Name":"x","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
-        <ListenerScriptPacketParser>x := tostring(RECEIVEDBYTES);</ListenerScriptPacketParser>
+        <ListenerScriptPacketParser></ListenerScriptPacketParser>
         <IpAddress>$[IpAddress]</IpAddress>
         <Port>$[Port]</Port>
         <RootTopic>shellies/#</RootTopic>
@@ -53,11 +53,11 @@ To find Device ID in browser interface go to Settings / Device Info / Device ID.
             <CustomVariables>[]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"returned energy [Wh]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/0/total_returned\u0022)\r\n return(parsejson(x, \u0022Payload\u0022));\r\nEND"},{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/0/voltage\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"current [A]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/0/current\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"power factor"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/0/pf\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Reset total","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"mqttpublish(\u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/0/command\u0022, \u0022reset_totals\u0022);"}]</ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR command := tostring(RECEIVEDBYTES);
-IF(parsejson(command, "Topic") = "shellies/shellyem3-"+dID+"/emeter/0/power")
- Ed := todouble(parsejson(command, "Payload"))/1000;
-elseif(parsejson(command, "Topic") = "shellies/shellyem3-"+dID+"/emeter/0/total")
- To := todouble(parsejson(command, "Payload"))/1000;
+            <ListenerScriptPacketParser>
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyem3-"+dID+"/emeter/0/power")
+ Ed := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
+elseif(RECEIVEDMSG.TOPIC = "shellies/shellyem3-"+dID+"/emeter/0/total")
+ To := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/getValue");
@@ -138,11 +138,11 @@ END</ListenerScriptPacketParser>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"total returned [Wh]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/1/total_returned\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/1/voltage\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"current [A]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/1/current\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"power factor"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/1/pf\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Reset total","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"mqttpublish(\u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/1/command\u0022, \u0022reset_totals\u0022);"}]</ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR command := tostring(RECEIVEDBYTES);
-IF(parsejson(command, "Topic") = "shellies/shellyem3-"+dID+"/emeter/1/power")
- Ed := todouble(parsejson(command, "Payload"))/1000;
- elseif(parsejson(command, "Topic") = "shellies/shellyem3-"+dID+"/emeter/1/total")
- To := todouble(parsejson(command, "Payload"))/1000;
+            <ListenerScriptPacketParser>
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyem3-"+dID+"/emeter/1/power")
+ Ed := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
+ elseif(RECEIVEDMSG.TOPIC = "shellies/shellyem3-"+dID+"/emeter/1/total")
+ To := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/getValue");
@@ -223,11 +223,11 @@ END</ListenerScriptPacketParser>
             <CustomVariables>[]</CustomVariables>
             <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"total returned [Wh]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/2/total_returned\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"voltage [V]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/2/voltage\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"current [A]"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/2/current\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"},{"AttributeDefinition":{"Name":"Power Factor"},"ReadFormula":"IF(parsejson(x, \u0022Topic\u0022) = \u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/2/pf\u0022)\r\n return(todouble(parsejson(x, \u0022Payload\u0022)));\r\nEND"}]</ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"reset total","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"mqttpublish(\u0022shellies/shellyem3-\u0022\u002BdID\u002B\u0022/emeter/2/command\u0022, \u0022reset_totals\u0022);"}]</ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>VAR command := tostring(RECEIVEDBYTES);
-IF(parsejson(command, "Topic") = "shellies/shellyem3-"+dID+"/emeter/2/power")
- Ed := todouble(parsejson(command, "Payload"))/1000;
- elseif(parsejson(command, "Topic") = "shellies/shellyem3-"+dID+"/emeter/2/total")
- To := todouble(parsejson(command, "Payload"))/1000;
+            <ListenerScriptPacketParser>
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyem3-"+dID+"/emeter/2/power")
+ Ed := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
+ elseif(RECEIVEDMSG.TOPIC = "shellies/shellyem3-"+dID+"/emeter/2/total")
+ To := todouble(TOSTRING(RECEIVEDMSG.PAYLOAD))/1000;
 END</ListenerScriptPacketParser>
             <ReadTotalConsumptionScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/getValue");
@@ -309,19 +309,10 @@ END</ListenerScriptPacketParser>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser># Parse received bytes:
-VAR command := tostring(RECEIVEDBYTES);
-IF(parsejson(command, "Topic") = "shellies/shellyem3-"+dID+"/relay/0")
- St := switch(parsejson(command, "Payload"),"on",1,0);
+IF(RECEIVEDMSG.TOPIC = "shellies/shellyem3-"+dID+"/relay/0")
+ St := switch(TOSTRING(RECEIVEDMSG.PAYLOAD),"on",1,0);
 END
-# Convert bytes to string:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES);
-#
-# Specify string encoding:
-# VAR jsonResponse := TOSTRING(RECEIVEDBYTES, "iso-8859-1");
-#
-# Complete service attribute or service action:
-# COMPLETESERVICEATTRIBUTE("attributeName", value, errorMessage);
-# COMPLETESERVICEACTION("actionName", message);</ListenerScriptPacketParser>
+</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <NegateState>False</NegateState>
             <OnStateIconId>60</OnStateIconId>
