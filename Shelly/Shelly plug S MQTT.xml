@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="73">
-  <Template revision="1.0" id ="a36bf5c0-5d73-4376-8acf-8a0263c3a456">
+<Templates format="2" protocolVersion="83">
+  <Template revision="1.1" id ="a36bf5c0-5d73-4376-8acf-8a0263c3a456">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="1.1">Changed to use RECEIVEDMSG</Revision>
     </RevisionHistory>
     <Name>Shelly plug S MQTT</Name>
     <CcuModel>PacketParserCCU</CcuModel>

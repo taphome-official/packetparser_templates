@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="73">
-  <Template revision="1.0" id="55377529-063e-4b5a-9d48-7d76c0c602a8">
+<Templates format="2" protocolVersion="83">
+  <Template revision="1.1" id="55377529-063e-4b5a-9d48-7d76c0c602a8">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="1.1">Changed to use RECEIVEDMSG</Revision>
     </RevisionHistory>
     <Name>Shelly UNI</Name>
     <CcuModel>PacketParserCCU</CcuModel>

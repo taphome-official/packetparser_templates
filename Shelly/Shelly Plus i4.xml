@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="80" >
-  <Template revision="1.0" id="953b9b4c-eda7-41c1-9aec-2a080efbdf74">
+<Templates format="2" protocolVersion="83" >
+  <Template revision="1.1" id="953b9b4c-eda7-41c1-9aec-2a080efbdf74">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="1.1">Changed to use RECEIVEDMSG</Revision>
     </RevisionHistory>
     <Name>Shelly Plus i4</Name>
     <CcuModel>PacketParserCCU</CcuModel>

@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="72">
-  <Template id="482e4a25-63a7-43ec-89b1-52f7dcf1a424" revision="1.0">
+<Templates format="2" protocolVersion="83">
+  <Template id="482e4a25-63a7-43ec-89b1-52f7dcf1a424" revision="1.1">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="1.1">Changed to use RECEIVEDMSG</Revision>
     </RevisionHistory>
     <Name>Shelly Motion 2 MQTT</Name>
     <CcuModel>PacketParserCCU</CcuModel>
