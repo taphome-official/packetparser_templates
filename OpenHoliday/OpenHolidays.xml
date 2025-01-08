@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="84">
   <Template revision="1.0" id="8e5e7b6c-3f2d-4628-8da9-ee4bd701d26d">
     <SuggestedCCUParameters />
@@ -7,9 +7,13 @@
     </RevisionHistory>
     <Name>OpenHolidays</Name>
     <CcuModel>PacketParserCCU</CcuModel>
-    <Producer>ToBo (tomas/bozik@gmail.com)</Producer>
+    <Producer>ToBo</Producer>
     <Model></Model>
-    <Description></Description>
+    <Description>
+    	Country - Set the Country iso code based on the list from the URL: https://openholidaysapi.org/Countries
+	Region - Set the Region iso code based on list from this url: https://openholidaysapi.org/Regional/Subdivisions?countryIsoCode={CountryIsoCode} 
+		for example Slovakia: https://openholidaysapi.org/Subdivisions?countryIsoCode=SK
+    </Description>
     <ImportParameters>
 		  <Parameter>
 			  <Name>Country</Name>	
