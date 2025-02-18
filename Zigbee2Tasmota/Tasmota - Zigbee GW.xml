@@ -21,6 +21,11 @@
 		<Value>1883</Value>
 		<Id>Port</Id>
 	</Parameter>
+    <Parameter>
+		<Name>Gateway name (Tasmota->Configuration->MQTT->Topic)</Name>	
+		<Value>tasmota_XXXXX</Value>
+		<Id>GWname</Id>
+	</Parameter>
 	</ImportParameters>    
     <Module>
       <Name>Tasmota - Zigbee GW</Name>
@@ -29,7 +34,7 @@
       <DeviceProperties>
         <ReadScriptPacketParser>MQTTPUBLISH("cmnd/" + GWname+ "/ZbInfo", "");</ReadScriptPacketParser>
         <InternalPollInterval>3600000</InternalPollInterval>
-        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"tasmota_z2m"},{"Name":"count","ValueTypeId":0,"NumericValue":0},{"Name":"new","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"$[GWname]"},{"Name":"count","ValueTypeId":0,"NumericValue":0},{"Name":"new","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"New devices"},"ReadFormula":"new"}]</ServiceAttributesScriptsPacketParser>
         <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
     var ModelId := PARSEJSON(RECEIVEDMSG.Payload, "ZbReceived." + ID + ".ModelId", true);
@@ -46,11 +51,11 @@ if INDEXOF(RECEIVEDMSG.Topic, "RESULT") &gt; 0
 		ID := PARSEJSON(RECEIVEDMSG.Payload, "$.ZbState.ShortAddr");
 	end
 end</ListenerScriptPacketParser>
-        <IpAddress>192.168.1.100</IpAddress>
-        <Port>1883</Port>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
         <WriteScriptPacketParser>if (St = 0, count := NaN, if (isnan(count), count := 0) )
 	</WriteScriptPacketParser>
-        <RootTopic>tele/tasmota_z2m/#</RootTopic>
+        <RootTopic>tele/$[GWname]/#</RootTopic>
         <DeviceVariables>[{"DeviceId":-3,"ValueLogType":48,"Abbreviation":"St","ValueLogTypeFlavourId":1}]</DeviceVariables>
       </DeviceProperties>
       <Devices>

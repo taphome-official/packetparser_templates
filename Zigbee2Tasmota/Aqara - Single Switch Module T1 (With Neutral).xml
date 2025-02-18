@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="83">
-  <Template revision="1.0" id="150c2610-d01e-4f5e-b1d8-60e476668ca3">
+  <Template revision="1.0" id="21327e99-50f7-4991-8ab6-35a35c6c4f2b">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Moes - Smart Switch</Name>
+    <Name>Aqara - Single Switch Module T1 (With Neutral)</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
@@ -33,12 +33,12 @@
     </Parameter>
 	</ImportParameters>      
     <Module>
-      <Name>Moes - Smart Switch</Name>
+      <Name>Aqara - Single Switch Module T1 (With Neutral)</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"$[GWname]"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"},{"Name":"LinkQuality","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"$[GWname]"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"0xC0B4"},{"Name":"LinkQuality","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IEEEAddr"},"ReadFormula":"MQTTPUBLISH(\u0022cmnd/\u0022 \u002B GWname\u002B \u0022/ZbInfo\u0022, ID)"},{"AttributeDefinition":{"Name":"ModelId"}},{"AttributeDefinition":{"Name":"Manufacturer"}},{"AttributeDefinition":{"Name":"Endpoints"}},{"AttributeDefinition":{"Name":"Config"}}]</ServiceAttributesScriptsPacketParser>
         <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
 	var ZbReceived := PARSEJSON(TOSTRING(RECEIVEDMSG.Payload), "ZbReceived." + ID, true);
@@ -51,7 +51,7 @@
         COMPLETESERVICEATTRIBUTE("ModelId", PARSEJSON(deviceInfo, "ModelId"));
         COMPLETESERVICEATTRIBUTE("Manufacturer", PARSEJSON(deviceInfo, "Manufacturer"));
         COMPLETESERVICEATTRIBUTE("Endpoints", PARSEJSON(deviceInfo, "Endpoints"));
-        COMPLETESERVICEATTRIBUTE("Config", PARSEJSON(deviceInfo, "Config"));
+        #COMPLETESERVICEATTRIBUTE("Config", PARSEJSON(deviceInfo, "Config"));
     end
 end</ListenerScriptPacketParser>
         <IpAddress>$[IpAddress]</IpAddress>
