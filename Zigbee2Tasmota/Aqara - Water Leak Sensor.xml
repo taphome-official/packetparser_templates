@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="83">
-  <Template revision="1.0" id="73278d6f-19b3-44ef-8d2a-2888d354101d">
+  <Template revision="1.0" id="b1a2e256-a54b-4ee4-8e3b-67d05311bd89">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Aqara - Door and Window Sensor</Name>
+    <Name>Aqara - Water Leak Sensor</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
@@ -21,7 +21,7 @@
 		<Value>1883</Value>
 		<Id>Port</Id>
 	</Parameter>
-   	<Parameter>
+  	<Parameter>
 		<Name>Gateway name (Tasmota->Configuration->MQTT->Topic)</Name>	
 		<Value>tasmota_XXXXX</Value>
 		<Id>GWname</Id>
@@ -33,13 +33,13 @@
     </Parameter>
 	</ImportParameters>      
     <Module>
-      <Name>Aqara - Door and Window Sensor</Name>
+      <Name>Aqara - Water Leak Sensor</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <ReadScriptPacketParser>MQTTPUBLISH("cmnd/" + GWname+ "/ZbInfo", ID)</ReadScriptPacketParser>
         <InternalPollInterval>3600000</InternalPollInterval>
-        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"$[GWname]"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"},{"Name":"BatteryVoltage","ValueTypeId":0,"NumericValue":0},{"Name":"BatteryPercentage","ValueTypeId":0,"NumericValue":0},{"Name":"LastSeenEpoch","ValueTypeId":0,"NumericValue":0}]</CustomVariables>
+        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"$[GWname]"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"0xF121"},{"Name":"BatteryVoltage","ValueTypeId":0,"NumericValue":0},{"Name":"BatteryPercentage","ValueTypeId":0,"NumericValue":0},{"Name":"LastSeenEpoch","ValueTypeId":0,"NumericValue":0}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IEEEAddr"},"ReadFormula":"MQTTPUBLISH(\u0022cmnd/\u0022 \u002B GWname\u002B \u0022/ZbInfo\u0022, ID)"},{"AttributeDefinition":{"Name":"ModelId"}},{"AttributeDefinition":{"Name":"Manufacturer"}},{"AttributeDefinition":{"Name":"Endpoints"}},{"AttributeDefinition":{"Name":"Config"}},{"AttributeDefinition":{"Name":"Link Quality"},"ReadFormula":""},{"AttributeDefinition":{"Name":"Battery Voltage"},"ReadFormula":"BatteryVoltage \u002B \u0022 V\u0022"},{"AttributeDefinition":{"Name":"Battery Percentage"},"ReadFormula":"BatteryPercentage \u002B \u0022%\u0022"}]</ServiceAttributesScriptsPacketParser>
         <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
 	var ZbReceived := PARSEJSON(RECEIVEDMSG.Payload, "ZbReceived." + ID, true);
@@ -55,7 +55,7 @@
         COMPLETESERVICEATTRIBUTE("ModelId", PARSEJSON(deviceInfo, "ModelId"));
         COMPLETESERVICEATTRIBUTE("Manufacturer", PARSEJSON(deviceInfo, "Manufacturer"));
         COMPLETESERVICEATTRIBUTE("Endpoints", PARSEJSON(deviceInfo, "Endpoints"));
-        COMPLETESERVICEATTRIBUTE("Config", PARSEJSON(deviceInfo, "Config"));
+        #COMPLETESERVICEATTRIBUTE("Config", PARSEJSON(deviceInfo, "Config"));
         COMPLETESERVICEATTRIBUTE("Link Quality", ROUND(LINEAR(PARSEJSON(deviceInfo, "LinkQuality"), 0,0, 254, 100)) + "%");
     end
 end
@@ -81,46 +81,24 @@ end</ListenerScriptPacketParser>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>${deviceType_DoorSensor}</Name>
+          <Name>${deviceType_FloodSensor}</Name>
           <Model>PacketParserReedContact</Model>
           <Id>-2</Id>
           <DeviceProperties>
-            <DeviceType>1041</DeviceType>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>2500</InternalPollInterval>
-            <CustomVariables />
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
-    var val := PARSEJSON(RECEIVEDMSG.Payload, "ZbReceived." + ID + ".Contact", true);
-    if(!ISNULL(val), Rc := val);
-end</ListenerScriptPacketParser>
-            <OnStateIconId>91</OnStateIconId>
-            <OffStateIconId>92</OffStateIconId>
-            <OnStateName>${general_open}</OnStateName>
-            <OffStateName>${general_closed}</OffStateName>
-            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>${deviceType_WindowSensor}</Name>
-          <Model>PacketParserReedContact</Model>
-          <Id>-3</Id>
-          <DeviceProperties>
-            <DeviceType>1040</DeviceType>
+            <DeviceType>1031</DeviceType>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
             <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
-    var val := PARSEJSON(RECEIVEDMSG.Payload, "ZbReceived." + ID + ".Contact", true);
+    var val := PARSEJSON(RECEIVEDMSG.Payload, "ZbReceived." + ID + ".ZoneStatusChange", true);
     if(!ISNULL(val), Rc := val);
 end</ListenerScriptPacketParser>
-            <OnStateIconId>111</OnStateIconId>
-            <OffStateIconId>112</OffStateIconId>
-            <OnStateName>${general_open}</OnStateName>
-            <OffStateName>${general_closed}</OffStateName>
+            <OnStateIconId>97</OnStateIconId>
+            <OffStateIconId>98</OffStateIconId>
+            <OnStateName>${Emergency_Alarm}</OnStateName>
+            <OffStateName>${Emergency_Ok}</OffStateName>
             <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>

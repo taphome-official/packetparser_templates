@@ -21,19 +21,24 @@
 		<Value>1883</Value>
 		<Id>Port</Id>
 	</Parameter>
+   	<Parameter>
+		<Name>Gateway name (Tasmota->Configuration->MQTT->Topic)</Name>	
+		<Value>tasmota_XXXXX</Value>
+		<Id>GWname</Id>
+	</Parameter>
     <Parameter>
         <Name>Device ID</Name>	
         <Value>0xFFFF</Value>
         <Id>deviceId</Id>
     </Parameter>
-	</ImportParameters>      
+	</ImportParameters>  
     <Module>
       <Name>Livarno SMART TS0505B</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"tasmota_z2m"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"},{"Name":"LinkQuality","ValueTypeId":1,"NumericValue":0},{"Name":"lastBr","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
+        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"$[GWname]"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"},{"Name":"LinkQuality","ValueTypeId":1,"NumericValue":0},{"Name":"lastBr","ValueTypeId":1,"NumericValue":0}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IEEEAddr"},"ReadFormula":"MQTTPUBLISH(\u0022cmnd/\u0022 \u002B GWname\u002B \u0022/ZbInfo\u0022, ID)"}]</ServiceAttributesScriptsPacketParser>
         <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
 	var ZbReceived := PARSEJSON(TOSTRING(RECEIVEDMSG.Payload), "ZbReceived." + ID, true);
@@ -49,8 +54,8 @@
         COMPLETESERVICEATTRIBUTE("Config", PARSEJSON(deviceInfo, "Config"));
     end
 end</ListenerScriptPacketParser>
-        <IpAddress>192.168.1.100</IpAddress>
-        <Port>1883</Port>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
         <WriteScriptPacketParser>if St = 0 or Hb &lt; 0.01
     MQTTPUBLISH("cmnd/" + GWname+ "/ZbSend", 
     "{\"device\":\" " + ID + 
@@ -75,7 +80,7 @@ else
     #"\",\"send\":{\"Power\":true}}");
 end
 </WriteScriptPacketParser>
-        <RootTopic>tele/tasmota_z2m/#</RootTopic>
+        <RootTopic>tele/$[GWname]/#</RootTopic>
         <DeviceVariables>[{"DeviceId":-2,"ValueLogType":65,"Abbreviation":"Hb","ValueLogTypeFlavourId":1},{"DeviceId":-2,"ValueLogType":68,"Abbreviation":"Hv","ValueLogTypeFlavourId":1},{"DeviceId":-2,"ValueLogType":48,"Abbreviation":"St","ValueLogTypeFlavourId":1},{"DeviceId":-2,"ValueLogType":40,"Abbreviation":"Hd","ValueLogTypeFlavourId":1},{"DeviceId":-2,"ValueLogType":89,"Abbreviation":"Ct","ValueLogTypeFlavourId":1},{"DeviceId":-2,"ValueLogType":41,"Abbreviation":"Sa","ValueLogTypeFlavourId":1}]</DeviceVariables>
       </DeviceProperties>
       <Devices>

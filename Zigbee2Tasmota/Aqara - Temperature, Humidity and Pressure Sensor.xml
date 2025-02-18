@@ -21,19 +21,25 @@
 		<Value>1883</Value>
 		<Id>Port</Id>
 	</Parameter>
+   	<Parameter>
+		<Name>Gateway name (Tasmota->Configuration->MQTT->Topic)</Name>	
+		<Value>tasmota_XXXXX</Value>
+		<Id>GWname</Id>
+	</Parameter>
     <Parameter>
         <Name>Device ID</Name>	
         <Value>0xFFFF</Value>
         <Id>deviceId</Id>
     </Parameter>
-	</ImportParameters>      
+	</ImportParameters>     
     <Module>
-      <Name>Aqara - Temperature, Humidity and Pressure Sensor (Basi)</Name>
+      <Name>Aqara - Temperature, Humidity and Pressure Sensor</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
-        <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"tasmota_z2m"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"},{"Name":"BatteryVoltage","ValueTypeId":0,"NumericValue":0},{"Name":"BatteryPercentage","ValueTypeId":0,"NumericValue":0},{"Name":"LastSeenEpoch","ValueTypeId":0,"NumericValue":0}]</CustomVariables>
+        <ReadScriptPacketParser>MQTTPUBLISH("cmnd/" + GWname+ "/ZbInfo", ID)</ReadScriptPacketParser>
+        <InternalPollInterval>3600000</InternalPollInterval>
+        <CustomVariables>[{"Name":"GWname","ValueTypeId":2,"NumericValue":0,"StringValue":"$[GWname]"},{"Name":"ID","ValueTypeId":2,"NumericValue":0,"StringValue":"$[deviceId]"},{"Name":"BatteryVoltage","ValueTypeId":0,"NumericValue":0},{"Name":"BatteryPercentage","ValueTypeId":0,"NumericValue":0},{"Name":"LastSeenEpoch","ValueTypeId":0,"NumericValue":0}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"IEEEAddr"},"ReadFormula":"MQTTPUBLISH(\u0022cmnd/\u0022 \u002B GWname\u002B \u0022/ZbInfo\u0022, ID)"},{"AttributeDefinition":{"Name":"ModelId"}},{"AttributeDefinition":{"Name":"Manufacturer"}},{"AttributeDefinition":{"Name":"Endpoints"}},{"AttributeDefinition":{"Name":"Config"}},{"AttributeDefinition":{"Name":"Link Quality"},"ReadFormula":""},{"AttributeDefinition":{"Name":"Battery Voltage"},"ReadFormula":"BatteryVoltage \u002B \u0022 V\u0022"},{"AttributeDefinition":{"Name":"Battery Percentage"},"ReadFormula":"BatteryPercentage \u002B \u0022%\u0022"}]</ServiceAttributesScriptsPacketParser>
         <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
 	var ZbReceived := PARSEJSON(RECEIVEDMSG.Payload, "ZbReceived." + ID, true);
@@ -71,9 +77,9 @@ if !ISNAN(LastSeenEpoch)
 else
 	LastSeenEpoch := now.UNIXTIME;
 end</ListenerScriptPacketParser>
-        <IpAddress>192.168.1.100</IpAddress>
-        <Port>1883</Port>
-        <RootTopic>tele/tasmota_z2m/#</RootTopic>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
+        <RootTopic>tele/$[GWname]/#</RootTopic>
       </DeviceProperties>
       <Devices>
         <Device>
