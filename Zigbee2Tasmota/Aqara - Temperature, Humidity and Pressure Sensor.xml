@@ -5,7 +5,7 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>Aqara - Temperature, Humidity and Pressure Sensor (Basi)</Name>
+    <Name>Aqara - Temperature, Humidity and Pressure Sensor</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
