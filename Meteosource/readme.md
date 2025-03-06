@@ -1,6 +1,6 @@
 # Meteosource API
 
-Purpose: this template provides weather information based on Meteosource API (https://www.meteosource.com/). To use it, sign up for free to get an API key.
+Purpose: this template provides weather information based on Meteosource API (https://www.meteosource.com/). To use it, sign up for free to get an API key at https://www.meteosource.com/client/sign-up .
 
 ## Settings
 - API key
