@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="84">
-  <Template revision="1.0">
+  <Template revision="1.0" id="37f6a1c4-8698-4a3d-85ee-81891b0dcb2f">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
+    <ImportParameters>
+	<Parameter>
+		<Name>${latitude}</Name>
+		<Value>48.1778</Value>
+		<Id>latitude</Id>
+	</Parameter>
+	<Parameter>
+		<Name>${longitude}</Name>
+		<Value>17.1426</Value>
+		<Id>longitude</Id>
+	</Parameter>
+	<Parameter>
+		<Name>Meteosource API key</Name>
+		<Value>apiKey</Value>
+		<Id>apiKey</Id>
+	</Parameter>
+    </ImportParameters>  	  
     <Name>Meteosource</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
@@ -25,7 +42,7 @@ IF response.IsSuccess
   responseJson := response.Content;
 END</ReadScriptPacketParser>
         <InternalPollInterval>300000</InternalPollInterval>
-        <CustomVariables>[{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"apiKey","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"lat","ValueTypeId":2,"NumericValue":0,"StringValue":"00.00N"},{"Name":"lon","ValueTypeId":2,"NumericValue":0,"StringValue":"00.00E"},{"Name":"tz","ValueTypeId":2,"NumericValue":0,"StringValue":"Europe/Prague"}]</CustomVariables>
+        <CustomVariables>[{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"apiKey","ValueTypeId":2,"NumericValue":0,"StringValue":"$[apiKey]"},{"Name":"lat","ValueTypeId":2,"NumericValue":0,"StringValue":"$[latitude]"},{"Name":"lon","ValueTypeId":2,"NumericValue":0,"StringValue":"$[longitude]"},{"Name":"tz","ValueTypeId":2,"NumericValue":0,"StringValue":"Europe/Prague"}]</CustomVariables>
         <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
         <IpAddress>www.meteosource.com</IpAddress>
         <Port>443</Port>
