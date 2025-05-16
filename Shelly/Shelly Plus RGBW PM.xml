@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="83">
+  <Template revision="1.0" id="d485cb61-584e-45b9-be76-0424ae28334c">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly Plus RGBW PM</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Shelly Plus RGBW PM</Model>
+    <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>      
+    <Module>
+      <Name>Shelly Plus RGBW PM</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Sys.GetStatus");
+IF response.IsSuccess
+    Sys.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Sys.GetConfig");
+IF response.IsSuccess
+    Sys.GetConfig := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/WiFi.GetStatus");
+IF response.IsSuccess
+    WiFi.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/PlusRGBWPM.GetConfig");
+IF response.IsSuccess
+    PlusRGBWPM.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(Sys.GetStatus, "available_updates.stable", true))
+    addwarning("New firmware update is available");
+end
+
+if parsejson(Sys.GetStatus, "restart_required", true)
+    addwarning("Restart required");
+end
+</ReadScriptPacketParser>
+        <InternalPollInterval>3000</InternalPollInterval>
+        <CustomVariables>[{"Name":"Sys.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"Sys.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"WiFi.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"PlusRGBWPM.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022ssid\u0022)"},{"AttributeDefinition":{"Name":"${ipAddress}"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022sta_ip\u0022)"},{"AttributeDefinition":{"Name":"${xml_signal_strength} [dB]"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022rssi\u0022)"},{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(Sys.GetStatus, \u0022mac\u0022)"},{"AttributeDefinition":{"Name":"Profile"},"ReadFormula":"PARSEJSON(Sys.GetConfig, \u0022$.device.profile\u0022);"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${xml_update_fw}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Update?stage=\\\u0022stable\\\u0022\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n\r\n"},{"ActionDefinition":{"Name":"${restart}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Reboot\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND"},{"ActionDefinition":{"Name":"Set Profile","NumericParameters":[],"BoolParameters":[],"EnumParameters":[{"FriendlyName":"Profile","Abbreviation":"prof","Values":[{"Item1":0,"Item2":"light"},{"Item1":1,"Item2":"rgb"},{"Item1":2,"Item2":"rgbw"}]}]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.SetProfile?name=\\\u0022\u0022 \u002B \r\nswitch(prof,\r\n0, \u0022light\u0022,\r\n1, \u0022rgb\u0022,\r\n2, \u0022rgbw\u0022,\r\n\u0022\u0022)\r\n\u002B \u0022\\\u0022\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+        <DeviceVariables>[{"DeviceId":-3,"ValueLogType":40,"Abbreviation":"Hd","ValueLogTypeFlavourId":1},{"DeviceId":-3,"ValueLogType":41,"Abbreviation":"Sa","ValueLogTypeFlavourId":1}]</DeviceVariables>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${dashboard_deviceRGBLight}</Name>
+          <Model>PacketParserHSBLight</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser>if PARSEJSON(Sys.GetConfig, "$.device.profile") != "rgb"
+	adderror("Profile is not set to rgb (" + PARSEJSON(Sys.GetConfig, "$.device.profile") + ")");
+end
+
+VAR response := SENDHTTPREQUEST("/rpc/RGB.GetStatus?id=" + ID);
+IF response.IsSuccess
+    RGB.GetStatus := response.Content;
+	R := PARSEJSON(RGB.GetStatus, "$.rgb[0]", true);
+	G := PARSEJSON(RGB.GetStatus, "$.rgb[1]", true);
+	B := PARSEJSON(RGB.GetStatus, "$.rgb[2]", true);    
+END
+
+response := SENDHTTPREQUEST("/rpc/RGB.GetConfig?id=" + ID);
+IF response.IsSuccess
+    RGB.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(RGB.GetStatus, "errors", true))
+    adderror("Error: " + parsejson(RGB.GetStatus, "errors"));
+end
+
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"ID","ValueTypeId":1,"NumericValue":0},{"Name":"RGB.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"RGB.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"R","ValueTypeId":0,"NumericValue":0},{"Name":"G","ValueTypeId":0,"NumericValue":0},{"Name":"B","ValueTypeId":0,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${device_variable_realtemperature} [\u00B0C]"},"ReadFormula":"parsejson(RGB.GetStatus, \u0022$.temperature.tC\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricityconsumption} [Wh]"},"ReadFormula":"parsejson(RGB.GetStatus, \u0022$.aenergy.total\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricitydemand} [W]"},"ReadFormula":"parsejson(RGB.GetStatus, \u0022$.apower\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricVoltage} [V]"},"ReadFormula":"parsejson(RGB.GetStatus, \u0022$.voltage\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricCurrent} [A]"},"ReadFormula":"parsejson(RGB.GetStatus, \u0022$.current\u0022, true)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser>VAR HSVColor := RGBTOHSV(R, G, B);
+ROUND(HSVColor.Hue);
+</ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser>VAR HSVColor := RGBTOHSV(R, G, B);
+ROUND(HSVColor.Saturation * 100.0) / 100.0;</ReadSaturationScriptPacketParser>
+            <ReadBrightnessScriptPacketParser>bool output := PARSEJSON(RGB.GetStatus, "$.output", true);
+var brightness := PARSEJSON(RGB.GetStatus, "$.brightness", true);
+
+if output
+    return(brightness / 100);
+else
+    return(0);
+end</ReadBrightnessScriptPacketParser>
+            <ReadCCTScriptPacketParser></ReadCCTScriptPacketParser>
+            <WriteHueScriptPacketParser>VAR color := HSVTORGB(Hd, Sa, 1);
+SENDHTTPREQUEST("/rpc/RGB.Set?id=" + ID + "&amp;rgb=[" + color.RED + "," + color.GREEN + "," + color.BLUE + "]");
+</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser>VAR color := HSVTORGB(Hd, Sa, 1);
+SENDHTTPREQUEST("/rpc/RGB.Set?id=" + ID + "&amp;rgb=[" + color.RED + "," + color.GREEN + "," + color.BLUE + "]");
+</WriteSaturationScriptPacketParser>
+            <WriteBrightnessScriptPacketParser>SENDHTTPREQUEST("/rpc/RGB.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;brightness=" + round(Hb*100.0));
+</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser></WriteCCTScriptPacketParser>
+            <IconId>0</IconId>
+            <MinColorTemperature>4500</MinColorTemperature>
+            <MaxColorTemperature>4500</MaxColorTemperature>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>RGBW Svetlo</Name>
+          <Model>PacketParserHSBLight</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser>if PARSEJSON(Sys.GetConfig, "$.device.profile") != "rgbw"
+	adderror("Profile is not set to rgbw (" + PARSEJSON(Sys.GetConfig, "$.device.profile") + ")");
+end
+
+VAR response := SENDHTTPREQUEST("/rpc/RGBW.GetStatus?id=" + ID);
+IF response.IsSuccess
+    RGBW.GetStatus := response.Content;
+	R := PARSEJSON(RGBW.GetStatus, "$.rgb[0]", true);
+	G := PARSEJSON(RGBW.GetStatus, "$.rgb[1]", true);
+	B := PARSEJSON(RGBW.GetStatus, "$.rgb[2]", true);    
+END
+
+response := SENDHTTPREQUEST("/rpc/RGBW.GetConfig?id=" + ID);
+IF response.IsSuccess
+    RGBW.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(RGBW.GetStatus, "errors", true))
+    adderror("Error: " + parsejson(RGBW.GetStatus, "errors"));
+end
+
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"ID","ValueTypeId":1,"NumericValue":0},{"Name":"RGBW.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"RGBW.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"R","ValueTypeId":0,"NumericValue":0},{"Name":"G","ValueTypeId":0,"NumericValue":0},{"Name":"B","ValueTypeId":0,"NumericValue":0}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${device_variable_realtemperature} [\u00B0C]"},"ReadFormula":"parsejson(RGBW.GetStatus, \u0022$.temperature.tC\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricityconsumption} [Wh]"},"ReadFormula":"parsejson(RGBW.GetStatus, \u0022$.aenergy.total\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricitydemand} [W]"},"ReadFormula":"parsejson(RGBW.GetStatus, \u0022$.apower\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricVoltage} [V]"},"ReadFormula":"parsejson(RGBW.GetStatus, \u0022$.voltage\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricCurrent} [A]"},"ReadFormula":"parsejson(RGBW.GetStatus, \u0022$.current\u0022, true)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadHueScriptPacketParser>VAR HSVColor := RGBTOHSV(R, G, B);
+ROUND(HSVColor.Hue);
+</ReadHueScriptPacketParser>
+            <ReadSaturationScriptPacketParser>VAR HSVColor := RGBTOHSV(R, G, B);
+ROUND(HSVColor.Saturation * 100.0) / 100.0;</ReadSaturationScriptPacketParser>
+            <ReadBrightnessScriptPacketParser>bool output := PARSEJSON(RGBW.GetStatus, "$.output", true);
+var brightness := PARSEJSON(RGBW.GetStatus, "$.brightness", true);
+var white := PARSEJSON(RGBW.GetStatus, "$.white", true);
+
+if output
+	if white != 0
+		return(linear(white, 0, 0, 255, 1));
+	else
+    	return(brightness / 100);
+    end
+else
+    return(0);
+end</ReadBrightnessScriptPacketParser>
+            <ReadCCTScriptPacketParser>var white := PARSEJSON(RGBW.GetStatus, "$.white", true);
+if white != 0 or !isnan(Ct)
+	return(4500);
+else
+	return(NaN);
+end</ReadCCTScriptPacketParser>
+            <WriteHueScriptPacketParser>VAR color := HSVTORGB(Hd, Sa, 1);
+SENDHTTPREQUEST("/rpc/RGBW.Set?id=" + ID + "&amp;rgb=[" + color.RED + "," + color.GREEN + "," + color.BLUE + "]");
+</WriteHueScriptPacketParser>
+            <WriteSaturationScriptPacketParser>VAR color := HSVTORGB(Hd, Sa, 1);
+SENDHTTPREQUEST("/rpc/RGBW.Set?id=" + ID + "&amp;rgb=[" + color.RED + "," + color.GREEN + "," + color.BLUE + "]");
+</WriteSaturationScriptPacketParser>
+            <WriteBrightnessScriptPacketParser>if isnan(Ct)
+	SENDHTTPREQUEST("/rpc/RGBW.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;white=0&amp;brightness=" + round(Hb*100.0));
+else
+	SENDHTTPREQUEST("/rpc/RGBW.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;brightness=0&amp;white=" + round(linear(Hb, 0, 0, 1, 255)));
+end
+</WriteBrightnessScriptPacketParser>
+            <WriteCCTScriptPacketParser>IF !isnan(Ct)
+	SENDHTTPREQUEST("/rpc/RGBW.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;brightness=0&amp;white=" + round(linear(Hb, 0, 0, 1, 255)));
+end</WriteCCTScriptPacketParser>
+            <IconId>0</IconId>
+            <MinColorTemperature>4500</MinColorTemperature>
+            <MaxColorTemperature>4500</MaxColorTemperature>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${lightDimmableLED} (O1)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>2016</DeviceType>
+            <ReadScriptPacketParser>if PARSEJSON(Sys.GetConfig, "$.device.profile") != "light"
+	adderror("Profile is not set to light (" + PARSEJSON(Sys.GetConfig, "$.device.profile") + ")");
+end
+
+VAR response := SENDHTTPREQUEST("/rpc/Light.GetStatus?id=" + ID);
+IF response.IsSuccess
+    Light.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Light.GetConfig?id=" + ID);
+IF response.IsSuccess
+    Light.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(Light.GetStatus, "errors", true))
+    adderror("Error: " + parsejson(Light.GetStatus, "errors"));
+end
+
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"ID","ValueTypeId":1,"NumericValue":1},{"Name":"Light.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"Light.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${device_variable_realtemperature} [\u00B0C]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.temperature.tC\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricityconsumption} [Wh]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.aenergy.total\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricitydemand} [W]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.apower\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricVoltage} [V]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.voltage\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricCurrent} [A]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.current\u0022, true)"},{"AttributeDefinition":{"Name":"Flags"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.flags\u0022, true)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${detail_deviceSettings_TemperatureSensor_categoryCalibration}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Light.Calibrate?id=\u0022 \u002B ID);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>bool output := PARSEJSON(Light.GetStatus, "$.output");
+var brightness := PARSEJSON(Light.GetStatus, "$.brightness");
+
+if output
+    return(brightness / 100);
+else
+    return(0);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>SENDHTTPREQUEST("/rpc/Light.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;brightness=" + round(Le*100.0));</WriteLevelScriptPacketParser>
+            <IconId>3001</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${lightDimmableLED} (O1)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>2016</DeviceType>
+            <ReadScriptPacketParser>if PARSEJSON(Sys.GetConfig, "$.device.profile") != "light"
+	adderror("Profile is not set to light (" + PARSEJSON(Sys.GetConfig, "$.device.profile") + ")");
+end
+
+VAR response := SENDHTTPREQUEST("/rpc/Light.GetStatus?id=" + ID);
+IF response.IsSuccess
+    Light.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Light.GetConfig?id=" + ID);
+IF response.IsSuccess
+    Light.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(Light.GetStatus, "errors", true))
+    adderror("Error: " + parsejson(Light.GetStatus, "errors"));
+end
+
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"ID","ValueTypeId":1,"NumericValue":0},{"Name":"Light.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"Light.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${device_variable_realtemperature} [\u00B0C]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.temperature.tC\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricityconsumption} [Wh]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.aenergy.total\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricitydemand} [W]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.apower\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricVoltage} [V]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.voltage\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricCurrent} [A]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.current\u0022, true)"},{"AttributeDefinition":{"Name":"Flags"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.flags\u0022, true)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${detail_deviceSettings_TemperatureSensor_categoryCalibration}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Light.Calibrate?id=\u0022 \u002B ID);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>bool output := PARSEJSON(Light.GetStatus, "$.output");
+var brightness := PARSEJSON(Light.GetStatus, "$.brightness");
+
+if output
+    return(brightness / 100);
+else
+    return(0);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>SENDHTTPREQUEST("/rpc/Light.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;brightness=" + round(Le*100.0));</WriteLevelScriptPacketParser>
+            <IconId>3001</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${lightDimmableLED} (O3)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>2016</DeviceType>
+            <ReadScriptPacketParser>if PARSEJSON(Sys.GetConfig, "$.device.profile") != "light"
+	adderror("Profile is not set to light (" + PARSEJSON(Sys.GetConfig, "$.device.profile") + ")");
+end
+
+VAR response := SENDHTTPREQUEST("/rpc/Light.GetStatus?id=" + ID);
+IF response.IsSuccess
+    Light.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Light.GetConfig?id=" + ID);
+IF response.IsSuccess
+    Light.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(Light.GetStatus, "errors", true))
+    adderror("Error: " + parsejson(Light.GetStatus, "errors"));
+end
+
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"ID","ValueTypeId":1,"NumericValue":2},{"Name":"Light.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"Light.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${device_variable_realtemperature} [\u00B0C]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.temperature.tC\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricityconsumption} [Wh]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.aenergy.total\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricitydemand} [W]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.apower\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricVoltage} [V]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.voltage\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricCurrent} [A]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.current\u0022, true)"},{"AttributeDefinition":{"Name":"Flags"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.flags\u0022, true)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${detail_deviceSettings_TemperatureSensor_categoryCalibration}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Light.Calibrate?id=\u0022 \u002B ID);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>bool output := PARSEJSON(Light.GetStatus, "$.output");
+var brightness := PARSEJSON(Light.GetStatus, "$.brightness");
+
+if output
+    return(brightness / 100);
+else
+    return(0);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>SENDHTTPREQUEST("/rpc/Light.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;brightness=" + round(Le*100.0));</WriteLevelScriptPacketParser>
+            <IconId>3001</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${lightDimmableLED} (O4)</Name>
+          <Model>PacketParserDimmer</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>2016</DeviceType>
+            <ReadScriptPacketParser>if PARSEJSON(Sys.GetConfig, "$.device.profile") != "light"
+	adderror("Profile is not set to light (" + PARSEJSON(Sys.GetConfig, "$.device.profile") + ")");
+end
+
+VAR response := SENDHTTPREQUEST("/rpc/Light.GetStatus?id=" + ID);
+IF response.IsSuccess
+    Light.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Light.GetConfig?id=" + ID);
+IF response.IsSuccess
+    Light.GetConfig := response.Content;
+END
+
+if ! ISNULL(parsejson(Light.GetStatus, "errors", true))
+    adderror("Error: " + parsejson(Light.GetStatus, "errors"));
+end
+
+</ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables>[{"Name":"ID","ValueTypeId":1,"NumericValue":3},{"Name":"Light.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"Light.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${device_variable_realtemperature} [\u00B0C]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.temperature.tC\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricityconsumption} [Wh]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.aenergy.total\u0022, true)"},{"AttributeDefinition":{"Name":"${device_variable_electricitydemand} [W]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.apower\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricVoltage} [V]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.voltage\u0022, true)"},{"AttributeDefinition":{"Name":"${valueLogType_ElectricCurrent} [A]"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.current\u0022, true)"},{"AttributeDefinition":{"Name":"Flags"},"ReadFormula":"parsejson(Light.GetStatus, \u0022$.flags\u0022, true)"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${detail_deviceSettings_TemperatureSensor_categoryCalibration}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Light.Calibrate?id=\u0022 \u002B ID);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n"}]</ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadLevelScriptPacketParser>bool output := PARSEJSON(Light.GetStatus, "$.output");
+var brightness := PARSEJSON(Light.GetStatus, "$.brightness");
+
+if output
+    return(brightness / 100);
+else
+    return(0);
+end</ReadLevelScriptPacketParser>
+            <WriteLevelScriptPacketParser>SENDHTTPREQUEST("/rpc/Light.Set?id=" + ID + "&amp;on=" + if(St, "true", "false") + "&amp;brightness=" + round(Le*100.0));</WriteLevelScriptPacketParser>
+            <IconId>3001</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
