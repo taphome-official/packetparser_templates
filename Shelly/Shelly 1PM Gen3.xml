@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="83">
+  <Template revision="1.0" id="087db76b-ab03-4a2a-98fe-95433a1126ae">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly 1PM Gen3</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer>Shelly</Producer>
+    <Model>Shelly 1PM Gen3</Model>
+    <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>  
+    <Module>
+      <Name>Shelly 1PM Gen3</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Sys.GetStatus");
+IF response.IsSuccess
+    Sys.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Sys.GetConfig");
+IF response.IsSuccess
+    Sys.GetConfig := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/WiFi.GetStatus");
+IF response.IsSuccess
+    WiFi.GetStatus := response.Content;
+END
+
+if ! ISNULL(parsejson(Sys.GetStatus, "available_updates.stable", true))
+    addwarning("New firmware update is available");
+end
+
+if parsejson(Sys.GetStatus, "restart_required", true)
+    addwarning("Restart required");
+end
+</ReadScriptPacketParser>
+        <InternalPollInterval>3000</InternalPollInterval>
+        <CustomVariables>[{"Name":"Sys.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"Sys.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"WiFi.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022ssid\u0022)"},{"AttributeDefinition":{"Name":"${ipAddress}"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022sta_ip\u0022)"},{"AttributeDefinition":{"Name":"${xml_signal_strength} [dB]"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022rssi\u0022)"},{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(Sys.GetStatus, \u0022mac\u0022)"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${xml_update_fw}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Update?stage=\\\u0022stable\\\u0022\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n\r\n"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Reboot\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${digital_output}</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>var x := (sendhttprequest("/rpc/Switch.GetStatus?id=0"));
+var status := x.Content;
+return(PARSEJSON(status, "$.output", true));
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("rpc/Switch.Set?id=0&amp;on=" + if(St,"true","false"));
+IF response.IsSuccess = false
+  ADDERROR(response.StatusCode);
+END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceElectricityMeter}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Switch.GetStatus?id=0");
+IF response.IsSuccess
+    Switch.GetStatus := response.Content;
+END</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[{"Name":"Switch.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${electric_current} [A]"},"ReadFormula":"return(parsejson(Switch.GetStatus,\u0022current\u0022));\r\n"},{"AttributeDefinition":{"Name":"${electric_voltage} [V]"},"ReadFormula":"return(parsejson(Switch.GetStatus,\u0022voltage\u0022));"},{"AttributeDefinition":{"Name":"${temperature} [\u00B0C]"},"ReadFormula":"return(parsejson(parsejson(Switch.GetStatus,\u0022temperature\u0022), \u0022tC\u0022));"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(parsejson(Switch.GetStatus,"aenergy"), "total")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(Switch.GetStatus,"apower")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
