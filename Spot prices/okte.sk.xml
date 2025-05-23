@@ -4,6 +4,7 @@
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="2.0">Refactor with sorts</Revision>
     </RevisionHistory>
     <Name>okte.sk</Name>
     <CcuModel>PacketParserCCU</CcuModel>
@@ -23,20 +24,20 @@ ELSE
     ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
 END</ReadScriptPacketParser>
         <InternalPollInterval>3600000</InternalPollInterval>
-        <CustomVariables>[{"Name":"output","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
-        <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+        <CustomVariables>[{"Name":"output","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"From","ValueTypeId":1,"NumericValue":9},{"Name":"To","ValueTypeId":1,"NumericValue":17}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Peri\u00F3da 1"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 1)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Atrib\u00FAt"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 2)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 3"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 3)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 4"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 4)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 5"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 5)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 6"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 6)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 7"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 7)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 8"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 8)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 9"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 9)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 10"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 10)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 11"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 11)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 12"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 12)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 13"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 13)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 14"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 14)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 15"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 15)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 16"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 16)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 17"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 17)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 18"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 18)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 19"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 19)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 20"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 20)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 21"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 21)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 22"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 22)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 23"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 23)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 24"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 24)].price\u0022) \u002B \u0022 EUR\u0022"}]</ServiceAttributesScriptsPacketParser>
         <IpAddress>isot.okte.sk</IpAddress>
         <Port>443</Port>
         <UseHttps>True</UseHttps>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Perioda 1</Name>
+          <Name>Aktuálna hodina - poradie</Name>
           <Model>PacketParserVariable</Model>
           <Id>-2</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -44,17 +45,22 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 1)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+var byPrice := ORDERINDEX(prices);
+VAR date := NOW();
+INDEXOF(byPrice, date.hour) +1
+</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 2</Name>
+        <Device>
+          <Name>Aktuálna hodina - poradie v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-3</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -62,89 +68,124 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 2)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF date.hour &lt; From or date.hour &gt; To or From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$..price");
+	var windowPrices := COPY(prices, From, To - From);
+	var byPrice := ORDERINDEX(windowPrices);
+
+	RETURN(INDEXOF(byPrice, date.hour - From) +1);
+END
+</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 3</Name>
+        <Device>
+          <Name>Najdrahšia cena dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-4</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 3)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+GETAT(ORDERDESC(prices), 0)</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 4</Name>
+        <Device>
+          <Name>Najdrahšia cena v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-5</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 4)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$..price");
+	var windowPrices := COPY(prices, From, To - From);
+	var byPrice := ORDERDESC(windowPrices);
+
+	RETURN(GETAT(byPrice, 0));
+END</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 5</Name>
+        <Device>
+          <Name>Najlacnejšia cena dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-6</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 5)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+GETAT(ORDER(prices), 0)</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 6</Name>
+        <Device>
+          <Name>Najlacnejšia cena v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-7</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 6)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$..price");
+	var windowPrices := COPY(prices, From, To - From);
+	var byPrice := ORDER(windowPrices);
+
+	RETURN(GETAT(byPrice, 0));
+END</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 7</Name>
+        <Device>
+          <Name>Najlacnejšia hodina dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-8</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -152,17 +193,19 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 7)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+GETAT(ORDERINDEX(prices), 0) +1</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 8</Name>
+        <Device>
+          <Name>Najlacnejšia zostávajúca hodina</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-9</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
             <CustomVariables></CustomVariables>
@@ -170,296 +213,62 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 8)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+VAR date := NOW();
+var remainingPrices := COPY(prices, date.hour, 24 - date.hour);
+var byPrice := ORDERINDEX(remainingPrices);
+
+GETAT(byPrice, 0) + date.hour +1
+</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 9</Name>
+        <Device>
+          <Name>Priemerná cena dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-10</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 9)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+AVG(prices)</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
-﻿        <Device>
-          <Name>Perioda 10</Name>
+        <Device>
+          <Name>Priemerná cena v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
+          <Id>-11</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 10)].price")</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$..price");
+	var windowPrices := COPY(prices, From, To - From);
+
+	RETURN(AVG(windowPrices));
+END</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 11</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 11)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 12</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 12)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 13</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 13)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 14</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 14)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 15</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 15)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 16</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 16)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 17</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 17)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 18</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 18)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 19</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 19)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 20</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 20)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 21</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 21)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 22</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 22)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 23</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 23)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-          </DeviceProperties>
-        </Device>
-﻿        <Device>
-          <Name>Perioda 24</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-2</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(output, "$[?(@.period == 24)].price")</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
       </Devices>
