@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="84">
+<Templates format="2" protocolVersion="87">
   <Template revision="1.0" id="37f6a1c4-8698-4a3d-85ee-81891b0dcb2f">
     <SuggestedCCUParameters />
     <RevisionHistory>
@@ -34,7 +34,7 @@
       <DeviceProperties>
         <ReadScriptPacketParser>VAR request := HTTPREQUEST(
 	"/api/v1/free/point?lat=" + lat + "&amp;lon=" + lon + "&amp;sections=current,daily&amp;timezone=" + tz + "&amp;language=en&amp;units=ca&amp;key=" + apiKey,
-	"GET"
+	"GET" 
 );
 VAR response := SENDHTTPREQUEST(request);
 VAR responseHeaders := response.Headers;
@@ -54,9 +54,9 @@ END</ReadScriptPacketParser>
           <Model>PacketParserMultiValueSwitch</Model>
           <Id>-2</Id>
           <DeviceProperties>
-            <DeviceType>0</DeviceType>
+            <DeviceType>6103</DeviceType>
             <ReadScriptPacketParser />
-            <InternalPollInterval>60000</InternalPollInterval>
+            <InternalPollInterval>1800000</InternalPollInterval>
             <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
@@ -71,40 +71,40 @@ END</ReadScriptPacketParser>
             <Value7Index>71</Value7Index>
             <Value8Index>72</Value8Index>
             <Value9Index>73</Value9Index>
-            <Value0Name>Slnečno </Value0Name>
-            <Value1Name>Oblačno/Iné</Value1Name>
-            <Value2Name>Dážď</Value2Name>
-            <Value3Name>Mrholenie</Value3Name>
-            <Value4Name>Sneženie</Value4Name>
-            <Value5Name>Búrka</Value5Name>
-            <Value6Name>Hmla</Value6Name>
-            <Value7Name>7</Value7Name>
-            <Value8Name>8</Value8Name>
-            <Value9Name>9</Value9Name>
+            <Value0Name>${weather_clear}</Value0Name>
+            <Value1Name>${weather_clouds}</Value1Name>
+            <Value2Name>${weather_rain}</Value2Name>
+            <Value3Name>${weather_drizzle}</Value3Name>
+            <Value4Name>${weather_thunderstorm}</Value4Name>
+            <Value5Name>${weather_snow}</Value5Name>
+            <Value6Name>${weather_fog}</Value6Name>
+            <Value7Name></Value7Name>
+            <Value8Name></Value8Name>
+            <Value9Name></Value9Name>
             <Value0IconId>234</Value0IconId>
             <Value1IconId>235</Value1IconId>
             <Value2IconId>238</Value2IconId>
             <Value3IconId>236</Value3IconId>
-            <Value4IconId>237</Value4IconId>
-            <Value5IconId>239</Value5IconId>
+            <Value4IconId>239</Value4IconId>
+            <Value5IconId>237</Value5IconId>
             <Value6IconId>240</Value6IconId>
-            <Value7IconId>12</Value7IconId>
-            <Value8IconId>13</Value8IconId>
-            <Value9IconId>14</Value9IconId>
-            <OffStateValue>-1</OffStateValue>
+            <Value7IconId>0</Value7IconId>
+            <Value8IconId>0</Value8IconId>
+            <Value9IconId>0</Value9IconId>
+            <OffStateValue>0</OffStateValue>
             <ReadSwitchStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error")
     return(NaN);
-END
+END 
 
 VAR weather := PARSEJSON(responseJson, "current.icon_num");
 SWITCH(weather, 
 2, 0, 3, 0, 4, 0,26,0, 27,0,28,0,
-5, 1, 6, 1, 7, 1, 8,1,29,1,30,1,31,1, 
+5, 0, 6, 1, 7, 1, 8,1,29,1,30,1,31,1, 
 	11,2,12,2,13,2,25,2,32,2,34,2,35,2,36,2,
 10,3,
-	16,4,17,4,18,4,19,4,20,4,21,4,22,4,23,4,24,4,
-14,5,15,5,33,5,
-9,6,
+	16,5,17,5,18,5,19,5,20,5,21,5,22,5,23,5,24,5,
+14,4,15,4,33,4,
+9,6, 
 1);</ReadSwitchStateScriptPacketParser>
             <WriteSwitchStateScriptPacketParser></WriteSwitchStateScriptPacketParser>
           </DeviceProperties>
@@ -130,6 +130,7 @@ SWITCH(weather,
 		"current.wind.speed"))
 );</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
@@ -153,6 +154,7 @@ SWITCH(weather,
 		"current.wind.angle"))
 )</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
@@ -186,6 +188,7 @@ SWITCH(weather,
             <IsReadOnly>True</IsReadOnly>
             <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, TODOUBLE(PARSEJSON(responseJson,"daily.data[0].all_day.temperature_max")))</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
@@ -204,6 +207,7 @@ SWITCH(weather,
             <IsReadOnly>True</IsReadOnly>
             <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, TODOUBLE(PARSEJSON(responseJson,"daily.data[0].all_day.temperature_min")))</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
@@ -222,6 +226,7 @@ SWITCH(weather,
             <IsReadOnly>True</IsReadOnly>
             <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, TODOUBLE(PARSEJSON(responseJson,"current.precipitation.total")))</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
@@ -240,6 +245,7 @@ SWITCH(weather,
             <IsReadOnly>True</IsReadOnly>
             <ReadStateScriptPacketParser>IF(ISNULL(responseJson) | responseJson = "error", NaN, TODOUBLE(PARSEJSON(responseJson,"daily.data[0].all_day.precipitation.total")))</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
       </Devices>
