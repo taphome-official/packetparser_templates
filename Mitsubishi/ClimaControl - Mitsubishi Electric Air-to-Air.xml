@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="87">
+  <Template revision="1.0" id="a3a82971-90ad-42c7-8702-34375553ba6e">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>     
+    <Name>ClimaControl - Mitsubishi Electric Air-to-Air</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description>https://clima.protoart.net/shop/climacontrol-mitsubishi-electric-airtoair/?v=41d6ad0761a5</Description>
+    <Module>
+      <Name>ClimaControl - Mitsubishi Electric Air-to-Air</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/control");
+IF response.IsSuccess
+ status := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+ RETURN(NaN);
+END</ReadScriptPacketParser>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"status","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"Reset","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/control?cmd=restart\u0022);\r\nIF response.IsSuccess = false\r\n RETURN(\u0022Error\u0022);\r\nELSE\r\n RETURN(\u0022OK\u0022);\r\nEND"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Fan Speed</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>Quiet</Value0Name>
+            <Value1Name>1</Value1Name>
+            <Value2Name>2</Value2Name>
+            <Value3Name>3</Value3Name>
+            <Value4Name>4</Value4Name>
+            <Value5Name>${device_mode_Automatic}</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>16</Value0IconId>
+            <Value1IconId>25</Value1IconId>
+            <Value2IconId>26</Value2IconId>
+            <Value3IconId>27</Value3IconId>
+            <Value4IconId>28</Value4IconId>
+            <Value5IconId>117</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>switch(parsejson(status, "heatpump.fan"),
+"quiet", 0, "1", 1, "2", 2, "3", 3, "4", 4, "auto", 5, NaN)</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>IF (!ISNAN(Mu))
+	VAR response := SENDHTTPREQUEST("/control?cmd=heatpump&amp;fan=" + switch(Mu,
+	0, "quiet", 1, "1", 2, "2", 3, "3", 4, "4", 5, "auto", ""));
+	IF response.IsSuccess = false
+	 ADDERROR(response.StatusCode);
+	END
+END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${category_switch}</Name>
+          <Model>PacketParserSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>60</OnStateIconId>
+            <OffStateIconId>61</OffStateIconId>
+            <OnStateName>${general_on}</OnStateName>
+            <OffStateName>${general_off}</OffStateName>
+            <ReadSwitchStateScriptPacketParser>switch(parsejson(status, "heatpump.power"),
+"off", 0, "on", 1, NaN)
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/control?cmd=heatpump&amp;power=" + St);
+IF response.IsSuccess = false
+ ADDERROR(response.StatusCode);
+END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Remote Temperature</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>True</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser>IF (!(ISNAN(Va) or Va &lt;= 0))
+	VAR response := SENDHTTPREQUEST("/control?cmd=heatpump&amp;remote_temperature=" + Va);
+	IF response.IsSuccess = false
+	 ADDERROR(response.StatusCode);
+	END
+END</WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${general_mode}</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>${device_mode_Automatic}</Value0Name>
+            <Value1Name>${device_mode_Cooling}</Value1Name>
+            <Value2Name>${category_ventilation}</Value2Name>
+            <Value3Name>Dry</Value3Name>
+            <Value4Name>${device_mode_Heating}</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>117</Value0IconId>
+            <Value1IconId>2</Value1IconId>
+            <Value2IconId>28</Value2IconId>
+            <Value3IconId>123</Value3IconId>
+            <Value4IconId>1</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>switch(parsejson(status, "heatpump.mode"),
+"auto", 0, "cool", 1, "fan", 2, "dry", 3, "heat", 4, NaN)
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>IF (!ISNAN(Mu))
+	VAR response := SENDHTTPREQUEST("/control?cmd=heatpump&amp;mode=" + switch(Mu,
+	0, "auto", 1, "cool", 2, "fan", 3, "dry", 4, "heat", ""));
+	IF response.IsSuccess = false
+	 ADDERROR(response.StatusCode);
+	END
+END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceThermostat}</Name>
+          <Model>PacketParserThermostat</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <MinTemperature>16</MinTemperature>
+            <MaxTemperature>30</MaxTemperature>
+            <ReadCurrentTemperatureScriptPacketParser>parsejson(status, "heatpump.actual_temperature")</ReadCurrentTemperatureScriptPacketParser>
+            <ReadTemperatureSetPointScriptPacketParser>parsejson(status, "heatpump.set_temperature")</ReadTemperatureSetPointScriptPacketParser>
+            <ReadHumidityScriptPacketParser></ReadHumidityScriptPacketParser>
+            <WriteTemperatureSetPointScriptPacketParser>VAR response := SENDHTTPREQUEST("/control?cmd=heatpump&amp;set_temperature=" + Se);
+IF response.IsSuccess = false
+ ADDERROR(response.StatusCode);
+END
+</WriteTemperatureSetPointScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Vane position</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>64</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>--</Value0Name>
+            <Value1Name>1</Value1Name>
+            <Value2Name>2</Value2Name>
+            <Value3Name>3</Value3Name>
+            <Value4Name>4</Value4Name>
+            <Value5Name>${device_mode_Automatic}</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>141</Value0IconId>
+            <Value1IconId>132</Value1IconId>
+            <Value2IconId>133</Value2IconId>
+            <Value3IconId>135</Value3IconId>
+            <Value4IconId>137</Value4IconId>
+            <Value5IconId>140</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>switch(parsejson(status, "heatpump.vane"),
+"1", 1, "2", 2, "3", 3, "4", 4, "auto", 5, NaN)</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>IF (!ISNAN(Mu))
+	VAR response := SENDHTTPREQUEST("/control?cmd=heatpump&amp;vane=" + switch(Mu,
+	1, "1", 2, "2", 3, "3", 4, "4", 5, "auto", ""));
+	IF response.IsSuccess = false
+	 ADDERROR(response.StatusCode);
+	END
+END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Widevane Position</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>farleft</Value0Name>
+            <Value1Name>left</Value1Name>
+            <Value2Name>middle</Value2Name>
+            <Value3Name>right</Value3Name>
+            <Value4Name>farright</Value4Name>
+            <Value5Name>wide</Value5Name>
+            <Value6Name>swing</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>125</Value0IconId>
+            <Value1IconId>126</Value1IconId>
+            <Value2IconId>127</Value2IconId>
+            <Value3IconId>129</Value3IconId>
+            <Value4IconId>130</Value4IconId>
+            <Value5IconId>181</Value5IconId>
+            <Value6IconId>138</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>0</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>switch(parsejson(status, "heatpump.widevane"),
+"farleft", 0, "left", 1, "middle", 2, "right", 3, "farright", 4, "wide", 5, "swing", 6, NaN)
+
+</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser>IF (!ISNAN(Mu))
+	VAR response := SENDHTTPREQUEST("/control?cmd=heatpump&amp;widevane=" + switch(Mu,
+	0, "farleft", 1, "left", 2, "middle", 3, "right", 4, "farright", 5, "wide", 6, "swing", ""));
+	IF response.IsSuccess = false
+	 ADDERROR(response.StatusCode);
+	END
+END
+</WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
