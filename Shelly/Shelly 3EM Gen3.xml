@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="80">
+  <Template revision="1.0" id="e8f60d19-9c7d-4692-a4df-5bf47d4a48c0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly 3EM Gen3</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+      <ImportParameters>
+      <Parameter>
+        <Name>${ipAddress}</Name>	
+        <Value>192.168.0.1</Value>
+        <Id>IpAddress</Id>
+      </Parameter>
+    </ImportParameters>    
+    <Module>
+      <Name>Shelly 3EM Gen3</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/rpc/Sys.GetStatus");
+IF response.IsSuccess
+    Sys.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/Sys.GetConfig");
+IF response.IsSuccess
+    Sys.GetConfig := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/WiFi.GetStatus");
+IF response.IsSuccess
+    WiFi.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/EM.GetStatus?id=0");
+IF response.IsSuccess
+    EM.GetStatus := response.Content;
+END
+
+response := SENDHTTPREQUEST("/rpc/EMData.GetStatus?id=0");
+IF response.IsSuccess
+    EMData.GetStatus := response.Content;
+END
+
+if ! ISNULL(parsejson(Sys.GetStatus, "available_updates.stable", true))
+    addwarning("New firmware update is available");
+end
+
+if parsejson(Sys.GetStatus, "restart_required", true)
+    addwarning("Restart required");
+end
+</ReadScriptPacketParser>
+        <InternalPollInterval>3000</InternalPollInterval>
+        <CustomVariables>[{"Name":"Sys.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"Sys.GetConfig","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"WiFi.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"EM.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"EMData.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Wifi"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022ssid\u0022)"},{"AttributeDefinition":{"Name":"${ipAddress}"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022sta_ip\u0022)"},{"AttributeDefinition":{"Name":"${xml_signal_strength} [dB]"},"ReadFormula":"PARSEJSON(WiFi.GetStatus, \u0022rssi\u0022)"},{"AttributeDefinition":{"Name":"MAC"},"ReadFormula":"PARSEJSON(Sys.GetStatus, \u0022mac\u0022)"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceActionsScriptsPacketParser>[{"ActionDefinition":{"Name":"${xml_update_fw}","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Update?stage=\\\u0022stable\\\u0022\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND\r\n\r\n"},{"ActionDefinition":{"Name":"Reboot","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"VAR response := SENDHTTPREQUEST(\u0022/rpc/Shelly.Reboot\u0022);\r\nIF response.IsSuccess\r\n    return(\u0022OK\u0022);\r\nelse\r\n    return(\u0022Error\u0022);\r\nEND"}]</ServiceActionsScriptsPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${total_energy}</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>5000</InternalPollInterval>
+            <CustomVariables>[{"Name":"EM.GetStatus","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${electric_current} [A]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022total_current\u0022));\r\n"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser>[]</ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(EMData.GetStatus,"total_act")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(EM.GetStatus,"total_act_power")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceElectricityMeter} A</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${electric_current} [A]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022a_current\u0022));\r\n"},{"AttributeDefinition":{"Name":"${electric_voltage} [V]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022a_voltage\u0022));"},{"AttributeDefinition":{"Name":"${power_factor}"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022a_pf\u0022));"},{"AttributeDefinition":{"Name":"${grid_frequency} [Hz]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022a_freq\u0022));"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(EMData.GetStatus,"a_total_act_energy")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(EM.GetStatus,"a_act_power")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceElectricityMeter} B</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${electric_current} [A]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022b_current\u0022));\r\n"},{"AttributeDefinition":{"Name":"${electric_voltage} [V]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022b_voltage\u0022));"},{"AttributeDefinition":{"Name":"${power_factor}"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022b_pf\u0022));"},{"AttributeDefinition":{"Name":"${grid_frequency} [Hz]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022b_freq\u0022));"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(EMData.GetStatus,"b_total_act_energy")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(EM.GetStatus,"b_act_power")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${dashboard_deviceElectricityMeter} C</Name>
+          <Model>PacketParserElectricityMeter</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"${electric_current} [A]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022c_current\u0022));\r\n"},{"AttributeDefinition":{"Name":"${electric_voltage} [V]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022c_voltage\u0022));"},{"AttributeDefinition":{"Name":"${power_factor}"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022c_pf\u0022));"},{"AttributeDefinition":{"Name":"${grid_frequency} [Hz]"},"ReadFormula":"return(parsejson(EM.GetStatus,\u0022c_freq\u0022));"}]</ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ReadTotalConsumptionScriptPacketParser>return(parsejson(EMData.GetStatus,"c_total_act_energy")/1000);</ReadTotalConsumptionScriptPacketParser>
+            <ReadDemandScriptPacketParser>return(parsejson(EM.GetStatus,"c_act_power")/1000);
+</ReadDemandScriptPacketParser>
+          </DeviceProperties>
+        </Device>        
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
