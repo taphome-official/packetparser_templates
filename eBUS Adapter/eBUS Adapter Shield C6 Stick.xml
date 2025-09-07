@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="88" locationId="fa823050-af1b-4a61-97f6-9430f39339c6">
+    <Template revision="1.0">
+        <SuggestedCCUParameters />
+        <RevisionHistory>
+            <Revision id="1.0">Initial version</Revision>
+        </RevisionHistory>
+        <Name>eBUS Adapter Shield C6 Stick</Name>
+        <CcuModel>PacketParserCCU</CcuModel>
+        <Producer></Producer>
+        <Model></Model>
+        <Description></Description>
+        <Module>
+            <Name>eBUS Adapter Shield C6 Stick</Name>
+            <Id>-1</Id>
+            <Model>PacketParserModuleMqtt</Model>
+            <DeviceProperties>
+                <InternalPollInterval>5000</InternalPollInterval>
+                <CustomVariables>[{"Name":"TOPIC","ValueTypeId":2,"NumericValue":0,"StringValue":"0"},{"Name":"PAYLOAD","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
+                <ServiceAttributesScriptsPacketParser>[]</ServiceAttributesScriptsPacketParser>
+                <ListenerScriptPacketParser># TOPIC := RECEIVEDMSG.TOPIC;
+                    # PAYLOAD := TOSTRING(RECEIVEDMSG.PAYLOAD);
+                </ListenerScriptPacketParser>
+                <IpAddress>taphome.mqtt.broker.local</IpAddress>
+                <Port>1883</Port>
+                <RootTopic>stick-c6/#</RootTopic>
+            </DeviceProperties>
+            <Devices>
+                <Device>
+                    <Name>ebus</Name>
+                    <Model>PacketParserReedContact</Model>
+                    <Id>-2</Id>
+                    <DeviceProperties>
+                        <DeviceType>0</DeviceType>
+                        <ReadScriptPacketParser></ReadScriptPacketParser>
+                        <InternalPollInterval>2500</InternalPollInterval>
+                        <CustomVariables />
+                        <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+                        <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+                        <ListenerScriptPacketParser>IF RECEIVEDMSG.TOPIC = "stick-c6/signal"
+                            Rc := IF(TOSTRING(RECEIVEDMSG.PAYLOAD) = "true", 1, 0);
+                            END</ListenerScriptPacketParser>
+                        <OnStateIconId>107</OnStateIconId>
+                        <OffStateIconId>108</OffStateIconId>
+                        <OnStateName>Connected</OnStateName>
+                        <OffStateName>Disconnected</OffStateName>
+                        <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+                    </DeviceProperties>
+                </Device>
+                <Device>
+                    <Name>ebusd</Name>
+                    <Model>PacketParserReedContact</Model>
+                    <Id>-3</Id>
+                    <DeviceProperties>
+                        <DeviceType>0</DeviceType>
+                        <ReadScriptPacketParser></ReadScriptPacketParser>
+                        <InternalPollInterval>2500</InternalPollInterval>
+                        <CustomVariables />
+                        <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+                        <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+                        <ListenerScriptPacketParser>IF RECEIVEDMSG.TOPIC = "stick-c6/connected"
+                            Rc := IF(TOSTRING(RECEIVEDMSG.PAYLOAD) = "true", 1, 0);
+                            END</ListenerScriptPacketParser>
+                        <OnStateIconId>107</OnStateIconId>
+                        <OffStateIconId>108</OffStateIconId>
+                        <OnStateName>Connected</OnStateName>
+                        <OffStateName>Disconnected</OffStateName>
+                        <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+                    </DeviceProperties>
+                </Device>
+                <Device>
+                    <Name>${temperatureSensor}</Name>
+                    <Model>PacketParserTemperatureSensor</Model>
+                    <Id>-4</Id>
+                    <DeviceProperties>
+                        <DeviceType>0</DeviceType>
+                        <ReadScriptPacketParser />
+                        <InternalPollInterval>15000</InternalPollInterval>
+                        <CustomVariables>[]</CustomVariables>
+                        <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+                        <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+                        <ListenerScriptPacketParser>IF RECEIVEDMSG.TOPIC = "stick-c6/temp"
+                            Te := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD));
+                            END</ListenerScriptPacketParser>
+                        <ReadTemperatureScriptPacketParser></ReadTemperatureScriptPacketParser>
+                        <ReadHumidityScriptPacketParser></ReadHumidityScriptPacketParser>
+                    </DeviceProperties>
+                </Device>
+                <Device>
+                    <Name>Uptime (h)</Name>
+                    <Model>PacketParserVariable</Model>
+                    <Id>-5</Id>
+                    <DeviceProperties>
+                        <DeviceType>0</DeviceType>
+                        <SerializedValueLogTypeConversions />
+                        <ReadScriptPacketParser></ReadScriptPacketParser>
+                        <InternalPollInterval>15000</InternalPollInterval>
+                        <CustomVariables />
+                        <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+                        <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+                        <ListenerScriptPacketParser>IF RECEIVEDMSG.TOPIC = "stick-c6/uptime"
+                            Va := TODOUBLE(TOSTRING(RECEIVEDMSG.PAYLOAD)) / 60 / 60;
+                            END</ListenerScriptPacketParser>
+                        <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+                        <IsReadOnly>True</IsReadOnly>
+                        <ReadStateScriptPacketParser />
+                        <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+                        <IconId>2027</IconId>
+                    </DeviceProperties>
+                </Device>
+            </Devices>
+        </Module>
+    </Template>
+</Templates>
