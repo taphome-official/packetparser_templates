@@ -67,11 +67,11 @@ end
 if !ISNAN(LastSeenEpoch)
 	DATETIME now := NOW();
 	var secondsSeen := now.UNIXTIME - LastSeenEpoch;
-	if secondsSeen &gt; 24 * 60 * 60
-		if secondsSeen &gt; 12 * 60 * 60
-			ADDWARNING("Device is offline &gt; 12H");
-		else
+	if secondsSeen &gt; 12 * 60 * 60
+		if secondsSeen &gt; 24 * 60 * 60
 			ADDERROR("Device is offline &gt; 24H");
+		else
+			ADDWARNING("Device is offline &gt; 12H");        
 		end
 	end
 end</ListenerScriptPacketParser>
