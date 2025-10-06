@@ -5,6 +5,7 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
       <Revision id="2.0">Refactor with sorts</Revision>
+      <Revision id="2.1">15 min periods</Revision>
     </RevisionHistory>
     <Name>okte.sk</Name>
     <CcuModel>PacketParserCCU</CcuModel>
@@ -25,14 +26,110 @@ ELSE
 END</ReadScriptPacketParser>
         <InternalPollInterval>3600000</InternalPollInterval>
         <CustomVariables>[{"Name":"output","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"From","ValueTypeId":1,"NumericValue":9},{"Name":"To","ValueTypeId":1,"NumericValue":17}]</CustomVariables>
-        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Peri\u00F3da 1"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 1)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Atrib\u00FAt"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 2)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 3"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 3)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 4"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 4)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 5"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 5)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 6"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 6)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 7"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 7)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 8"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 8)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 9"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 9)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 10"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 10)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 11"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 11)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 12"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 12)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 13"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 13)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 14"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 14)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 15"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 15)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 16"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 16)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 17"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 17)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 18"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 18)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 19"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 19)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 20"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 20)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 21"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 21)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 22"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 22)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 23"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 23)].price\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Peri\u00F3da 24"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 24)].price\u0022) \u002B \u0022 EUR\u0022"}]</ServiceAttributesScriptsPacketParser>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Peri\u00F3da 1"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 1)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 2"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 2)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 3"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 3)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 4"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 4)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 5"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 5)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 6"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 6)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 7"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 7)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 8"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 8)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 9"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 9)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 10"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 10)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 11"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 11)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 12"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 12)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 13"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 13)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 14"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 14)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 15"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 15)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 16"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 16)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 17"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 17)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 18"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 18)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 19"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 19)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 20"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 20)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 21"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 21)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 22"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 22)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 23"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 23)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 24"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 24)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 25"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 25)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 26"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 26)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 27"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 27)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 28"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 28)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 29"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 29)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 30"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 30)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 31"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 31)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 32"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 32)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 33"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 33)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 34"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 34)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 35"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 35)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 36"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 36)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 37"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 37)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 38"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 38)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 39"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 39)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 40"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 40)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 41"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 41)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 42"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 42)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 43"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 43)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 44"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 44)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 45"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 45)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 46"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 46)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 47"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 47)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 48"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 48)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 49"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 49)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 50"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 50)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 51"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 51)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 52"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 52)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 53"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 53)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 54"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 54)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 55"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 55)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 56"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 56)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 57"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 57)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 58"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 58)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 59"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 59)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 60"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 60)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 61"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 61)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 62"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 62)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 63"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 63)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 64"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 64)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 65"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 65)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 66"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 66)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 67"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 67)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 68"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 68)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 69"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 69)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 70"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 70)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 71"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 71)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 72"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 72)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 73"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 73)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 74"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 74)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 75"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 75)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 76"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 76)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 77"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 77)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 78"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 78)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 79"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 79)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 80"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 80)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 81"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 81)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 82"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 82)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 83"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 83)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 84"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 84)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 85"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 85)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 86"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 86)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 87"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 87)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 88"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 88)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 89"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 89)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 90"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 90)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 91"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 91)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 92"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 92)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 93"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 93)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 94"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 94)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 95"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 95)].price\u0022) \u002B \u0022 EUR\u0022"}
+,{"AttributeDefinition":{"Name":"Peri\u00F3da 96"},"ReadFormula":"PARSEJSON(output, \u0022$[?(@.period == 96)].price\u0022) \u002B \u0022 EUR\u0022"}
+]</ServiceAttributesScriptsPacketParser>
         <IpAddress>isot.okte.sk</IpAddress>
         <Port>443</Port>
         <UseHttps>True</UseHttps>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Aktuálna hodina - poradie</Name>
+          <Name>Aktuálna perióda - poradie</Name>
           <Model>PacketParserVariable</Model>
           <Id>-2</Id>
           <DeviceProperties>
@@ -48,14 +145,17 @@ END</ReadScriptPacketParser>
             <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
 var byPrice := ORDERINDEX(prices);
 VAR date := NOW();
-INDEXOF(byPrice, date.hour) +1
+var periodHour := LENGTH(prices) / 24;	
+var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+
+INDEXOF(byPrice, actualperiod) + 1
 </ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>394</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Aktuálna hodina - poradie v časovom okne</Name>
+          <Name>Aktuálna perióda - poradie v časovom okne</Name>
           <Model>PacketParserVariable</Model>
           <Id>-3</Id>
           <DeviceProperties>
@@ -67,16 +167,19 @@ INDEXOF(byPrice, date.hour) +1
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>False</IsReadOnly>
+            <IsReadOnly>True</IsReadOnly>
             <ReadStateScriptPacketParser>VAR date := NOW();
 IF date.hour &lt; From or date.hour &gt; To or From &gt;= To
 	RETURN(NaN);
 ELSE
 	var prices := PARSEJSON(output, "$..price");
-	var windowPrices := COPY(prices, From, To - From);
+	var periodHour := LENGTH(prices) / 24;
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
 	var byPrice := ORDERINDEX(windowPrices);
+	
+	var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
 
-	RETURN(INDEXOF(byPrice, date.hour - From) +1);
+	RETURN(INDEXOF(byPrice, actualperiod - From * periodHour) +1);
 END
 </ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
@@ -92,7 +195,7 @@ END
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -112,7 +215,7 @@ GETAT(ORDERDESC(prices), 0)</ReadStateScriptPacketParser>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -122,7 +225,9 @@ IF From &gt;= To
 	RETURN(NaN);
 ELSE
 	var prices := PARSEJSON(output, "$..price");
-	var windowPrices := COPY(prices, From, To - From);
+	var periodHour := LENGTH(prices) / 24;	
+	var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
 	var byPrice := ORDERDESC(windowPrices);
 
 	RETURN(GETAT(byPrice, 0));
@@ -140,7 +245,7 @@ END</ReadStateScriptPacketParser>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -160,7 +265,7 @@ GETAT(ORDER(prices), 0)</ReadStateScriptPacketParser>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -170,7 +275,9 @@ IF From &gt;= To
 	RETURN(NaN);
 ELSE
 	var prices := PARSEJSON(output, "$..price");
-	var windowPrices := COPY(prices, From, To - From);
+	var periodHour := LENGTH(prices) / 24;	
+	#var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
 	var byPrice := ORDER(windowPrices);
 
 	RETURN(GETAT(byPrice, 0));
@@ -180,7 +287,7 @@ END</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Najlacnejšia hodina dňa</Name>
+          <Name>Najlacnejšia perióda dňa</Name>
           <Model>PacketParserVariable</Model>
           <Id>-8</Id>
           <DeviceProperties>
@@ -200,7 +307,7 @@ GETAT(ORDERINDEX(prices), 0) +1</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Najlacnejšia zostávajúca hodina</Name>
+          <Name>Najlacnejšia zostávajúca perióda </Name>
           <Model>PacketParserVariable</Model>
           <Id>-9</Id>
           <DeviceProperties>
@@ -215,25 +322,47 @@ GETAT(ORDERINDEX(prices), 0) +1</ReadStateScriptPacketParser>
             <IsReadOnly>False</IsReadOnly>
             <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
 VAR date := NOW();
-var remainingPrices := COPY(prices, date.hour, 24 - date.hour);
+var periodHour := LENGTH(prices) / 24;	
+var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+var remainingPrices := COPY(prices, actualperiod, LENGTH(prices) - actualperiod);
 var byPrice := ORDERINDEX(remainingPrices);
 
-GETAT(byPrice, 0) + date.hour +1
+GETAT(byPrice, 0) + actualperiod +1
 </ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>394</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>Priemerná cena dňa</Name>
+          <Name>Počet periód</Name>
           <Model>PacketParserVariable</Model>
           <Id>-10</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+LENGTH(prices);</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2027</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Priemerná cena dňa</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-11</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -247,13 +376,13 @@ AVG(prices)</ReadStateScriptPacketParser>
         <Device>
           <Name>Priemerná cena v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-11</Id>
+          <Id>-12</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -263,7 +392,9 @@ IF From &gt;= To
 	RETURN(NaN);
 ELSE
 	var prices := PARSEJSON(output, "$..price");
-	var windowPrices := COPY(prices, From, To - From);
+	var periodHour := LENGTH(prices) / 24;	
+	#var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
 
 	RETURN(AVG(windowPrices));
 END</ReadStateScriptPacketParser>
