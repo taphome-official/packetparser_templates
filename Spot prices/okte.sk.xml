@@ -129,9 +129,34 @@ END</ReadScriptPacketParser>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>Aktuálna perióda - poradie</Name>
+          <Name>Aktuálna cena</Name>
           <Model>PacketParserVariable</Model>
           <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$..price");
+VAR date := NOW();
+var periodHour := LENGTH(prices) / 24;	
+var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+
+GETAT(prices, actualperiod)
+</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Aktuálna perióda - poradie</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-3</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -157,7 +182,7 @@ INDEXOF(byPrice, actualperiod) + 1
         <Device>
           <Name>Aktuálna perióda - poradie v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-3</Id>
+          <Id>-4</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -189,7 +214,7 @@ END
         <Device>
           <Name>Najdrahšia cena dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-4</Id>
+          <Id>-5</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
@@ -209,7 +234,7 @@ GETAT(ORDERDESC(prices), 0)</ReadStateScriptPacketParser>
         <Device>
           <Name>Najdrahšia cena v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-5</Id>
+          <Id>-6</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
@@ -239,7 +264,7 @@ END</ReadStateScriptPacketParser>
         <Device>
           <Name>Najlacnejšia cena dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-6</Id>
+          <Id>-7</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
@@ -259,7 +284,7 @@ GETAT(ORDER(prices), 0)</ReadStateScriptPacketParser>
         <Device>
           <Name>Najlacnejšia cena v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-7</Id>
+          <Id>-8</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
@@ -289,7 +314,7 @@ END</ReadStateScriptPacketParser>
         <Device>
           <Name>Najlacnejšia perióda dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-8</Id>
+          <Id>-9</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -309,7 +334,7 @@ GETAT(ORDERINDEX(prices), 0) +1</ReadStateScriptPacketParser>
         <Device>
           <Name>Najlacnejšia zostávajúca perióda </Name>
           <Model>PacketParserVariable</Model>
-          <Id>-9</Id>
+          <Id>-10</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -336,13 +361,13 @@ GETAT(byPrice, 0) + actualperiod +1
         <Device>
           <Name>Počet periód</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-10</Id>
+          <Id>-11</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
@@ -354,9 +379,37 @@ LENGTH(prices);</ReadStateScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
+          <Name>Počet periód v časovom okne</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$..price");
+	var periodHour := LENGTH(prices) / 24;
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
+
+	RETURN(LENGTH(windowPrices));
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2027</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
           <Name>Priemerná cena dňa</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-11</Id>
+          <Id>-13</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
@@ -376,7 +429,7 @@ AVG(prices)</ReadStateScriptPacketParser>
         <Device>
           <Name>Priemerná cena v časovom okne</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-12</Id>
+          <Id>-14</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
