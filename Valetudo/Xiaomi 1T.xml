@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="80">
+  <Template revision="1.0" id="2ad60748-1185-40a3-9f52-d0870ca1bad1">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Xiaomi 1T (Valetudo)</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>	
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>      
+    <Module>
+      <Name>Xiaomi 1T (Valetudo)</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/v2/robot/state/attributes");
+IF response.IsSuccess
+ state := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END</ReadScriptPacketParser>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"state","ValueTypeId":2,"NumericValue":0,"StringValue":""}]</CustomVariables>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>80</Port>
+        <UseHttps>False</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${deviceType_BatterySOC}</Name>
+          <Model>PacketParserAnalogInput</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>11001</DeviceType>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadInputLevelScriptPacketParser>PARSEJSON(state, "$[?(@.__class == 'BatteryStateAttribute')].level") / 100</ReadInputLevelScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Home</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/v2/robot/capabilities/BasicControlCapability", "PUT", "{\"action\": \"home\"}", "accept: */*", "Content-Type: application/json");
+IF response.IsSuccess
+ var res := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END
+</WriteButtonPressedStateScriptPacketParser>
+            <IconId>37</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Locate</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/v2/robot/capabilities/LocateCapability", "PUT", "{\"action\": \"locate\"}", "accept: */*", "Content-Type: application/json");
+IF response.IsSuccess
+ var res := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END
+</WriteButtonPressedStateScriptPacketParser>
+            <IconId>19</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${general_pause}</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>4004</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/v2/robot/capabilities/BasicControlCapability", "PUT", "{\"action\": \"pause\"}", "accept: */*", "Content-Type: application/json");
+IF response.IsSuccess
+ var res := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END
+</WriteButtonPressedStateScriptPacketParser>
+            <IconId>214</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Start</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/v2/robot/capabilities/BasicControlCapability", "PUT", "{\"action\": \"start\"}", "accept: */*", "Content-Type: application/json");
+IF response.IsSuccess
+ var res := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END
+</WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${adddevice_multivalueswitch}</Name>
+          <Model>PacketParserMultiValueSwitch</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>9</Value9Index>
+            <Value0Name>Docked</Value0Name>
+            <Value1Name>Cleaning</Value1Name>
+            <Value2Name>Returning</Value2Name>
+            <Value3Name>Paused</Value3Name>
+            <Value4Name>Idle</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>???</Value9Name>
+            <Value0IconId>37</Value0IconId>
+            <Value1IconId>185</Value1IconId>
+            <Value2IconId>209</Value2IconId>
+            <Value3IconId>214</Value3IconId>
+            <Value4IconId>215</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>186</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchStateScriptPacketParser>var status := PARSEJSON(state, "$[?(@.__class == 'StatusStateAttribute')].value");
+
+switch(status,
+"docked", 0,
+"cleaning", 1,
+"returning", 2,
+"paused", 3,
+"idle", 4,
+9);</ReadSwitchStateScriptPacketParser>
+            <WriteSwitchStateScriptPacketParser></WriteSwitchStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${stop}</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <DeviceType>4003</DeviceType>
+            <ReadScriptPacketParser />
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser>VAR response := SENDHTTPREQUEST("/api/v2/robot/capabilities/BasicControlCapability", "PUT", "{\"action\": \"stop\"}", "accept: */*", "Content-Type: application/json");
+IF response.IsSuccess
+ var res := response.Content;
+ELSE
+ ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END
+</WriteButtonPressedStateScriptPacketParser>
+            <IconId>215</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
