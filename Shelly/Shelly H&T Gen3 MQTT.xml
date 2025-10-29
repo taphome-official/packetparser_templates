@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="80">
+  <Template revision="1.0" id="38d1da35-9791-44d1-9574-fbbf8bef107a">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Shelly H&amp;T Gen3 MQTT </Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <ImportParameters>
+      <Parameter>
+        <Name>Mqtt Broker ${ipAddress}</Name>	
+        <Value>192.168.0.1</Value>
+        <Id>IpAddress</Id>
+      </Parameter>
+      <Parameter>
+        <Name>Mqtt Broker port</Name>	
+        <Value>1883</Value>
+        <Id>Port</Id>
+      </Parameter>
+      <Parameter>
+        <Name>MQTT ID</Name>	
+        <Value>shellyhtg3-123456789012</Value>
+        <Id>mID</Id>
+      </Parameter>
+    </ImportParameters>    
+    <Module>
+      <Name>Shelly H&amp;T Gen3 MQTT </Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>if !ISNAN(timestamp)
+	DATETIME now := NOW();
+	var secondsSeen := now.UNIXTIME - timestamp;
+	if secondsSeen &gt; 12 * 60 * 60
+		if secondsSeen &gt; 24 * 60 * 60
+			ADDERROR("Device is offline &gt; 24H");
+		else
+			ADDWARNING("Device is offline &gt; 12H");        
+		end
+	end
+end</ReadScriptPacketParser>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <CustomVariables>[{"Name":"BatteryPercentage","ValueTypeId":0,"NumericValue":0},{"Name":"timestamp","ValueTypeId":0,"NumericValue":0}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Battery [%]"},"ReadFormula":"BatteryPercentage"}]</ServiceAttributesScriptsPacketParser>
+        <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "events/rpc") &gt; 0
+	var ts := PARSEJSON(RECEIVEDMSG.Payload, "params.ts", true);
+	if(!ISNULL(ts), timestamp := ts);
+    var bat := PARSEJSON(RECEIVEDMSG.Payload, "params['devicepower:0'].battery.percent", true);
+	if(!ISNULL(bat), BatteryPercentage := bat);
+end
+
+if BatteryPercentage &lt; 30
+	ADDWARNING("Low battery (&lt;30%)");
+end</ListenerScriptPacketParser>
+        <IpAddress>$[IpAddress]</IpAddress>
+        <Port>$[Port]</Port>
+        <RootTopic>$[mID]/#</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${temperatureSensor}</Name>
+          <Model>PacketParserTemperatureSensor</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables>[]</CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "events/rpc") &gt; 0
+	var temperature := PARSEJSON(RECEIVEDMSG.Payload, "params['temperature:0'].tC", true);
+    if(!ISNULL(temperature), Te := temperature);
+    var humidity := PARSEJSON(RECEIVEDMSG.Payload, "params['humidity:0'].rh", true);
+    if(!ISNULL(humidity), Hu := humidity / 100);
+end</ListenerScriptPacketParser>
+            <ReadTemperatureScriptPacketParser></ReadTemperatureScriptPacketParser>
+            <ReadHumidityScriptPacketParser></ReadHumidityScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
