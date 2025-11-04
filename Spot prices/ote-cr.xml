@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="88" locationId="4bd16cde-614f-404c-b9bf-a69b2516e5f4">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>ote-cr</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description>Spotové ceny z ote-cr.cz. Ceny jsou v základu v EUR, pro převod na CZK použijte šablonu kurzy ČNB a pomocí vzorce propojte kurz měny </Description>
+    <Module>
+      <Name>ote-cr</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleHttp</Model>
+      <DeviceProperties>
+        <ReadScriptPacketParser>VAR today := tostring(NOW(), "yyyy-MM-dd");
+VAR response := SENDHTTPREQUEST("/cs/kratkodobe-trhy/elektrina/denni-trh/chart-data");
+IF response.IsSuccess
+    output := response.Content;
+ELSE
+    ADDERROR(response.StatusCode + " (" + response.ReasonPhrase + ")");
+END</ReadScriptPacketParser>
+        <InternalPollInterval>3600000</InternalPollInterval>
+        <CustomVariables>[{"Name":"output","ValueTypeId":2,"NumericValue":0,"StringValue":""},{"Name":"From","ValueTypeId":1,"NumericValue":9},{"Name":"To","ValueTypeId":1,"NumericValue":17},{"Name":"kurz","ValueTypeId":1,"NumericValue":1}]</CustomVariables>
+        <ServiceAttributesScriptsPacketParser>[{"AttributeDefinition":{"Name":"Perioda 1"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[0].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 2"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[1].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 3"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[2].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 4"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[3].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 5"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[4].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 6"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[5].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 7"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[6].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 8"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[7].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 9"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[8].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 10"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[9].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 11"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[10].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 12"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[11].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 13"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[12].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 14"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[13].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 15"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[14].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 16"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[15].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 17"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[16].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 18"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[17].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 19"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[18].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 20"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[19].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 21"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[20].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 22"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[21].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 23"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[22].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 24"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[23].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 25"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[24].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 26"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[25].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 27"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[26].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 28"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[27].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 29"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[28].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 30"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[29].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 31"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[30].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 32"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[31].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 33"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[32].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 34"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[33].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 35"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[34].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 36"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[35].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 37"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[36].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 38"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[37].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 39"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[38].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 40"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[39].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 41"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[40].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 42"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[41].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 43"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[42].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 44"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[43].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 45"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[44].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 46"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[45].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 47"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[46].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 48"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[47].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 49"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[48].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 50"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[49].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 51"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[50].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 52"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[51].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 53"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[52].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 54"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[53].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 55"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[54].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 56"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[55].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 57"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[56].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 58"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[57].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 59"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[58].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 60"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[59].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 61"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[60].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 62"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[61].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 63"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[62].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 64"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[63].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 65"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[64].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 66"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[65].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 67"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[66].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 68"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[67].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 69"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[68].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 70"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[69].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 71"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[70].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 72"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[71].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 73"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[72].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 74"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[73].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 75"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[74].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 76"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[75].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 77"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[76].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 78"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[77].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 79"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[78].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 80"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[79].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 81"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[80].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 82"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[81].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 83"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[82].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 84"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[83].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 85"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[84].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 86"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[85].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 87"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[86].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 88"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[87].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 89"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[88].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 90"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[89].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 91"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[90].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 92"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[91].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 93"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[92].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 94"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[93].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 95"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[94].y\u0022) \u002B \u0022 EUR\u0022"},{"AttributeDefinition":{"Name":"Perioda 96"},"ReadFormula":"PARSEJSON(output, \u0022$.data.dataLine[1].point[95].y\u0022) \u002B \u0022 EUR\u0022"}]</ServiceAttributesScriptsPacketParser>
+        <IpAddress>www.ote-cr.cz</IpAddress>
+        <Port>443</Port>
+        <UseHttps>True</UseHttps>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Aktuální cena</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+VAR date := NOW();
+var periodHour := LENGTH(prices) / 24;	
+var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+
+ROUND(GETAT(prices, actualperiod)*kurz)
+</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Aktuální perioda - pořadí</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+var byPrice := ORDERINDEX(prices);
+VAR date := NOW();
+var periodHour := LENGTH(prices) / 24;	
+var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+
+INDEXOF(byPrice, actualperiod) + 1
+</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Aktuální perioda - pořadí v časovém okně</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF date.hour &lt; From or date.hour &gt; To or From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+	var periodHour := LENGTH(prices) / 24;
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
+	var byPrice := ORDERINDEX(windowPrices);
+	
+	var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+
+	RETURN(INDEXOF(byPrice, actualperiod - From * periodHour) +1);
+END
+</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Kurz pro měnu</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>kurz</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser>kurz := Va</WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Nejdražší cena dne</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+GETAT(ORDERDESC(prices), 0)*kurz</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Nejdražší cena v časové okně</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+	var periodHour := LENGTH(prices) / 24;	
+	var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
+	var byPrice := ORDERDESC(windowPrices);
+
+	RETURN(GETAT(byPrice, 0)*kurz);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Nejlevnější cena dne</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+GETAT(ORDER(prices), 0)*kurz</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Nejlevnější cena v časové okně</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+	var periodHour := LENGTH(prices) / 24;	
+	#var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
+	var byPrice := ORDER(windowPrices);
+
+	RETURN(GETAT(byPrice, 0)*kurz);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Nejlevnější perioda dne</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+GETAT(ORDERINDEX(prices), 0) +1</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Nejlevnější zůstávající perioda </Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-11</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+VAR date := NOW();
+var periodHour := LENGTH(prices) / 24;	
+var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+var remainingPrices := COPY(prices, actualperiod, LENGTH(prices) - actualperiod);
+var byPrice := ORDERINDEX(remainingPrices);
+
+GETAT(byPrice, 0) + actualperiod +1
+</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>394</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Počet period</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+LENGTH(prices);</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2027</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Počet period v časovém okně</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-13</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+	var periodHour := LENGTH(prices) / 24;
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
+
+	RETURN(LENGTH(windowPrices));
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2027</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Průměrná cena dne</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-14</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+AVG(prices)*kurz</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Průměrná cena v časovém okně</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-15</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"91":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:91}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser>VAR date := NOW();
+IF From &gt;= To
+	RETURN(NaN);
+ELSE
+	var prices := PARSEJSON(output, "$.data.dataLine[1].point..y");
+	var periodHour := LENGTH(prices) / 24;	
+	#var actualperiod := FLOOR(((date.hour * 60) + date.minute) * periodHour / 60);
+	var windowPrices := COPY(prices, From * periodHour, (To - From) * periodHour);
+
+	RETURN(AVG(windowPrices)*kurz);
+END</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
