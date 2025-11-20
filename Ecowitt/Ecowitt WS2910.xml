@@ -162,7 +162,7 @@ RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
     RETURN(NaN);
 END
 
-VAR value := PARSEJSON(responseJson,"data.rainfall.hourly.value");
+VAR value := PARSEJSON(responseJson,"data.rainfall.1_hour.value");
 RETURN(TODOUBLE(value));</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
           </DeviceProperties>
