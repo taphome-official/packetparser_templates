@@ -49,28 +49,9 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>BGN</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-3</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[2].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
           <Name>BRL</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-4</Id>
+          <Id>-3</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -89,6 +70,25 @@ END</ReadScriptPacketParser>
         <Device>
           <Name>CAD</Name>
           <Model>PacketParserVariable</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[13].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>CNY</Name>
+          <Model>PacketParserVariable</Model>
           <Id>-5</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
@@ -100,13 +100,13 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[14].rate");</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[2].rate");</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>2035</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>CNY</Name>
+          <Name>DKK</Name>
           <Model>PacketParserVariable</Model>
           <Id>-6</Id>
           <DeviceProperties>
@@ -125,7 +125,7 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>DKK</Name>
+          <Name>EUR</Name>
           <Model>PacketParserVariable</Model>
           <Id>-7</Id>
           <DeviceProperties>
@@ -144,7 +144,7 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>EUR</Name>
+          <Name>GBP</Name>
           <Model>PacketParserVariable</Model>
           <Id>-8</Id>
           <DeviceProperties>
@@ -157,13 +157,13 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[5].rate");</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[29].rate");</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>2035</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>GBP</Name>
+          <Name>HKD</Name>
           <Model>PacketParserVariable</Model>
           <Id>-9</Id>
           <DeviceProperties>
@@ -176,26 +176,7 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[30].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>HKD</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-10</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[7].rate");</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[6].rate");</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>2035</IconId>
           </DeviceProperties>
@@ -203,140 +184,7 @@ END</ReadScriptPacketParser>
         <Device>
           <Name>HUF</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-11</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[16].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>CHF</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-12</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[26].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>IDR</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-13</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[9].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>ILS</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-14</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[11].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>INR</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-15</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[8].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>ISK</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-16</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[10].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>JPY</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-17</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[12].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>KRW</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-18</Id>
+          <Id>-10</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -353,9 +201,9 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>MXN</Name>
+          <Name>CHF</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-19</Id>
+          <Id>-11</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -366,15 +214,129 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[18].rate");</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[25].rate");</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>2035</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>MYR</Name>
+          <Name>IDR</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-20</Id>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[8].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>ILS</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-13</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[10].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>INR</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-14</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[7].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>ISK</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-15</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[9].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>JPY</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-16</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[11].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>KRW</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-17</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[14].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>MXN</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-18</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -391,7 +353,45 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
+          <Name>MYR</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-19</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[16].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
           <Name>NOK</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-20</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[19].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>NZD</Name>
           <Model>PacketParserVariable</Model>
           <Id>-21</Id>
           <DeviceProperties>
@@ -410,9 +410,28 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NZD</Name>
+          <Name>PHP</Name>
           <Model>PacketParserVariable</Model>
           <Id>-22</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[5].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>PLN</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-23</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -429,26 +448,7 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>PHP</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-23</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[6].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>PLN</Name>
+          <Name>RON</Name>
           <Model>PacketParserVariable</Model>
           <Id>-24</Id>
           <DeviceProperties>
@@ -467,47 +467,9 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>RON</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-25</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[23].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
           <Name>SEK</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-26</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[25].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>SGD</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-27</Id>
+          <Id>-25</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -524,7 +486,45 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
+          <Name>SGD</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-26</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[23].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
           <Name>THB</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-27</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[26].rate");</ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>2035</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>TRY</Name>
           <Model>PacketParserVariable</Model>
           <Id>-28</Id>
           <DeviceProperties>
@@ -543,7 +543,7 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>TRY</Name>
+          <Name>USD</Name>
           <Model>PacketParserVariable</Model>
           <Id>-29</Id>
           <DeviceProperties>
@@ -562,7 +562,7 @@ END</ReadScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>USD</Name>
+          <Name>XDR</Name>
           <Model>PacketParserVariable</Model>
           <Id>-30</Id>
           <DeviceProperties>
@@ -575,13 +575,13 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[29].rate");</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[18].rate");</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>2035</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>XDR</Name>
+          <Name>ZAR</Name>
           <Model>PacketParserVariable</Model>
           <Id>-31</Id>
           <DeviceProperties>
@@ -594,26 +594,7 @@ END</ReadScriptPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[19].rate");</ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>2035</IconId>
-          </DeviceProperties>
-        </Device>
-        <Device>
-          <Name>ZAR</Name>
-          <Model>PacketParserVariable</Model>
-          <Id>-32</Id>
-          <DeviceProperties>
-            <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
-            <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
-            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
-            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
-            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
-            <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[13].rate");</ReadStateScriptPacketParser>
+            <ReadStateScriptPacketParser>PARSEJSON(responsejson, "$.rates[12].rate");</ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>2035</IconId>
           </DeviceProperties>
