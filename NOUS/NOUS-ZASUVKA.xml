@@ -5,50 +5,67 @@
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
     </RevisionHistory>
-    <Name>ESP-NOUS-ZASUVKA-1</Name>
+    <Name>A1T-NOUS-DIN-ZASUVKA</Name>
     <CcuModel>PacketParserCCU</CcuModel>
     <Producer></Producer>
     <Model></Model>
     <Description></Description>
     <Module>
-      <Name>ESP-NOUS-ZASUVKA-1</Name>
+      <Name>A1T-NOUS-DIN-ZASUVKA</Name>
       <Id>-1</Id>
       <Model>PacketParserModuleMqtt</Model>
       <DeviceProperties>
         <InternalPollInterval>5000</InternalPollInterval>
-        <CustomVariables>[{"Name":"plug1topic","ValueTypeId":2,"NumericValue":0,"StringValue":"tasmota_496D5A"},{"Name":"ID1","ValueTypeId":2,"NumericValue":0,"StringValue":"Wifi"},{"Name":"ID2","ValueTypeId":2,"NumericValue":0,"StringValue":"STATE"},{"Name":"ID3","ValueTypeId":2,"NumericValue":0,"StringValue":"POWER"},{"Name":"ID4","ValueTypeId":2,"NumericValue":0,"StringValue":"SENSOR"},{"Name":"ID12","ValueTypeId":2,"NumericValue":0,"StringValue":"ENERGY"}]</CustomVariables>
-        <ListenerScriptPacketParser>#var tmp := RECEIVEDMSG.Payload;</ListenerScriptPacketParser>
+        <CustomVariables>[{"Name":"plug1topic","ValueTypeId":2,"NumericValue":0,"StringValue":"NOUS_A1T_4E4CB6"},{"Name":"ID1","ValueTypeId":2,"NumericValue":0,"StringValue":"Wifi"},{"Name":"ID2","ValueTypeId":2,"NumericValue":0,"StringValue":"STATE"},{"Name":"ID3","ValueTypeId":2,"NumericValue":0,"StringValue":"POWER"},{"Name":"ID4","ValueTypeId":2,"NumericValue":0,"StringValue":"SENSOR"},{"Name":"ID12","ValueTypeId":2,"NumericValue":0,"StringValue":"ENERGY"}]</CustomVariables>
+        <ListenerScriptPacketParser>#</ListenerScriptPacketParser>
         <IpAddress>192.168.0.150</IpAddress>
         <Port>1883</Port>
-        <RootTopic>tele/tasmota_496D5A/#</RootTopic>
+        <RootTopic>tele/NOUS_A1T_4E4CB6/#</RootTopic>
       </DeviceProperties>
       <Devices>
         <Device>
-          <Name>NOUS-2.4GHz WiFi Channel</Name>
+          <Name>A1T manual ON/OFF</Name>
           <Model>PacketParserVariable</Model>
           <Id>-2</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
-            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <SerializedValueLogTypeConversions />
+            <ReadScriptPacketParser># 
+#
+# 
+#
+#
+# 
+#
+#
+#</ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables></CustomVariables>
+            <CustomVariables />
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "STATE") &gt; 0
 	var tmp := RECEIVEDMSG.Payload;
-    var temp4 := PARSEJSON(RECEIVEDMSG.Payload, ID1 + ".Channel", true);
-    if (!ISNULL(temp4), Va := temp4/1);
+    var temp := PARSEJSON(RECEIVEDMSG.Payload, "POWER", true);
+if (temp = "ON",  Va :=1);
+if (temp = "OFF", Va :=0);
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
-            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
-            <IconId>397</IconId>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser># 
+# END
+#
+# 
+#
+# 
+#
+#
+# </WriteStateScriptPacketParser>
+            <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-APPARENT POWER</Name>
+          <Name>A1T-APPARENT POWER</Name>
           <Model>PacketParserVariable</Model>
           <Id>-3</Id>
           <DeviceProperties>
@@ -56,7 +73,7 @@ end</ListenerScriptPacketParser>
             <SerializedValueLogTypeConversions>{"59":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:0.001,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:59}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -66,21 +83,21 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>107</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-CosFi </Name>
+          <Name>A1T-CosFi </Name>
           <Model>PacketParserVariable</Model>
           <Id>-4</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <SerializedValueLogTypeConversions />
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -90,13 +107,13 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>335</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-CURRENT</Name>
+          <Name>A1T-CURRENT</Name>
           <Model>PacketParserVariable</Model>
           <Id>-5</Id>
           <DeviceProperties>
@@ -136,7 +153,7 @@ end</ListenerScriptPacketParser>
 # Download data from FTP:
 # FTPDOWNLOAD("filePath");</ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -146,7 +163,7 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>False</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser># Simple HTTP Request:
 # VAR response := SENDHTTPREQUEST("/example/set/value=" + Va);
 # IF response.IsSuccess = false
@@ -174,14 +191,14 @@ end</ListenerScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-OUTPUT 230VAC</Name>
+          <Name>A1T-OUTPUT 230VAC</Name>
           <Model>PacketParserSwitch</Model>
           <Id>-6</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
-            <ReadScriptPacketParser />
+            <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>2500</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser></ListenerScriptPacketParser>
@@ -189,8 +206,8 @@ end</ListenerScriptPacketParser>
             <NegateState>False</NegateState>
             <OnStateIconId>60</OnStateIconId>
             <OffStateIconId>61</OffStateIconId>
-            <OnStateName>ON-ACCESO</OnStateName>
-            <OffStateName>OFF-SPENTO</OffStateName>
+            <OnStateName>ON</OnStateName>
+            <OffStateName>OFF</OffStateName>
             <ReadSwitchStateScriptPacketParser></ReadSwitchStateScriptPacketParser>
             <WriteSwitchStateScriptPacketParser>var value1 := IF(St = 1, "1", "0");
 MQTTPUBLISH("cmnd/" +  plug1topic + "/Power", value1);
@@ -199,7 +216,7 @@ var value2 := IF(St = 0, MQTTPUBLISH("cmnd/" +  plug1topic + "/Status", "8"));</
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-PERIOD</Name>
+          <Name>A1T-PERIOD</Name>
           <Model>PacketParserVariable</Model>
           <Id>-7</Id>
           <DeviceProperties>
@@ -207,7 +224,7 @@ var value2 := IF(St = 0, MQTTPUBLISH("cmnd/" +  plug1topic + "/Status", "8"));</
             <SerializedValueLogTypeConversions>{"59":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:59}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -217,13 +234,13 @@ var value2 := IF(St = 0, MQTTPUBLISH("cmnd/" +  plug1topic + "/Status", "8"));</
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>107</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-POWER</Name>
+          <Name>A1T-POWER</Name>
           <Model>PacketParserVariable</Model>
           <Id>-8</Id>
           <DeviceProperties>
@@ -231,7 +248,7 @@ end</ListenerScriptPacketParser>
             <SerializedValueLogTypeConversions>{"60":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:0.001,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:60}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -241,13 +258,13 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-POWER TODAY</Name>
+          <Name>A1T-POWER TODAY</Name>
           <Model>PacketParserVariable</Model>
           <Id>-9</Id>
           <DeviceProperties>
@@ -255,7 +272,7 @@ end</ListenerScriptPacketParser>
             <SerializedValueLogTypeConversions>{"59":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:59}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -265,21 +282,57 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>345</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-REACTIV POWER</Name>
+          <Name>A1T-POWER YESTERDAY</Name>
           <Model>PacketParserVariable</Model>
           <Id>-10</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"59":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:59}\u0022}"}</SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser># 
+#
+#
+# 
+#
+#</ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
+	var tmp := RECEIVEDMSG.Payload;
+    var temp4 := PARSEJSON(RECEIVEDMSG.Payload, ID12 + ".Yesterday", true);
+    if (!ISNULL(temp4), Va := temp4/1);
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser />
+            <WriteStateScriptPacketParser># 
+#
+# 
+#
+# 
+#
+#
+#</WriteStateScriptPacketParser>
+            <IconId>0</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>A1T-REACTIV POWER</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-11</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"59":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:0.001,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:59}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -289,21 +342,39 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>107</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-TOTAL POWER</Name>
+          <Name>A1T-Set UpTime=1</Name>
+          <Model>PacketParserPushButton</Model>
+          <Id>-12</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>10000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser></ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <ReadButtonPressedStateScriptPacketParser></ReadButtonPressedStateScriptPacketParser>
+            <WriteButtonPressedStateScriptPacketParser></WriteButtonPressedStateScriptPacketParser>
+            <IconId>86</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>A1T-TOTAL POWER</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-11</Id>
+          <Id>-13</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"59":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:59}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -313,15 +384,15 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-UPTIME</Name>
+          <Name>A1T-UPTIME</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-12</Id>
+          <Id>-14</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
@@ -343,15 +414,15 @@ end</ListenerScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-VOLTAGE (AC)</Name>
+          <Name>A1T-VOLTAGE (AC)</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-13</Id>
+          <Id>-15</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"87":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:87}\u0022}"}</SerializedValueLogTypeConversions>
             <ReadScriptPacketParser></ReadScriptPacketParser>
             <InternalPollInterval>15000</InternalPollInterval>
-            <CustomVariables />
+            <CustomVariables></CustomVariables>
             <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
             <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
             <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "SENSOR") &gt; 0
@@ -361,15 +432,39 @@ end</ListenerScriptPacketParser>
 end</ListenerScriptPacketParser>
             <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
             <IsReadOnly>True</IsReadOnly>
-            <ReadStateScriptPacketParser />
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
             <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
             <IconId>0</IconId>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-WiFi Power</Name>
+          <Name>A1T-WiFi Channel</Name>
           <Model>PacketParserVariable</Model>
-          <Id>-14</Id>
+          <Id>-16</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <CustomVariables></CustomVariables>
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>if INDEXOF(RECEIVEDMSG.Topic, "STATE") &gt; 0
+	var tmp := RECEIVEDMSG.Payload;
+    var temp4 := PARSEJSON(RECEIVEDMSG.Payload, ID1 + ".Channel", true);
+    if (!ISNULL(temp4), Va := temp4/1);
+end</ListenerScriptPacketParser>
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+            <WriteStateScriptPacketParser></WriteStateScriptPacketParser>
+            <IconId>397</IconId>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>A1T-WiFi Power</Name>
+          <Model>PacketParserVariable</Model>
+          <Id>-17</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions>{"26":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:100,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:26}\u0022}"}</SerializedValueLogTypeConversions>
@@ -391,9 +486,9 @@ end</ListenerScriptPacketParser>
           </DeviceProperties>
         </Device>
         <Device>
-          <Name>NOUS-WiFi RSSI</Name>
+          <Name>A1T-WiFi RSSI</Name>
           <Model>PacketParserAnalogInput</Model>
-          <Id>-15</Id>
+          <Id>-18</Id>
           <DeviceProperties>
             <DeviceType>0</DeviceType>
             <SerializedValueLogTypeConversions></SerializedValueLogTypeConversions>
