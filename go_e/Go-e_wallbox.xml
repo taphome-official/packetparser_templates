@@ -31,7 +31,7 @@ ELSE
 END</ReadScriptPacketParser>
         <InternalPollInterval>5000</InternalPollInterval>
         <CustomVariables>[{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
-        <IpAddress>192.168.1.246</IpAddress>
+        <IpAddress>192.168.1.1</IpAddress>
         <Port>80</Port>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
