@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Templates format="2" protocolVersion="89" locationId="f8904c5b-737c-491c-89db-a0b44237a93b">
-  <Template revision="1.0">
+<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="88">
+  <Template revision="1.0" id="d1b516bc-6443-425d-aa4c-9377c6e7ec91">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
@@ -10,6 +10,13 @@
     <Producer></Producer>
     <Model></Model>
     <Description></Description>
+    <ImportParameters>
+        <Parameter>
+            <Name>${ipAddress}</Name>
+            <Value>192.168.0.1</Value>
+            <Id>IpAddress</Id>
+        </Parameter>
+    </ImportParameters>
     <Module>
       <Name>Go-e</Name>
       <Id>-1</Id>
@@ -31,7 +38,7 @@ ELSE
 END</ReadScriptPacketParser>
         <InternalPollInterval>5000</InternalPollInterval>
         <CustomVariables>[{"Name":"responseJson","ValueTypeId":2,"NumericValue":0,"StringValue":"0"}]</CustomVariables>
-        <IpAddress>192.168.1.1</IpAddress>
+        <IpAddress>$[IpAddress]</IpAddress>
         <Port>80</Port>
         <UseHttps>False</UseHttps>
       </DeviceProperties>
