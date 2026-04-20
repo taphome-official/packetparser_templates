@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="82" locationId="799e6d0a-8cf9-463c-b38f-67076dfdeb60">
+  <Template revision="1.0">
+    <SuggestedCCUParameters />
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Radar Occupancy Sensor</Name>
+    <CcuModel>PacketParserCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description>Integrate Zigbee devices via Zigbee2MQTT package and an MQTT broker. This allows local control between Zigbee network and TapHome: more about this here: https://github.com/nygma2004/km/wiki/TapHome-Examples#zigbee2mqtt-integration</Description>
+    <Module>
+      <Name>Radar Occupancy Sensor</Name>
+      <Id>-1</Id>
+      <Model>PacketParserModuleMqtt</Model>
+      <DeviceProperties>
+        <InternalPollInterval>5000</InternalPollInterval>
+        <IpAddress>192.168.1.176</IpAddress>
+        <Port>1883</Port>
+        <RootTopic>zigbee2mqtt/Radar Sensor</RootTopic>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${deviceType_PresenceDetector} (1)</Name>
+          <Model>PacketParserReedContact</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>1011</DeviceType>
+            <ReadScriptPacketParser></ReadScriptPacketParser>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <CustomVariables />
+            <ServiceAttributesScriptsPacketParser></ServiceAttributesScriptsPacketParser>
+            <ServiceActionsScriptsPacketParser></ServiceActionsScriptsPacketParser>
+            <ListenerScriptPacketParser>VAR json := TOSTRING(RECEIVEDBYTES);
+VAR topic := PARSEJSON(json, "Topic");
+VAR payload := PARSEJSON(json, "Payload");
+
+VAR occupancy := PARSEJSON(payload,"occupancy",1);
+IF !ISNULL(occupancy)
+    IF occupancy
+        Rc := 1;
+    ELSE
+        Rc := 0;
+    END
+END</ListenerScriptPacketParser>
+            <OnStateIconId>203</OnStateIconId>
+            <OffStateIconId>204</OffStateIconId>
+            <OnStateName>${general_motion_true}</OnStateName>
+            <OffStateName>${general_motion_false}</OffStateName>
+            <ReadStateScriptPacketParser></ReadStateScriptPacketParser>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
