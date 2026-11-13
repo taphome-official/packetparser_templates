@@ -21,7 +21,7 @@
                 <ListenerScriptPacketParser># TOPIC := RECEIVEDMSG.TOPIC;
                     # PAYLOAD := TOSTRING(RECEIVEDMSG.PAYLOAD);
                 </ListenerScriptPacketParser>
-                <IpAddress>taphome.mqtt.broker.local</IpAddress>
+                <IpAddress>127.0.0.1</IpAddress>
                 <Port>1883</Port>
                 <RootTopic>stick-c6/#</RootTopic>
             </DeviceProperties>
