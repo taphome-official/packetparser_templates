@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="74">
-  <Template revision="1.0" id="6f9c3038-49db-4caf-8bc6-1650d7b5a21e">
+  <Template revision="1.1" id="6f9c3038-49db-4caf-8bc6-1650d7b5a21e">
     <SuggestedCCUParameters />
     <RevisionHistory>
       <Revision id="1.0">Initial version</Revision>
+      <Revision id="1.1">Color temperature write script checks ISNAN(Ct), comparison with NaN is always false and fails to parse</Revision>
     </RevisionHistory>
 	<ImportParameters>
 		<Parameter>
@@ -160,7 +161,7 @@ END
 
 VAR now := NOW();
 debounceTimestamp := now.Ticks + transitionTime + 500;</WriteBrightnessScriptPacketParser>
-            <WriteCCTScriptPacketParser>IF Ct = NaN
+            <WriteCCTScriptPacketParser>IF ISNAN(Ct)
     RETURN(0);
 END
 
